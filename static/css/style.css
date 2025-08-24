@@ -150,6 +150,49 @@ body {
     color: var(--bg-primary);
 }
 
+/* Large Module Icons for Overview */
+.module-icon-large {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(45deg, var(--accent-green), var(--accent-green-dim));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    box-shadow: 0 0 20px rgba(0, 255, 102, 0.4);
+}
+
+.module-icon-large i {
+    font-size: 30px;
+    color: var(--bg-primary);
+}
+
+/* Overview Cards */
+.overview-card {
+    min-height: 280px;
+    display: flex;
+    flex-direction: column;
+}
+
+.overview-card .card-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 2rem;
+}
+
+.overview-card .card-title {
+    font-size: 1.25rem;
+    margin-bottom: 15px;
+}
+
+.overview-card .card-text {
+    color: var(--text-secondary);
+    margin-bottom: 20px;
+    flex-grow: 1;
+}
+
 .card-title {
     color: var(--accent-green);
     margin: 0;

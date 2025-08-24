@@ -21,281 +21,96 @@
     <div class="row">
         <!-- Hash Calculator -->
         <div class="col-lg-4 col-md-6 mb-4">
-            <div class="card module-card">
-                <div class="card-body">
-                    <div class="module-header">
-                        <div class="module-icon">
-                            <i class="fas fa-hash"></i>
-                        </div>
-                        <h5 class="card-title">Hash Calculator</h5>
+            <div class="card module-card overview-card">
+                <div class="card-body text-center">
+                    <div class="module-icon-large">
+                        <i class="fas fa-hash"></i>
                     </div>
-                    
-                    <div class="education-info">
-                        <small class="text-muted">
-                            <i class="fas fa-info-circle"></i>
-                            Generate cryptographic hashes (MD5, SHA-1, SHA-256, SHA-512) for data integrity verification.
-                        </small>
-                    </div>
-                    
-                    <form method="POST" action="{{ url_for('hash_calculator') }}" enctype="multipart/form-data">
-                        <div class="mb-3">
-                            <label class="form-label">Hash Type</label>
-                            <select name="hash_type" class="form-select">
-                                <option value="md5">MD5</option>
-                                <option value="sha1">SHA-1</option>
-                                <option value="sha256" selected>SHA-256</option>
-                                <option value="sha512">SHA-512</option>
-                            </select>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label class="form-label">Input Text</label>
-                            <textarea name="text" class="form-control" rows="2" placeholder="Enter text to hash..."></textarea>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label class="form-label">Or Upload File</label>
-                            <input type="file" name="file" class="form-control">
-                        </div>
-                        
-                        <button type="submit" class="btn btn-primary btn-glow w-100">
-                            <i class="fas fa-calculator"></i> Calculate Hash
-                        </button>
-                    </form>
+                    <h5 class="card-title">Hash Calculator</h5>
+                    <p class="card-text">Generate secure hash values using multiple algorithms</p>
+                    <button class="btn btn-primary btn-glow" onclick="openModule('hash')">
+                        <i class="fas fa-external-link-alt"></i> Click to use
+                    </button>
                 </div>
             </div>
         </div>
         
         <!-- File Encryption -->
         <div class="col-lg-4 col-md-6 mb-4">
-            <div class="card module-card">
-                <div class="card-body">
-                    <div class="module-header">
-                        <div class="module-icon">
-                            <i class="fas fa-lock"></i>
-                        </div>
-                        <h5 class="card-title">File Encryption</h5>
+            <div class="card module-card overview-card">
+                <div class="card-body text-center">
+                    <div class="module-icon-large">
+                        <i class="fas fa-lock"></i>
                     </div>
-                    
-                    <div class="education-info">
-                        <small class="text-muted">
-                            <i class="fas fa-info-circle"></i>
-                            Secure files using AES encryption with password-based key derivation (PBKDF2).
-                        </small>
-                    </div>
-                    
-                    <form method="POST" action="{{ url_for('encrypt') }}" enctype="multipart/form-data">
-                        <div class="mb-3">
-                            <label class="form-label">File to Encrypt</label>
-                            <input type="file" name="file" class="form-control" required>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label class="form-label">Encryption Password</label>
-                            <input type="password" name="password" class="form-control" required>
-                        </div>
-                        
-                        <button type="submit" class="btn btn-success btn-glow w-100">
-                            <i class="fas fa-shield-alt"></i> Encrypt File
-                        </button>
-                    </form>
-                    
-                    <hr>
-                    
-                    <form method="POST" action="{{ url_for('decrypt') }}" enctype="multipart/form-data">
-                        <h6 class="text-center mb-3">Decrypt File</h6>
-                        
-                        <div class="mb-3">
-                            <label class="form-label">Encrypted File</label>
-                            <input type="file" name="file" class="form-control" required>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label class="form-label">Decryption Password</label>
-                            <input type="password" name="password" class="form-control" required>
-                        </div>
-                        
-                        <button type="submit" class="btn btn-warning btn-glow w-100">
-                            <i class="fas fa-unlock"></i> Decrypt File
-                        </button>
-                    </form>
+                    <h5 class="card-title">File Encrypt/Decrypt</h5>
+                    <p class="card-text">Secure files with advanced encryption algorithms</p>
+                    <button class="btn btn-primary btn-glow" onclick="openModule('encrypt')">
+                        <i class="fas fa-external-link-alt"></i> Click to use
+                    </button>
                 </div>
             </div>
         </div>
         
-        <!-- Password Cracker -->
+        <!-- Brute Force Simulator -->
         <div class="col-lg-4 col-md-6 mb-4">
-            <div class="card module-card">
-                <div class="card-body">
-                    <div class="module-header">
-                        <div class="module-icon">
-                            <i class="fas fa-key"></i>
-                        </div>
-                        <h5 class="card-title">Password Cracker</h5>
+            <div class="card module-card overview-card">
+                <div class="card-body text-center">
+                    <div class="module-icon-large">
+                        <i class="fas fa-hammer"></i>
                     </div>
-                    
-                    <div class="education-info">
-                        <small class="text-muted">
-                            <i class="fas fa-info-circle"></i>
-                            Attempt brute force attacks on protected files (PDF, ZIP, Office documents) for password recovery.
-                        </small>
-                    </div>
-                    
-                    <div class="alert alert-danger alert-sm">
-                        <i class="fas fa-exclamation-triangle"></i>
-                        <strong>Legal Notice:</strong> Only use on files you own or have explicit permission to test.
-                        Unauthorized access is illegal.
-                    </div>
-                    
-                    <form method="POST" action="{{ url_for('start_brute') }}" enctype="multipart/form-data" onsubmit="return confirmLegality()">
-                        <div class="mb-3">
-                            <label class="form-label">Protected File</label>
-                            <input type="file" name="file" class="form-control" accept=".pdf,.zip,.docx,.pptx,.xlsx" required>
-                            <small class="form-text">Supports: PDF, ZIP, DOCX, PPTX, XLSX</small>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label class="form-label">Wordlist Type</label>
-                            <select name="wordlist" class="form-select">
-                                <option value="common">Common Passwords</option>
-                                <option value="numbers">Numeric (0000-9999)</option>
-                                <option value="years">Years (1900-2029)</option>
-                            </select>
-                        </div>
-                        
-                        <button type="submit" class="btn btn-danger btn-glow w-100">
-                            <i class="fas fa-hammer"></i> Start Brute Force
-                        </button>
-                    </form>
+                    <h5 class="card-title">Brute Force Simulator</h5>
+                    <p class="card-text">Demonstrate password vulnerability concepts</p>
+                    <button class="btn btn-primary btn-glow" onclick="openModule('brute')">
+                        <i class="fas fa-external-link-alt"></i> Click to use
+                    </button>
                 </div>
             </div>
         </div>
         
         <!-- Hash Comparison -->
         <div class="col-lg-4 col-md-6 mb-4">
-            <div class="card module-card">
-                <div class="card-body">
-                    <div class="module-header">
-                        <div class="module-icon">
-                            <i class="fas fa-balance-scale"></i>
-                        </div>
-                        <h5 class="card-title">Hash Comparison</h5>
+            <div class="card module-card overview-card">
+                <div class="card-body text-center">
+                    <div class="module-icon-large">
+                        <i class="fas fa-balance-scale"></i>
                     </div>
-                    
-                    <div class="education-info">
-                        <small class="text-muted">
-                            <i class="fas fa-info-circle"></i>
-                            Compare cryptographic hashes of two files to verify integrity and detect tampering.
-                        </small>
-                    </div>
-                    
-                    <form method="POST" action="{{ url_for('compare') }}" enctype="multipart/form-data">
-                        <div class="mb-3">
-                            <label class="form-label">Hash Type</label>
-                            <select name="hash_type" class="form-select">
-                                <option value="md5">MD5</option>
-                                <option value="sha1">SHA-1</option>
-                                <option value="sha256" selected>SHA-256</option>
-                                <option value="sha512">SHA-512</option>
-                            </select>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label class="form-label">First File</label>
-                            <input type="file" name="file1" class="form-control" required>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label class="form-label">Second File</label>
-                            <input type="file" name="file2" class="form-control" required>
-                        </div>
-                        
-                        <button type="submit" class="btn btn-info btn-glow w-100">
-                            <i class="fas fa-equals"></i> Compare Hashes
-                        </button>
-                    </form>
+                    <h5 class="card-title">Hash Comparison</h5>
+                    <p class="card-text">Compare hash values to detect file changes</p>
+                    <button class="btn btn-primary btn-glow" onclick="openModule('compare')">
+                        <i class="fas fa-external-link-alt"></i> Click to use
+                    </button>
                 </div>
             </div>
         </div>
         
         <!-- URL & Malware Scanner -->
         <div class="col-lg-4 col-md-6 mb-4">
-            <div class="card module-card">
-                <div class="card-body">
-                    <div class="module-header">
-                        <div class="module-icon">
-                            <i class="fas fa-shield-virus"></i>
-                        </div>
-                        <h5 class="card-title">Security Scanner</h5>
+            <div class="card module-card overview-card">
+                <div class="card-body text-center">
+                    <div class="module-icon-large">
+                        <i class="fas fa-globe"></i>
                     </div>
-                    
-                    <div class="education-info">
-                        <small class="text-muted">
-                            <i class="fas fa-info-circle"></i>
-                            Scan URLs for safety and files for malware signatures using basic detection algorithms.
-                        </small>
-                    </div>
-                    
-                    <form method="POST" action="{{ url_for('scan_url_route') }}">
-                        <div class="mb-3">
-                            <label class="form-label">URL to Scan</label>
-                            <input type="url" name="url" class="form-control" placeholder="https://example.com" required>
-                        </div>
-                        
-                        <button type="submit" class="btn btn-warning btn-glow w-100 mb-3">
-                            <i class="fas fa-search"></i> Scan URL
-                        </button>
-                    </form>
-                    
-                    <hr>
-                    
-                    <form method="POST" action="{{ url_for('scan_file_route') }}" enctype="multipart/form-data">
-                        <div class="mb-3">
-                            <label class="form-label">File to Scan</label>
-                            <input type="file" name="file" class="form-control" required>
-                        </div>
-                        
-                        <button type="submit" class="btn btn-danger btn-glow w-100">
-                            <i class="fas fa-virus"></i> Scan for Malware
-                        </button>
-                    </form>
+                    <h5 class="card-title">URL & Malware Scanner</h5>
+                    <p class="card-text">Identify malicious URLs and phishing attempts</p>
+                    <button class="btn btn-primary btn-glow" onclick="openModule('scanner')">
+                        <i class="fas fa-external-link-alt"></i> Click to use
+                    </button>
                 </div>
             </div>
         </div>
         
         <!-- Vulnerability Scanner -->
         <div class="col-lg-4 col-md-6 mb-4">
-            <div class="card module-card">
-                <div class="card-body">
-                    <div class="module-header">
-                        <div class="module-icon">
-                            <i class="fas fa-bug"></i>
-                        </div>
-                        <h5 class="card-title">Vulnerability Scanner</h5>
+            <div class="card module-card overview-card">
+                <div class="card-body text-center">
+                    <div class="module-icon-large">
+                        <i class="fas fa-bug"></i>
                     </div>
-                    
-                    <div class="education-info">
-                        <small class="text-muted">
-                            <i class="fas fa-info-circle"></i>
-                            Test websites for common vulnerabilities like SQL injection, XSS, and missing security headers.
-                        </small>
-                    </div>
-                    
-                    <div class="alert alert-warning alert-sm">
-                        <i class="fas fa-exclamation-triangle"></i>
-                        <strong>Ethical Use:</strong> Only scan websites you own or have explicit permission to test.
-                    </div>
-                    
-                    <form method="POST" action="{{ url_for('vulnerability_scan_route') }}" onsubmit="return confirmEthicalUse()">
-                        <div class="mb-3">
-                            <label class="form-label">Target URL</label>
-                            <input type="url" name="url" class="form-control" placeholder="https://target.com" required>
-                        </div>
-                        
-                        <button type="submit" class="btn btn-dark btn-glow w-100">
-                            <i class="fas fa-search-plus"></i> Scan Vulnerabilities
-                        </button>
-                    </form>
+                    <h5 class="card-title">Vulnerability Scanner</h5>
+                    <p class="card-text">Analyze websites for security vulnerabilities</p>
+                    <button class="btn btn-primary btn-glow" onclick="openModule('vuln')">
+                        <i class="fas fa-external-link-alt"></i> Click to use
+                    </button>
                 </div>
             </div>
         </div>
@@ -366,6 +181,9 @@
 </div>
 {% endblock %}
 
+<!-- Module Modals -->
+<div id="moduleModalContainer"></div>
+
 {% block scripts %}
 <script>
 function confirmLegality() {
@@ -374,6 +192,276 @@ function confirmLegality() {
 
 function confirmEthicalUse() {
     return confirm("I confirm that I own this website or have explicit written permission to perform security testing. Unauthorized scanning may be illegal.");
+}
+
+function openModule(moduleType) {
+    const modalContainer = document.getElementById('moduleModalContainer');
+    
+    const modalContent = getModalContent(moduleType);
+    modalContainer.innerHTML = modalContent;
+    
+    const modal = new bootstrap.Modal(document.getElementById('moduleModal'));
+    modal.show();
+    
+    // Clean up when modal is hidden
+    document.getElementById('moduleModal').addEventListener('hidden.bs.modal', function() {
+        modalContainer.innerHTML = '';
+    });
+}
+
+function getModalContent(moduleType) {
+    const modals = {
+        hash: `
+            <div class="modal fade" id="moduleModal" tabindex="-1">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content" style="background: rgba(26, 26, 26, 0.95); border: 1px solid var(--accent-green);">
+                        <div class="modal-header">
+                            <h5 class="modal-title text-white"><i class="fas fa-hash"></i> Hash Calculator</h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="education-info mb-3">
+                                <small class="text-muted">
+                                    <i class="fas fa-info-circle"></i>
+                                    Generate cryptographic hashes (MD5, SHA-1, SHA-256, SHA-512) for data integrity verification.
+                                </small>
+                            </div>
+                            <form method="POST" action="{{ url_for('hash_calculator') }}" enctype="multipart/form-data">
+                                <div class="mb-3">
+                                    <label class="form-label">Hash Type</label>
+                                    <select name="hash_type" class="form-select">
+                                        <option value="md5">MD5</option>
+                                        <option value="sha1">SHA-1</option>
+                                        <option value="sha256" selected>SHA-256</option>
+                                        <option value="sha512">SHA-512</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Input Text</label>
+                                    <textarea name="text" class="form-control" rows="2" placeholder="Enter text to hash..."></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Or Upload File</label>
+                                    <input type="file" name="file" class="form-control">
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-glow w-100">
+                                    <i class="fas fa-calculator"></i> Calculate Hash
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>`,
+        
+        encrypt: `
+            <div class="modal fade" id="moduleModal" tabindex="-1">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content" style="background: rgba(26, 26, 26, 0.95); border: 1px solid var(--accent-green);">
+                        <div class="modal-header">
+                            <h5 class="modal-title text-white"><i class="fas fa-lock"></i> File Encrypt/Decrypt</h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="education-info mb-3">
+                                <small class="text-muted">
+                                    <i class="fas fa-info-circle"></i>
+                                    Secure files using AES encryption with password-based key derivation (PBKDF2).
+                                </small>
+                            </div>
+                            <form method="POST" action="{{ url_for('encrypt') }}" enctype="multipart/form-data">
+                                <h6 class="text-center mb-3 text-success">Encrypt File</h6>
+                                <div class="mb-3">
+                                    <label class="form-label">File to Encrypt</label>
+                                    <input type="file" name="file" class="form-control" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Encryption Password</label>
+                                    <input type="password" name="password" class="form-control" required>
+                                </div>
+                                <button type="submit" class="btn btn-success btn-glow w-100 mb-3">
+                                    <i class="fas fa-shield-alt"></i> Encrypt File
+                                </button>
+                            </form>
+                            <hr>
+                            <form method="POST" action="{{ url_for('decrypt') }}" enctype="multipart/form-data">
+                                <h6 class="text-center mb-3 text-warning">Decrypt File</h6>
+                                <div class="mb-3">
+                                    <label class="form-label">Encrypted File</label>
+                                    <input type="file" name="file" class="form-control" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Decryption Password</label>
+                                    <input type="password" name="password" class="form-control" required>
+                                </div>
+                                <button type="submit" class="btn btn-warning btn-glow w-100">
+                                    <i class="fas fa-unlock"></i> Decrypt File
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>`,
+        
+        brute: `
+            <div class="modal fade" id="moduleModal" tabindex="-1">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content" style="background: rgba(26, 26, 26, 0.95); border: 1px solid var(--accent-green);">
+                        <div class="modal-header">
+                            <h5 class="modal-title text-white"><i class="fas fa-hammer"></i> Brute Force Simulator</h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="alert alert-danger alert-sm">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <strong>Legal Notice:</strong> Only use on files you own or have explicit permission to test.
+                            </div>
+                            <div class="education-info mb-3">
+                                <small class="text-muted">
+                                    <i class="fas fa-info-circle"></i>
+                                    Attempt brute force attacks on protected files (PDF, ZIP, Office documents) for password recovery.
+                                </small>
+                            </div>
+                            <form method="POST" action="{{ url_for('start_brute') }}" enctype="multipart/form-data" onsubmit="return confirmLegality()">
+                                <div class="mb-3">
+                                    <label class="form-label">Protected File</label>
+                                    <input type="file" name="file" class="form-control" accept=".pdf,.zip,.docx,.pptx,.xlsx" required>
+                                    <small class="form-text">Supports: PDF, ZIP, DOCX, PPTX, XLSX</small>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Wordlist Type</label>
+                                    <select name="wordlist" class="form-select">
+                                        <option value="common">Common Passwords</option>
+                                        <option value="numbers">Numeric (0000-9999)</option>
+                                        <option value="years">Years (1900-2029)</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-danger btn-glow w-100">
+                                    <i class="fas fa-hammer"></i> Start Brute Force
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>`,
+        
+        compare: `
+            <div class="modal fade" id="moduleModal" tabindex="-1">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content" style="background: rgba(26, 26, 26, 0.95); border: 1px solid var(--accent-green);">
+                        <div class="modal-header">
+                            <h5 class="modal-title text-white"><i class="fas fa-balance-scale"></i> Hash Comparison</h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="education-info mb-3">
+                                <small class="text-muted">
+                                    <i class="fas fa-info-circle"></i>
+                                    Compare cryptographic hashes of two files to verify integrity and detect tampering.
+                                </small>
+                            </div>
+                            <form method="POST" action="{{ url_for('compare') }}" enctype="multipart/form-data">
+                                <div class="mb-3">
+                                    <label class="form-label">Hash Type</label>
+                                    <select name="hash_type" class="form-select">
+                                        <option value="md5">MD5</option>
+                                        <option value="sha1">SHA-1</option>
+                                        <option value="sha256" selected>SHA-256</option>
+                                        <option value="sha512">SHA-512</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">First File</label>
+                                    <input type="file" name="file1" class="form-control" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Second File</label>
+                                    <input type="file" name="file2" class="form-control" required>
+                                </div>
+                                <button type="submit" class="btn btn-info btn-glow w-100">
+                                    <i class="fas fa-equals"></i> Compare Hashes
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>`,
+        
+        scanner: `
+            <div class="modal fade" id="moduleModal" tabindex="-1">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content" style="background: rgba(26, 26, 26, 0.95); border: 1px solid var(--accent-green);">
+                        <div class="modal-header">
+                            <h5 class="modal-title text-white"><i class="fas fa-globe"></i> URL & Malware Scanner</h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="education-info mb-3">
+                                <small class="text-muted">
+                                    <i class="fas fa-info-circle"></i>
+                                    Scan URLs for safety and files for malware signatures using basic detection algorithms.
+                                </small>
+                            </div>
+                            <form method="POST" action="{{ url_for('scan_url_route') }}">
+                                <h6 class="text-center mb-3 text-warning">URL Scanner</h6>
+                                <div class="mb-3">
+                                    <label class="form-label">URL to Scan</label>
+                                    <input type="url" name="url" class="form-control" placeholder="https://example.com" required>
+                                </div>
+                                <button type="submit" class="btn btn-warning btn-glow w-100 mb-3">
+                                    <i class="fas fa-search"></i> Scan URL
+                                </button>
+                            </form>
+                            <hr>
+                            <form method="POST" action="{{ url_for('scan_file_route') }}" enctype="multipart/form-data">
+                                <h6 class="text-center mb-3 text-danger">File Scanner</h6>
+                                <div class="mb-3">
+                                    <label class="form-label">File to Scan</label>
+                                    <input type="file" name="file" class="form-control" required>
+                                </div>
+                                <button type="submit" class="btn btn-danger btn-glow w-100">
+                                    <i class="fas fa-virus"></i> Scan for Malware
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>`,
+        
+        vuln: `
+            <div class="modal fade" id="moduleModal" tabindex="-1">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content" style="background: rgba(26, 26, 26, 0.95); border: 1px solid var(--accent-green);">
+                        <div class="modal-header">
+                            <h5 class="modal-title text-white"><i class="fas fa-bug"></i> Vulnerability Scanner</h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="alert alert-warning alert-sm">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <strong>Ethical Use:</strong> Only scan websites you own or have explicit permission to test.
+                            </div>
+                            <div class="education-info mb-3">
+                                <small class="text-muted">
+                                    <i class="fas fa-info-circle"></i>
+                                    Test websites for common vulnerabilities like SQL injection, XSS, and missing security headers.
+                                </small>
+                            </div>
+                            <form method="POST" action="{{ url_for('vulnerability_scan_route') }}" onsubmit="return confirmEthicalUse()">
+                                <div class="mb-3">
+                                    <label class="form-label">Target URL</label>
+                                    <input type="url" name="url" class="form-control" placeholder="https://target.com" required>
+                                </div>
+                                <button type="submit" class="btn btn-dark btn-glow w-100">
+                                    <i class="fas fa-search-plus"></i> Scan Vulnerabilities
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>`
+    };
+    
+    return modals[moduleType] || '<div>Module not found</div>';
 }
 </script>
 {% endblock %}
