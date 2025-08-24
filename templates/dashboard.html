@@ -181,11 +181,15 @@
 </div>
 {% endblock %}
 
+{% block scripts %}
 <!-- Module Modals -->
 <div id="moduleModalContainer"></div>
-
-{% block scripts %}
 <script>
+// Wait for everything to load
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Dashboard loaded successfully');
+});
+
 function confirmLegality() {
     return confirm("I confirm that I own this file or have explicit permission to attempt password recovery. Unauthorized access is illegal and may result in criminal charges.");
 }
@@ -195,18 +199,36 @@ function confirmEthicalUse() {
 }
 
 function openModule(moduleType) {
+    // Wait for DOM to be ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() {
+            openModule(moduleType);
+        });
+        return;
+    }
+    
     const modalContainer = document.getElementById('moduleModalContainer');
+    if (!modalContainer) {
+        console.error('Modal container not found');
+        return;
+    }
     
     const modalContent = getModalContent(moduleType);
     modalContainer.innerHTML = modalContent;
     
-    const modal = new bootstrap.Modal(document.getElementById('moduleModal'));
+    const modalElement = document.getElementById('moduleModal');
+    if (!modalElement) {
+        console.error('Modal element not found');
+        return;
+    }
+    
+    const modal = new bootstrap.Modal(modalElement);
     modal.show();
     
     // Clean up when modal is hidden
-    document.getElementById('moduleModal').addEventListener('hidden.bs.modal', function() {
+    modalElement.addEventListener('hidden.bs.modal', function() {
         modalContainer.innerHTML = '';
-    });
+    }, { once: true });
 }
 
 function getModalContent(moduleType) {
