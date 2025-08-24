@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Access Denied - CyberSec Dashboard{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center min-vh-100 align-items-center">
+        <div class="col-md-6 col-lg-4">
+            <div class="card error-card">
+                <div class="card-body text-center">
+                    <div class="error-icon">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <h3 class="card-title">Access Denied</h3>
+                    <p class="card-text">
+                        You don't have permission to access this resource, or an authentication error occurred.
+                    </p>
+                    <div class="error-actions">
+                        <a href="{{ url_for('index') }}" class="btn btn-primary btn-glow">
+                            <i class="fas fa-home"></i> Go Home
+                        </a>
+                        <a href="{{ url_for('replit_auth.login') }}" class="btn btn-outline-primary">
+                            <i class="fas fa-sign-in-alt"></i> Try Login Again
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
