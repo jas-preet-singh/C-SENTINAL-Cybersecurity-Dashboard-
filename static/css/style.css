@@ -6,8 +6,8 @@
     --accent-green: #00ff66;
     --accent-green-dim: #00cc52;
     --text-primary: #ffffff;
-    --text-secondary: #cccccc;
-    --text-muted: #888888;
+    --text-secondary: #e0e0e0;
+    --text-muted: #b0b0b0;
     --danger: #ff4444;
     --warning: #ffaa00;
     --success: #00ff66;
@@ -291,8 +291,45 @@ body {
 }
 
 .form-text {
-    color: var(--text-muted);
+    color: var(--text-secondary);
     font-size: 0.875rem;
+}
+
+/* Text Overrides for Better Readability */
+.text-muted {
+    color: var(--text-muted) !important;
+}
+
+small {
+    color: var(--text-secondary) !important;
+}
+
+.d-block.text-muted,
+.form-text {
+    color: var(--text-secondary) !important;
+}
+
+/* Additional text color fixes */
+.card-text {
+    color: var(--text-secondary) !important;
+}
+
+.text-center.text-muted {
+    color: var(--text-secondary) !important;
+}
+
+.badge {
+    font-weight: 500;
+}
+
+/* Footer text */
+footer small {
+    color: var(--text-secondary) !important;
+}
+
+/* Activity details */
+.activity-details small {
+    color: var(--text-secondary) !important;
 }
 
 /* Alerts */
