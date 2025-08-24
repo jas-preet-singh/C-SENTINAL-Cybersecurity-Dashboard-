@@ -287,10 +287,10 @@ function debounce(func, wait) {
     };
 }
 
-// Error handling for matrix canvas
+// Error handling for circuit grid canvas
 window.addEventListener('error', function(e) {
     if (e.filename && e.filename.includes('matrix.js')) {
-        console.warn('Matrix effect encountered an error, continuing without it.');
+        console.warn('Circuit grid effect encountered an error, continuing without it.');
         const canvas = document.getElementById('matrix-canvas');
         if (canvas) {
             canvas.style.display = 'none';
