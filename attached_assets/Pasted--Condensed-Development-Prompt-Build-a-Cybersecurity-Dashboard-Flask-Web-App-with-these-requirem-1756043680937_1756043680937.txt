@@ -1,0 +1,91 @@
+🔹 Condensed Development Prompt
+
+Build a Cybersecurity Dashboard (Flask Web App) with these requirements:
+
+Modules (each in its own card-style div):
+
+Hash Calculator → MD5, SHA-1, SHA-256, SHA-512.
+
+File Encrypt/Decrypt → AES encryption/decryption with user key.
+
+Password Cracker (Brute Force Unlocker) → Supports PDF, ZIP, DOCX, PPTX, XLSX. Progress reporting + cancel option.
+
+Hash Comparison → Compare two files’ hashes.
+
+URL & Malware Scanner → Check URLs (safe/unsafe) + file malware scan.
+
+Vulnerability Scanner → SQLi/XSS + passive security checks.
+
+Educational Info → Each module has a short explanation of the concept.
+
+Frontend (Dark Matrix Theme):
+
+Dark background (#0b0b0b), neon green (#00ff66) accents, glowing hover effects.
+
+Matrix rain effect (matrix.js on <canvas> with z-index: -1, continuous animation).
+
+Each module in a card (rounded, shadowed).
+
+Sticky navbar (Home, Modules, Education, About, Contact, Profile).
+
+Footer with social links.
+
+Mobile responsive (3-column desktop → 1-column mobile).
+
+Backend & Database:
+
+Flask (app.py) with Blueprints.
+
+SQLite for development (tables: users, uploads, jobs, scan_results).
+
+User login/signup (bcrypt password hashing).
+
+Roles: user, admin. Admin can view logs.
+
+File uploads stored in /uploads, size limited to 50MB.
+
+Security & Ethics:
+
+CSRF protection, input validation, file MIME whitelist.
+
+HTTPS in production.
+
+Disclaimer before brute-force/vulnerability scans (user must confirm legality).
+
+UI Behavior:
+
+Matrix background runs smoothly while scrolling.
+
+Buttons glow on hover.
+
+Custom styled file inputs.
+
+Scripts loaded at bottom for performance.
+
+API Endpoints:
+
+/login, /signup, /logout.
+
+/hash, /encrypt, /decrypt, /brute/start, /brute/stop, /scan/url, /scan/file, /compare.
+
+/admin/logs (admin only).
+
+Deployment:
+
+Local dev with virtualenv + SQLite.
+
+Production with Gunicorn + Nginx.
+
+Environment variables: SECRET_KEY, DATABASE_URL, API keys.
+
+Acceptance Criteria:
+
+All modules work without errors.
+
+Matrix effect smooth, non-blocking.
+
+User login + secure storage works.
+
+Brute force + vulnerability scans show disclaimers.
+
+Educational content visible with each module.
