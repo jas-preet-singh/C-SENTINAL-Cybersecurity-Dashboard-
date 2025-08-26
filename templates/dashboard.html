@@ -125,6 +125,12 @@ function openModule(moduleType) {
         return;
     }
     
+    // Special case for network tools
+    if (moduleType === 'network') {
+        openNetworkTools();
+        return;
+    }
+    
     const modalContainer = document.getElementById('moduleModalContainer');
     if (!modalContainer) {
         console.error('Modal container not found');
