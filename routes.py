@@ -38,6 +38,16 @@ def index():
         return redirect(url_for('dashboard'))
     return render_template('index.html')
 
+@app.route('/services')
+def services():
+    """Services provided page"""
+    return render_template('services.html')
+
+@app.route('/about')
+def about():
+    """About us page"""
+    return render_template('about.html')
+
 @app.route('/dashboard')
 @require_login
 def dashboard():
