@@ -11,6 +11,7 @@ from utils.hash_utils import calculate_hash, compare_hashes
 from utils.crypto_utils import encrypt_file, decrypt_file
 from utils.password_cracker import start_brute_force, check_job_status
 from utils.scanner_utils import scan_url, scan_file_for_malware, vulnerability_scan
+from utils.password_analyzer import analyze_password_strength, generate_password_suggestions
 
 app.register_blueprint(make_replit_blueprint(), url_prefix="/auth")
 
@@ -228,6 +229,30 @@ def api_cancel_job(job_id):
     db.session.commit()
     
     return jsonify({'message': 'Job cancelled'})
+
+@app.route('/analyze_password', methods=['POST'])
+@require_login
+def analyze_password():
+    """Analyze password strength"""
+    try:
+        password = request.form.get('password', '')
+        
+        if not password:
+            return jsonify({'error': 'Password is required'}), 400
+        
+        analysis = analyze_password_strength(password)
+        suggestions = generate_password_suggestions()
+        
+        # Log activity (without storing the actual password)
+        log_activity('password_analysis', f'Password length: {len(password)} chars')
+        
+        return jsonify({
+            'analysis': analysis,
+            'suggestions': suggestions
+        })
+        
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 @app.route('/compare', methods=['POST'])
 @require_login

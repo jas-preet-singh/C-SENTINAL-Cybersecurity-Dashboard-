@@ -114,6 +114,22 @@
                 </div>
             </div>
         </div>
+        
+        <!-- Password Strength Analyzer -->
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card module-card overview-card">
+                <div class="card-body text-center">
+                    <div class="module-icon-large">
+                        <i class="fas fa-shield-check"></i>
+                    </div>
+                    <h5 class="card-title">Password Strength Analyzer</h5>
+                    <p class="card-text">Analyze password security and get strength recommendations</p>
+                    <button class="btn btn-primary btn-glow" onclick="openModule('password')">
+                        <i class="fas fa-external-link-alt"></i> Click to use
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
     
     <!-- Recent Activity -->
@@ -511,6 +527,99 @@ function getModalContent(moduleType) {
                         </div>
                     </div>
                 </div>
+            </div>`,
+        
+        password: `
+            <div class="modal fade" id="moduleModal" tabindex="-1">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content" style="background: rgba(26, 26, 26, 0.95); border: 1px solid var(--accent-green);">
+                        <div class="modal-header">
+                            <h5 class="modal-title text-white"><i class="fas fa-shield-check"></i> Password Strength Analyzer</h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="education-info mb-3">
+                                <small class="text-muted">
+                                    <i class="fas fa-info-circle"></i>
+                                    Analyze password security, entropy, patterns, and get detailed strength recommendations.
+                                </small>
+                            </div>
+                            <form id="passwordAnalyzerForm" onsubmit="return analyzePassword(event)">
+                                <div class="mb-3">
+                                    <label class="form-label">Password to Analyze</label>
+                                    <div class="input-group">
+                                        <input type="password" id="passwordInput" name="password" class="form-control" placeholder="Enter password..." required>
+                                        <button type="button" class="btn btn-outline-secondary" onclick="togglePasswordVisibility()">
+                                            <i id="toggleIcon" class="fas fa-eye"></i>
+                                        </button>
+                                    </div>
+                                    <small class="form-text">Your password is analyzed locally and not stored</small>
+                                </div>
+                                <button type="submit" class="btn btn-success btn-glow w-100">
+                                    <i class="fas fa-check-circle"></i> Analyze Strength
+                                </button>
+                            </form>
+                            
+                            <!-- Analysis Results -->
+                            <div id="analysisResults" style="display: none;" class="mt-4">
+                                <div class="card" style="background: rgba(0, 0, 0, 0.3); border: 1px solid var(--accent-green);">
+                                    <div class="card-header">
+                                        <h6><i class="fas fa-chart-bar"></i> Strength Analysis</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row mb-3">
+                                            <div class="col-6">
+                                                <div class="text-center">
+                                                    <h2 id="strengthScore" class="text-success">0</h2>
+                                                    <small class="text-muted">Security Score</small>
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="text-center">
+                                                    <h5 id="strengthLevel" class="text-success">Very Strong</h5>
+                                                    <small class="text-muted">Strength Level</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="progress mb-3">
+                                            <div id="strengthBar" class="progress-bar bg-success" role="progressbar" style="width: 0%"></div>
+                                        </div>
+                                        
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <h6><i class="fas fa-info-circle"></i> Details</h6>
+                                                <ul id="detailsList" class="list-unstyled">
+                                                </ul>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <h6><i class="fas fa-exclamation-triangle"></i> Feedback</h6>
+                                                <ul id="feedbackList" class="list-unstyled">
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="mt-3">
+                                            <h6><i class="fas fa-clock"></i> Estimated Crack Time</h6>
+                                            <p id="crackTime" class="text-warning">-</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Password Suggestions -->
+                                <div class="card mt-3" style="background: rgba(0, 0, 0, 0.3); border: 1px solid var(--accent-green);">
+                                    <div class="card-header">
+                                        <h6><i class="fas fa-lightbulb"></i> Password Tips</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <ul id="suggestionsList" class="list-unstyled">
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>`
     };
     
@@ -661,6 +770,119 @@ function closeModal() {
     if (modal) {
         modal.hide();
     }
+}
+
+function togglePasswordVisibility() {
+    const passwordInput = document.getElementById('passwordInput');
+    const toggleIcon = document.getElementById('toggleIcon');
+    
+    if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        toggleIcon.className = 'fas fa-eye-slash';
+    } else {
+        passwordInput.type = 'password';
+        toggleIcon.className = 'fas fa-eye';
+    }
+}
+
+function analyzePassword(event) {
+    event.preventDefault();
+    
+    const form = document.getElementById('passwordAnalyzerForm');
+    const formData = new FormData(form);
+    const resultsDiv = document.getElementById('analysisResults');
+    
+    // Show loading state
+    const submitBtn = form.querySelector('button[type="submit"]');
+    const originalText = submitBtn.innerHTML;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Analyzing...';
+    submitBtn.disabled = true;
+    
+    fetch('{{ url_for('analyze_password') }}', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.error) {
+            alert('Error: ' + data.error);
+        } else {
+            displayAnalysisResults(data.analysis, data.suggestions);
+            resultsDiv.style.display = 'block';
+        }
+    })
+    .catch(error => {
+        alert('Error: ' + error);
+    })
+    .finally(() => {
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+    });
+    
+    return false;
+}
+
+function displayAnalysisResults(analysis, suggestions) {
+    // Update score and level
+    document.getElementById('strengthScore').textContent = analysis.score;
+    document.getElementById('strengthLevel').textContent = analysis.strength;
+    
+    // Update progress bar
+    const strengthBar = document.getElementById('strengthBar');
+    strengthBar.style.width = analysis.score + '%';
+    
+    // Set colors based on strength
+    const colorClass = analysis.strength_color === 'success' ? 'bg-success' : 
+                      analysis.strength_color === 'info' ? 'bg-info' :
+                      analysis.strength_color === 'warning' ? 'bg-warning' : 'bg-danger';
+    strengthBar.className = 'progress-bar ' + colorClass;
+    
+    // Update text colors
+    const scoreElement = document.getElementById('strengthScore');
+    const levelElement = document.getElementById('strengthLevel');
+    scoreElement.className = 'text-' + analysis.strength_color;
+    levelElement.className = 'text-' + analysis.strength_color;
+    
+    // Display details
+    const detailsList = document.getElementById('detailsList');
+    detailsList.innerHTML = '';
+    
+    const details = [
+        { label: 'Length', value: analysis.details.length + ' characters', score: analysis.details.length_score },
+        { label: 'Character Variety', value: analysis.details.character_variety.variety_count + '/4 types', score: analysis.details.variety_score },
+        { label: 'Entropy', value: analysis.entropy + ' bits' },
+        { label: 'Common Password', value: analysis.details.is_common_password ? 'Yes ⚠️' : 'No ✓' }
+    ];
+    
+    details.forEach(detail => {
+        const li = document.createElement('li');
+        li.innerHTML = '<strong>' + detail.label + ':</strong> ' + detail.value;
+        if (detail.score) {
+            li.innerHTML += ' <small class="text-muted">(' + detail.score + ')</small>';
+        }
+        detailsList.appendChild(li);
+    });
+    
+    // Display feedback
+    const feedbackList = document.getElementById('feedbackList');
+    feedbackList.innerHTML = '';
+    analysis.feedback.forEach(feedback => {
+        const li = document.createElement('li');
+        li.innerHTML = '<i class="fas fa-arrow-right text-warning"></i> ' + feedback;
+        feedbackList.appendChild(li);
+    });
+    
+    // Display crack time
+    document.getElementById('crackTime').textContent = analysis.estimated_crack_time;
+    
+    // Display suggestions
+    const suggestionsList = document.getElementById('suggestionsList');
+    suggestionsList.innerHTML = '';
+    suggestions.forEach(suggestion => {
+        const li = document.createElement('li');
+        li.innerHTML = '<i class="fas fa-lightbulb text-success"></i> ' + suggestion;
+        suggestionsList.appendChild(li);
+    });
 }
 </script>
 {% endblock %}

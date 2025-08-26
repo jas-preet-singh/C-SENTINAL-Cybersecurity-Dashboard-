@@ -1,6 +1,6 @@
 # Overview
 
-CyberSec Dashboard is a comprehensive Flask-based cybersecurity web application designed for security professionals, researchers, and enthusiasts. The platform provides a suite of security tools including hash calculation, file encryption/decryption, password cracking, vulnerability scanning, and malware detection. The application features a dark Matrix-themed UI with neon green accents and animated background effects, creating an immersive cybersecurity environment.
+CyberSec Dashboard is a comprehensive Flask-based cybersecurity web application designed for security professionals, researchers, and enthusiasts. The platform provides a suite of 8 security tools including hash calculation, file encryption/decryption, password cracking, vulnerability scanning, malware detection, and password strength analysis. The application features a dark Matrix-themed UI with neon green accents and animated background effects, creating an immersive cybersecurity environment.
 
 # User Preferences
 
@@ -32,10 +32,12 @@ Preferred communication style: Simple, everyday language.
 ## Security Modules
 - **Hash Calculator**: MD5, SHA-1, SHA-256, SHA-512 generation and comparison
 - **File Encryption**: AES encryption/decryption with PBKDF2 key derivation
-- **Password Cracker**: Brute force attack simulation for PDF, ZIP, DOCX files
+- **Password Cracker**: Brute force attack simulation for PDF, ZIP, DOCX files with real-time progress
 - **URL Scanner**: Basic safety checks for suspicious patterns and connectivity
 - **Vulnerability Scanner**: SQLi/XSS detection and passive security analysis
 - **Malware Scanner**: File analysis for potential threats
+- **Hash Comparison**: Side-by-side hash comparison for file integrity verification
+- **Password Strength Analyzer**: Comprehensive password security analysis with entropy calculation, pattern detection, and detailed recommendations
 
 ## Authorization System
 - **Role-based Access**: User and admin roles with different permission levels
