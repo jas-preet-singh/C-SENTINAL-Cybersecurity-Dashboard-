@@ -52,7 +52,46 @@ def about():
 @require_login
 def dashboard():
     """Main dashboard with all security modules"""
-    return render_template('dashboard.html')
+    # Get service usage statistics from ActivityLog
+    service_usage = {}
+    
+    # Define all 9 services with their action names and display info
+    services = {
+        'hash_calculation': {'name': 'Hash Calculator', 'icon': 'fas fa-calculator'},
+        'file_encryption': {'name': 'File Encryption', 'icon': 'fas fa-lock'},
+        'file_decryption': {'name': 'File Decryption', 'icon': 'fas fa-unlock'},
+        'brute_force_start': {'name': 'Password Cracker', 'icon': 'fas fa-hammer'},
+        'hash_comparison': {'name': 'Hash Comparison', 'icon': 'fas fa-balance-scale'},
+        'url_scan': {'name': 'URL Scanner', 'icon': 'fas fa-link'},
+        'file_scan': {'name': 'Malware Scanner', 'icon': 'fas fa-shield-virus'},
+        'vulnerability_scan': {'name': 'Vulnerability Scanner', 'icon': 'fas fa-bug'},
+        'password_analysis': {'name': 'Password Analyzer', 'icon': 'fas fa-key'},
+        'network_tools': {'name': 'Network Tools', 'icon': 'fas fa-network-wired'}
+    }
+    
+    # Count usage for each service from ActivityLog
+    for action_name, service_info in services.items():
+        count = ActivityLog.query.filter_by(action=action_name).count()
+        
+        # Also count network tool specific actions for the network tools category
+        if action_name == 'network_tools':
+            network_actions = ['network_ping', 'network_dns', 'network_portscan', 
+                             'network_traceroute', 'network_whois', 'network_info']
+            network_count = 0
+            for net_action in network_actions:
+                network_count += ActivityLog.query.filter_by(action=net_action).count()
+            count = network_count
+        
+        service_usage[action_name] = {
+            'name': service_info['name'],
+            'icon': service_info['icon'],
+            'count': count
+        }
+    
+    # Sort services by usage count (descending)
+    sorted_services = sorted(service_usage.items(), key=lambda x: x[1]['count'], reverse=True)
+    
+    return render_template('dashboard.html', service_usage=sorted_services)
 
 @app.route('/activity')
 @require_login

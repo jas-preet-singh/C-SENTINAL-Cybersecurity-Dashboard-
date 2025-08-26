@@ -43,24 +43,14 @@
                     <h6><i class="fas fa-trophy"></i> Most Used Services</h6>
                 </div>
                 <div class="card-body">
+                    {% for service_key, service_data in service_usage %}
                     <div class="service-rank-item">
-                        <span class="rank-number">1</span>
-                        <i class="fas fa-lock rank-icon"></i>
-                        <span class="rank-name">File Encryption</span>
-                        <span class="rank-count">24 uses</span>
+                        <span class="rank-number">{{ loop.index }}</span>
+                        <i class="{{ service_data.icon }} rank-icon"></i>
+                        <span class="rank-name">{{ service_data.name }}</span>
+                        <span class="rank-count">{{ service_data.count }} uses</span>
                     </div>
-                    <div class="service-rank-item">
-                        <span class="rank-number">2</span>
-                        <i class="fas fa-calculator rank-icon"></i>
-                        <span class="rank-name">Hash Calculator</span>
-                        <span class="rank-count">18 uses</span>
-                    </div>
-                    <div class="service-rank-item">
-                        <span class="rank-number">3</span>
-                        <i class="fas fa-bug rank-icon"></i>
-                        <span class="rank-name">Vulnerability Scanner</span>
-                        <span class="rank-count">12 uses</span>
-                    </div>
+                    {% endfor %}
                 </div>
             </div>
         </div>
