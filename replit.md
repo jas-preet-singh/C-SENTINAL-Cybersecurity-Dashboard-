@@ -1,6 +1,6 @@
 # Overview
 
-CyberSec Dashboard is a comprehensive Flask-based cybersecurity web application designed for security professionals, researchers, and enthusiasts. The platform provides a suite of 8 security tools including hash calculation, file encryption/decryption, password cracking, vulnerability scanning, malware detection, and password strength analysis. The application features a dark Matrix-themed UI with neon green accents and animated background effects, creating an immersive cybersecurity environment.
+CyberSec Dashboard is a comprehensive Flask-based cybersecurity web application designed for security professionals, researchers, and enthusiasts. The platform provides a suite of 9 security tools including hash calculation, file encryption/decryption, password cracking, vulnerability scanning, malware detection, password strength analysis, and comprehensive network diagnostic tools. The application features a dark Matrix-themed UI with neon green accents and animated background effects, creating an immersive cybersecurity environment.
 
 # User Preferences
 
@@ -14,6 +14,7 @@ Preferred communication style: Simple, everyday language.
 - **Styling**: Custom CSS with CSS variables for consistent theming and glowing hover effects
 - **JavaScript**: Vanilla JavaScript for interactive features and Matrix rain animation
 - **Responsive Design**: 3-column desktop layout that collapses to single-column on mobile devices
+- **Module Navigation**: Dynamic modal system with URL parameter support for direct module access
 
 ## Backend Architecture
 - **Framework**: Flask with SQLAlchemy ORM for database operations
@@ -21,6 +22,8 @@ Preferred communication style: Simple, everyday language.
 - **File Handling**: Werkzeug secure filename handling with 50MB upload limit
 - **Security**: CSRF protection, input validation, and file MIME type restrictions
 - **Architecture Pattern**: Blueprint-based modular design for scalable route organization
+- **Network Operations**: Container-optimized network diagnostic tools with fallback implementations
+- **Activity Logging**: Comprehensive logging system for all security operations and network diagnostics
 
 ## Database Schema
 - **Users Table**: Stores user profiles with role-based access (user/admin)
@@ -38,6 +41,7 @@ Preferred communication style: Simple, everyday language.
 - **Malware Scanner**: File analysis for potential threats
 - **Hash Comparison**: Side-by-side hash comparison for file integrity verification
 - **Password Strength Analyzer**: Comprehensive password security analysis with entropy calculation, pattern detection, and detailed recommendations
+- **Network Tools**: Comprehensive network diagnostic utilities including ping, DNS lookup, port scanning, traceroute, WHOIS lookup, and network information analysis
 
 ## Authorization System
 - **Role-based Access**: User and admin roles with different permission levels
@@ -70,6 +74,18 @@ Preferred communication style: Simple, everyday language.
 - **JWT**: JSON Web Token handling for authentication tokens
 - **bcrypt**: Password hashing (implied for secure authentication)
 
+## Network Diagnostic Tools
+- **socket**: Built-in Python library for network connections and port scanning
+- **subprocess**: System command execution for network utilities
+- **re**: Regular expressions for parsing network command outputs
+- **time**: Timing measurements for connectivity tests
+
+## System Dependencies
+- **iputils**: Network utilities package providing ping functionality
+- **traceroute**: Network route tracing utility for path analysis
+- **whois**: Domain registration information lookup utility
+- **dnsutils**: DNS lookup and resolution utilities
+
 ## Database Configuration
 - **SQLAlchemy**: Database abstraction layer with connection pooling
 - **Database URL**: Configured via environment variable for flexible deployment
@@ -79,3 +95,26 @@ Preferred communication style: Simple, everyday language.
 - **SESSION_SECRET**: Environment variable for Flask session encryption
 - **DATABASE_URL**: Database connection string from environment
 - **File Upload Directory**: Configurable upload folder with size restrictions
+
+# Recent Changes
+
+## Network Tools Implementation (Latest Update)
+- **Complete Network Diagnostic Suite**: 6 comprehensive network tools in tabbed interface
+- **Container-Optimized Implementation**: Custom implementations for container environments without raw socket access
+- **Ping Tool**: TCP connectivity testing with timing statistics and packet loss calculation
+- **DNS Lookup**: Multi-record type resolution (A, AAAA, MX, NS, TXT, CNAME)
+- **Port Scanner**: TCP port scanning with configurable port ranges (security limited to 50 ports)
+- **Traceroute**: Network path analysis with estimated route information and actual connectivity testing
+- **WHOIS Lookup**: Domain information retrieval with HTTP fallback when traditional WHOIS unavailable
+- **Network Info**: Local network status and connectivity analysis
+- **Professional UI**: Bootstrap 5 tabbed interface with real-time results and error handling
+- **Activity Logging**: All network operations logged for security monitoring
+- **Module Navigation**: Enhanced home page integration with URL parameter redirection to dashboard
+- **Error Resilience**: Comprehensive fallback mechanisms for constrained environments
+
+## Security & Performance Features
+- **Input Validation**: All network inputs sanitized and validated
+- **Rate Limiting**: Port scanning limited to prevent abuse
+- **Timeout Protection**: All network operations have configurable timeouts
+- **Fallback Implementations**: Alternative methods when system commands unavailable
+- **Real-time Results**: Dynamic result display with formatted output and statistics
