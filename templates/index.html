@@ -503,10 +503,25 @@
 {% block scripts %}
 <script>
 function openNetworkToolsModal() {
+    console.log('Opening Network Tools modal...');
     const networkModal = document.getElementById('networkModal');
+    console.log('Network modal element:', networkModal);
+    
     if (networkModal) {
-        const modal = new bootstrap.Modal(networkModal);
-        modal.show();
+        try {
+            const modal = new bootstrap.Modal(networkModal);
+            modal.show();
+            console.log('Modal shown successfully');
+        } catch (error) {
+            console.error('Error showing modal:', error);
+            // Fallback: try to show modal directly
+            networkModal.style.display = 'block';
+            networkModal.classList.add('show');
+            document.body.classList.add('modal-open');
+        }
+    } else {
+        console.error('Network modal element not found');
+        alert('Network Tools modal not found. Please refresh the page and try again.');
     }
 }
 
