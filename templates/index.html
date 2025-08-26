@@ -3,6 +3,8 @@
 {% block title %}Welcome - CyberSec Dashboard{% endblock %}
 
 {% block content %}
+{% if not current_user.is_authenticated %}
+<!-- Landing Page for Anonymous Users -->
 <div class="hero-section">
     <div class="container">
         <div class="row align-items-center min-vh-100">
@@ -40,19 +42,11 @@
                         </div>
                     </div>
                     
-                    {% if not current_user.is_authenticated %}
                     <div class="hero-cta">
                         <a href="{{ url_for('replit_auth.login') }}" class="btn btn-primary btn-glow btn-lg">
                             <i class="fas fa-sign-in-alt"></i> Get Started
                         </a>
                     </div>
-                    {% else %}
-                    <div class="hero-cta">
-                        <a href="{{ url_for('dashboard') }}" class="btn btn-primary btn-glow btn-lg">
-                            <i class="fas fa-tachometer-alt"></i> Go to Dashboard
-                        </a>
-                    </div>
-                    {% endif %}
                 </div>
             </div>
             
@@ -81,6 +75,162 @@
         </div>
     </div>
 </div>
+{% else %}
+<!-- Service Modules for Authenticated Users -->
+<div class="container">
+    <!-- Welcome Section -->
+    <div class="row mt-4 mb-5">
+        <div class="col-12">
+            <div class="welcome-card">
+                <h2>
+                    <i class="fas fa-home"></i> 
+                    Welcome back, {{ current_user.first_name or 'User' }}!
+                </h2>
+                <p>Access powerful cybersecurity tools and analyze potential threats.</p>
+                <div class="mt-3">
+                    <a href="{{ url_for('dashboard') }}" class="btn btn-secondary btn-glow me-3">
+                        <i class="fas fa-chart-bar"></i> View Analytics Dashboard
+                    </a>
+                    <a href="{{ url_for('activity') }}" class="btn btn-outline-primary">
+                        <i class="fas fa-history"></i> View Activity History
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Security Modules Grid -->
+    <div class="row">
+        <!-- Hash Calculator -->
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card module-card overview-card">
+                <div class="card-body text-center">
+                    <div class="module-icon-large">
+                        <i class="fas fa-calculator"></i>
+                    </div>
+                    <h5 class="card-title">Hash Calculator</h5>
+                    <p class="card-text">Generate secure hash values using multiple algorithms</p>
+                    <button class="btn btn-primary btn-glow" onclick="openModule('hash')">
+                        <i class="fas fa-external-link-alt"></i> Click to use
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- File Encryption -->
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card module-card overview-card">
+                <div class="card-body text-center">
+                    <div class="module-icon-large">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <h5 class="card-title">File Encrypt/Decrypt</h5>
+                    <p class="card-text">Secure files with advanced encryption algorithms</p>
+                    <button class="btn btn-primary btn-glow" onclick="openModule('encrypt')">
+                        <i class="fas fa-external-link-alt"></i> Click to use
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Brute Force Simulator -->
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card module-card overview-card">
+                <div class="card-body text-center">
+                    <div class="module-icon-large">
+                        <i class="fas fa-hammer"></i>
+                    </div>
+                    <h5 class="card-title">Brute Force Simulator</h5>
+                    <p class="card-text">Demonstrate password vulnerability concepts</p>
+                    <button class="btn btn-primary btn-glow" onclick="openModule('brute')">
+                        <i class="fas fa-external-link-alt"></i> Click to use
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Hash Comparison -->
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card module-card overview-card">
+                <div class="card-body text-center">
+                    <div class="module-icon-large">
+                        <i class="fas fa-balance-scale"></i>
+                    </div>
+                    <h5 class="card-title">Hash Comparison</h5>
+                    <p class="card-text">Compare hash values to detect file changes</p>
+                    <button class="btn btn-primary btn-glow" onclick="openModule('compare')">
+                        <i class="fas fa-external-link-alt"></i> Click to use
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- URL & Malware Scanner -->
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card module-card overview-card">
+                <div class="card-body text-center">
+                    <div class="module-icon-large">
+                        <i class="fas fa-globe"></i>
+                    </div>
+                    <h5 class="card-title">URL & Malware Scanner</h5>
+                    <p class="card-text">Identify malicious URLs and phishing attempts</p>
+                    <button class="btn btn-primary btn-glow" onclick="openModule('scanner')">
+                        <i class="fas fa-external-link-alt"></i> Click to use
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Vulnerability Scanner -->
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card module-card overview-card">
+                <div class="card-body text-center">
+                    <div class="module-icon-large">
+                        <i class="fas fa-bug"></i>
+                    </div>
+                    <h5 class="card-title">Vulnerability Scanner</h5>
+                    <p class="card-text">Analyze websites for security vulnerabilities</p>
+                    <button class="btn btn-primary btn-glow" onclick="openModule('vuln')">
+                        <i class="fas fa-external-link-alt"></i> Click to use
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Password Strength Analyzer -->
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card module-card overview-card">
+                <div class="card-body text-center">
+                    <div class="module-icon-large">
+                        <i class="fas fa-key"></i>
+                    </div>
+                    <h5 class="card-title">Password Strength Analyzer</h5>
+                    <p class="card-text">Analyze password security and get strength recommendations</p>
+                    <button class="btn btn-primary btn-glow" onclick="openModule('password')">
+                        <i class="fas fa-external-link-alt"></i> Click to use
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Network Tools -->
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card module-card overview-card">
+                <div class="card-body text-center">
+                    <div class="module-icon-large">
+                        <i class="fas fa-network-wired"></i>
+                    </div>
+                    <h5 class="card-title">Network Tools</h5>
+                    <p class="card-text">Network analysis and diagnostic utilities</p>
+                    <button class="btn btn-primary btn-glow" onclick="openModule('network')">
+                        <i class="fas fa-external-link-alt"></i> Click to use
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
 
 <!-- Educational Section -->
 <section class="education-section py-5">

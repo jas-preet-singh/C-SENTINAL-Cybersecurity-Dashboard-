@@ -34,9 +34,7 @@ def log_activity(action, details=None):
 
 @app.route('/')
 def index():
-    """Landing page for anonymous users, dashboard for authenticated users"""
-    if current_user.is_authenticated:
-        return redirect(url_for('dashboard'))
+    """Home page with service modules for authenticated users, landing page for anonymous users"""
     return render_template('index.html')
 
 @app.route('/services')
