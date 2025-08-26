@@ -48,6 +48,49 @@ def about():
     """About us page"""
     return render_template('about.html')
 
+# Individual service GET routes for direct access from home page
+@app.route('/hash-calculator')
+@require_login
+def hash_calculator_page():
+    """Hash Calculator service page"""
+    return render_template('services/hash_calculator.html')
+
+@app.route('/file-encryption')
+@require_login  
+def file_encryption_page():
+    """File Encryption service page"""
+    return render_template('services/file_encryption.html')
+
+@app.route('/password-cracker')
+@require_login
+def password_cracker_page():
+    """Password Cracker service page"""
+    return render_template('services/password_cracker.html')
+
+@app.route('/hash-comparison')
+@require_login
+def hash_comparison_page():
+    """Hash Comparison service page"""
+    return render_template('services/hash_comparison.html')
+
+@app.route('/url-scanner')
+@require_login
+def url_scanner_page():
+    """URL & Malware Scanner service page"""
+    return render_template('services/url_scanner.html')
+
+@app.route('/vulnerability-scanner')
+@require_login
+def vulnerability_scanner_page():
+    """Vulnerability Scanner service page"""
+    return render_template('services/vulnerability_scanner.html')
+
+@app.route('/password-analyzer')
+@require_login
+def password_analyzer_page():
+    """Password Strength Analyzer service page"""
+    return render_template('services/password_analyzer.html')
+
 @app.route('/dashboard')
 @require_login
 def dashboard():
