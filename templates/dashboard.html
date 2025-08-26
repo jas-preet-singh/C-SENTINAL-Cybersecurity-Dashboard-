@@ -161,22 +161,9 @@
     
     <!-- Additional Analytics Row -->
     <div class="row mt-4">
-        <!-- Security Score Gauge -->
-        <div class="col-lg-4 mb-4">
-            <div class="card analytics-card">
-                <div class="card-header">
-                    <h6><i class="fas fa-shield-alt"></i> Security Score</h6>
-                </div>
-                <div class="card-body text-center">
-                    <canvas id="securityScoreGauge" width="200" height="200"></canvas>
-                    <h4 class="mt-3 text-success" id="securityScoreText">85/100</h4>
-                    <small class="text-muted">Based on recent activity</small>
-                </div>
-            </div>
-        </div>
         
         <!-- Top Services -->
-        <div class="col-lg-4 mb-4">
+        <div class="col-lg-6 mb-4">
             <div class="card analytics-card">
                 <div class="card-header">
                     <h6><i class="fas fa-trophy"></i> Most Used Services</h6>
@@ -205,7 +192,7 @@
         </div>
         
         <!-- Real-time Stats -->
-        <div class="col-lg-4 mb-4">
+        <div class="col-lg-6 mb-4">
             <div class="card analytics-card">
                 <div class="card-header">
                     <h6><i class="fas fa-pulse"></i> Real-time Statistics</h6>
@@ -882,29 +869,6 @@ function initializeCharts() {
         }
     });
 
-    // Security Score Gauge (Doughnut with center text)
-    const gaugeCtx = document.getElementById('securityScoreGauge').getContext('2d');
-    new Chart(gaugeCtx, {
-        type: 'doughnut',
-        data: {
-            datasets: [{
-                data: [85, 15],
-                backgroundColor: ['#00ff66', 'rgba(255, 255, 255, 0.1)'],
-                borderWidth: 0,
-                cutout: '80%'
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            rotation: -90,
-            circumference: 180,
-            plugins: {
-                legend: { display: false },
-                tooltip: { enabled: false }
-            }
-        }
-    });
 
     // Update real-time stats with animation
     updateRealTimeStats();
