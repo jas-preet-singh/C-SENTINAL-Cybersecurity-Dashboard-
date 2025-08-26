@@ -681,6 +681,155 @@ footer small {
     backdrop-filter: blur(10px);
 }
 
+/* About Page Professional Styling */
+.stats-row .stat-item {
+    text-align: center;
+    padding: 15px;
+}
+
+.stats-row .stat-number {
+    color: var(--accent-green);
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.stats-row .stat-label {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    margin-bottom: 0;
+}
+
+.company-overview-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--accent-green);
+}
+
+.company-highlights .highlight-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 15px;
+    border-radius: 8px;
+    background: rgba(0, 255, 102, 0.1);
+}
+
+.company-highlights .highlight-item i {
+    font-size: 2rem;
+    color: var(--accent-green);
+    margin-right: 15px;
+    min-width: 40px;
+}
+
+.company-highlights .highlight-item h5 {
+    color: var(--text-primary);
+    margin-bottom: 5px;
+}
+
+.company-highlights .highlight-item p {
+    color: var(--text-secondary);
+    margin-bottom: 0;
+    font-size: 0.9rem;
+}
+
+.mission-vision-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--accent-green);
+    transition: all 0.3s ease;
+}
+
+.mission-vision-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 255, 102, 0.2);
+}
+
+.mv-icon {
+    font-size: 3rem;
+    color: var(--accent-green);
+    margin-bottom: 20px;
+}
+
+.mv-text {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--text-secondary);
+}
+
+.client-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--accent-green);
+    transition: all 0.3s ease;
+}
+
+.client-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 255, 102, 0.15);
+}
+
+.client-icon {
+    font-size: 2.5rem;
+    color: var(--accent-green);
+    margin-bottom: 15px;
+}
+
+.client-stats {
+    margin-top: 15px;
+}
+
+.client-stats .badge {
+    font-size: 0.8rem;
+    padding: 8px 12px;
+}
+
+.partnership-card, .contact-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--accent-green);
+}
+
+.partnership-list {
+    list-style: none;
+    padding: 0;
+}
+
+.partnership-list li {
+    margin-bottom: 10px;
+    font-size: 0.95rem;
+}
+
+.partnership-list li i {
+    margin-right: 10px;
+}
+
+.contact-info .contact-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    padding: 10px;
+    border-radius: 5px;
+    background: rgba(0, 255, 102, 0.05);
+}
+
+.contact-info .contact-item i {
+    color: var(--accent-green);
+    margin-right: 15px;
+    min-width: 20px;
+}
+
+.cta-trust-indicators {
+    border-top: 1px solid rgba(0, 255, 102, 0.2);
+    padding-top: 20px;
+}
+
+.cta-trust-indicators small {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.cta-trust-indicators i {
+    color: var(--accent-green);
+    margin-right: 5px;
+}
+
 /* Analytics Dashboard Styles */
 .analytics-card {
     background: rgba(26, 26, 26, 0.95);
