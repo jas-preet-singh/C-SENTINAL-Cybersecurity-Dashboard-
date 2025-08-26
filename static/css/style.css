@@ -1175,6 +1175,12 @@ canvas {
     margin-bottom: 0.5rem;
 }
 
+.feature-highlight p, .tech-item p {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
 .guarantee-item {
     padding: 1rem;
 }
@@ -1189,6 +1195,12 @@ canvas {
 .guarantee-item h5 {
     color: #ffc107;
     margin-bottom: 0.5rem;
+}
+
+.guarantee-item p {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    line-height: 1.4;
 }
 
 .mission-icon, .feature-icon, .value-icon, .audience-icon {
