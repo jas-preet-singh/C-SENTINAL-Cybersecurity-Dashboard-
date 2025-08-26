@@ -32,34 +32,34 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('index') }}">
+                        <a class="nav-link {{ 'active' if request.endpoint == 'index' else '' }}" href="{{ url_for('index') }}">
                             <i class="fas fa-home"></i> Home
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('services') }}">
+                        <a class="nav-link {{ 'active' if request.endpoint == 'services' else '' }}" href="{{ url_for('services') }}">
                             <i class="fas fa-shield-alt"></i> Services
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('about') }}">
+                        <a class="nav-link {{ 'active' if request.endpoint == 'about' else '' }}" href="{{ url_for('about') }}">
                             <i class="fas fa-info-circle"></i> About Us
                         </a>
                     </li>
                     {% if current_user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('dashboard') }}">
+                        <a class="nav-link {{ 'active' if request.endpoint == 'dashboard' else '' }}" href="{{ url_for('dashboard') }}">
                             <i class="fas fa-tachometer-alt"></i> Dashboard
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('activity') }}">
+                        <a class="nav-link {{ 'active' if request.endpoint == 'activity' else '' }}" href="{{ url_for('activity') }}">
                             <i class="fas fa-history"></i> Activity
                         </a>
                     </li>
                     {% if current_user.role == 'admin' %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('admin_panel') }}">
+                        <a class="nav-link {{ 'active' if request.endpoint == 'admin_panel' else '' }}" href="{{ url_for('admin_panel') }}">
                             <i class="fas fa-cog"></i> Admin
                         </a>
                     </li>
