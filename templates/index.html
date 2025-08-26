@@ -222,7 +222,7 @@
                     </div>
                     <h5 class="card-title">Network Tools</h5>
                     <p class="card-text">Network analysis and diagnostic utilities</p>
-                    <button class="btn btn-primary btn-glow" onclick="window.location.href='/dashboard?module=network'">
+                    <button class="btn btn-primary btn-glow" onclick="redirectToModule('network')">
                         <i class="fas fa-external-link-alt"></i> Click to use
                     </button>
                 </div>
@@ -301,4 +301,29 @@
         </div>
     </div>
 </section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function redirectToModule(moduleType) {
+    // Store the module preference
+    sessionStorage.setItem('selectedModule', moduleType);
+    
+    // Redirect to dashboard with module parameter
+    window.location.href = '/dashboard?module=' + moduleType;
+}
+
+// Auto-redirect other buttons too
+document.addEventListener('DOMContentLoaded', function() {
+    // Update all other module buttons to use the new function
+    const buttons = document.querySelectorAll('button[onclick*="window.location.href"]');
+    buttons.forEach(button => {
+        const onclick = button.getAttribute('onclick');
+        if (onclick && onclick.includes('/dashboard?module=')) {
+            const module = onclick.match(/module=(\w+)/)[1];
+            button.setAttribute('onclick', `redirectToModule('${module}')`);
+        }
+    });
+});
+</script>
 {% endblock %}

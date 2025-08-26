@@ -99,10 +99,18 @@
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Dashboard loaded successfully');
     
-    // Check for module parameter in URL
+    // Check for module parameter in URL or sessionStorage
     const urlParams = new URLSearchParams(window.location.search);
-    const moduleParam = urlParams.get('module');
+    let moduleParam = urlParams.get('module');
+    
+    // Also check sessionStorage for module preference
+    if (!moduleParam) {
+        moduleParam = sessionStorage.getItem('selectedModule');
+        sessionStorage.removeItem('selectedModule'); // Clean up
+    }
+    
     if (moduleParam) {
+        console.log('Auto-opening module:', moduleParam);
         // Auto-open the specified module
         setTimeout(() => {
             openModule(moduleParam);
