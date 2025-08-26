@@ -119,7 +119,7 @@ def encrypt():
             return redirect(url_for('dashboard'))
         
         # Save uploaded file
-        filename = secure_filename(file.filename)
+        filename = secure_filename(file.filename or 'unknown')
         file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(file_path)
         
@@ -161,7 +161,7 @@ def decrypt():
             return redirect(url_for('dashboard'))
         
         # Save uploaded file
-        filename = secure_filename(file.filename)
+        filename = secure_filename(file.filename or 'unknown')
         file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(file_path)
         
@@ -188,7 +188,7 @@ def start_brute():
         wordlist_type = request.form.get('wordlist', 'common')
         
         # Save uploaded file
-        filename = secure_filename(file.filename)
+        filename = secure_filename(file.filename or 'unknown')
         file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(file_path)
         
@@ -352,7 +352,7 @@ def scan_file_route():
         file = request.files['file']
         
         # Save uploaded file
-        filename = secure_filename(file.filename)
+        filename = secure_filename(file.filename or 'unknown')
         file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(file_path)
         
