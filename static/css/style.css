@@ -673,6 +673,92 @@ footer small {
     backdrop-filter: blur(10px);
 }
 
+/* Analytics Dashboard Styles */
+.analytics-card {
+    background: rgba(26, 26, 26, 0.95);
+    border: 1px solid var(--accent-green);
+    color: var(--text-light);
+    transition: all 0.3s ease;
+}
+
+.analytics-card:hover {
+    border-color: var(--accent-green);
+    box-shadow: 0 5px 15px rgba(0, 255, 102, 0.3);
+    transform: translateY(-2px);
+}
+
+.analytics-card .card-header {
+    background: rgba(0, 255, 102, 0.1);
+    border-bottom: 1px solid var(--accent-green);
+    color: var(--accent-green);
+    font-weight: 600;
+}
+
+/* Service Ranking Styles */
+.service-rank-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(0, 255, 102, 0.2);
+}
+
+.service-rank-item:last-child {
+    border-bottom: none;
+}
+
+.rank-number {
+    background: var(--accent-green);
+    color: var(--bg-dark);
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 12px;
+    margin-right: 10px;
+}
+
+.rank-icon {
+    color: var(--accent-green);
+    margin-right: 10px;
+    width: 20px;
+}
+
+.rank-name {
+    flex: 1;
+    color: var(--text-light);
+    font-weight: 500;
+}
+
+.rank-count {
+    color: var(--text-muted);
+    font-size: 0.9em;
+}
+
+/* Statistics Items */
+.stat-item {
+    text-align: center;
+    padding: 10px 0;
+}
+
+.stat-number {
+    font-size: 2rem;
+    font-weight: bold;
+    margin: 0;
+    background: linear-gradient(45deg, var(--accent-green), #00cc66);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Chart container styling */
+canvas {
+    max-width: 100% !important;
+    height: auto !important;
+}
+
 .footer h5, .footer h6 {
     color: var(--accent-green);
 }

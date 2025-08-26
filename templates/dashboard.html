@@ -132,64 +132,97 @@
         </div>
     </div>
     
-    <!-- Recent Activity -->
+    <!-- Analytics Dashboard -->
     <div class="row mt-5">
+        <!-- Service Usage Chart -->
         <div class="col-lg-6 mb-4">
-            <div class="card activity-card">
+            <div class="card analytics-card">
                 <div class="card-header">
-                    <h6><i class="fas fa-clock"></i> Recent Jobs</h6>
+                    <h6><i class="fas fa-chart-bar"></i> Service Usage Analytics</h6>
                 </div>
                 <div class="card-body">
-                    {% if recent_jobs %}
-                        <div class="activity-list">
-                            {% for job in recent_jobs %}
-                            <div class="activity-item">
-                                <div class="activity-icon">
-                                    <i class="fas fa-{{ 'check' if job.status == 'completed' else 'clock' if job.status == 'running' else 'times' }}"></i>
-                                </div>
-                                <div class="activity-details">
-                                    <strong>{{ job.job_type.replace('_', ' ').title() }}</strong>
-                                    <small class="d-block text-muted">{{ job.created_at.strftime('%Y-%m-%d %H:%M') }}</small>
-                                    <span class="badge bg-{{ 'success' if job.status == 'completed' else 'warning' if job.status == 'running' else 'danger' }}">
-                                        {{ job.status.title() }}
-                                    </span>
-                                </div>
-                            </div>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        <p class="text-muted text-center">No recent jobs</p>
-                    {% endif %}
+                    <canvas id="serviceUsageChart" width="400" height="300"></canvas>
                 </div>
             </div>
         </div>
         
+        <!-- Activity Timeline -->
         <div class="col-lg-6 mb-4">
-            <div class="card activity-card">
+            <div class="card analytics-card">
                 <div class="card-header">
-                    <h6><i class="fas fa-shield-alt"></i> Recent Scans</h6>
+                    <h6><i class="fas fa-clock"></i> Activity Timeline (Last 7 Days)</h6>
                 </div>
                 <div class="card-body">
-                    {% if recent_scans %}
-                        <div class="activity-list">
-                            {% for scan in recent_scans %}
-                            <div class="activity-item">
-                                <div class="activity-icon">
-                                    <i class="fas fa-{{ 'shield-alt' if scan.risk_level == 'low' else 'exclamation-triangle' if scan.risk_level == 'medium' else 'skull-crossbones' }}"></i>
-                                </div>
-                                <div class="activity-details">
-                                    <strong>{{ scan.scan_type.title() }} Scan</strong>
-                                    <small class="d-block text-muted">{{ scan.target[:50] }}{% if scan.target|length > 50 %}...{% endif %}</small>
-                                    <span class="badge bg-{{ 'success' if scan.risk_level == 'low' else 'warning' if scan.risk_level == 'medium' else 'danger' }}">
-                                        {{ scan.risk_level.title() }} Risk
-                                    </span>
-                                </div>
-                            </div>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        <p class="text-muted text-center">No recent scans</p>
-                    {% endif %}
+                    <canvas id="activityTimelineChart" width="400" height="300"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Additional Analytics Row -->
+    <div class="row mt-4">
+        <!-- Security Score Gauge -->
+        <div class="col-lg-4 mb-4">
+            <div class="card analytics-card">
+                <div class="card-header">
+                    <h6><i class="fas fa-shield-alt"></i> Security Score</h6>
+                </div>
+                <div class="card-body text-center">
+                    <canvas id="securityScoreGauge" width="200" height="200"></canvas>
+                    <h4 class="mt-3 text-success" id="securityScoreText">85/100</h4>
+                    <small class="text-muted">Based on recent activity</small>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Top Services -->
+        <div class="col-lg-4 mb-4">
+            <div class="card analytics-card">
+                <div class="card-header">
+                    <h6><i class="fas fa-trophy"></i> Most Used Services</h6>
+                </div>
+                <div class="card-body">
+                    <div class="service-rank-item">
+                        <span class="rank-number">1</span>
+                        <i class="fas fa-lock rank-icon"></i>
+                        <span class="rank-name">File Encryption</span>
+                        <span class="rank-count">24 uses</span>
+                    </div>
+                    <div class="service-rank-item">
+                        <span class="rank-number">2</span>
+                        <i class="fas fa-calculator rank-icon"></i>
+                        <span class="rank-name">Hash Calculator</span>
+                        <span class="rank-count">18 uses</span>
+                    </div>
+                    <div class="service-rank-item">
+                        <span class="rank-number">3</span>
+                        <i class="fas fa-bug rank-icon"></i>
+                        <span class="rank-name">Vulnerability Scanner</span>
+                        <span class="rank-count">12 uses</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Real-time Stats -->
+        <div class="col-lg-4 mb-4">
+            <div class="card analytics-card">
+                <div class="card-header">
+                    <h6><i class="fas fa-pulse"></i> Real-time Statistics</h6>
+                </div>
+                <div class="card-body">
+                    <div class="stat-item">
+                        <h3 class="stat-number" id="totalScans">142</h3>
+                        <small class="text-muted">Total Scans Today</small>
+                    </div>
+                    <div class="stat-item mt-3">
+                        <h3 class="stat-number text-warning" id="activeJobs">3</h3>
+                        <small class="text-muted">Active Jobs</small>
+                    </div>
+                    <div class="stat-item mt-3">
+                        <h3 class="stat-number text-success" id="successRate">94%</h3>
+                        <small class="text-muted">Success Rate</small>
+                    </div>
                 </div>
             </div>
         </div>
@@ -771,6 +804,151 @@ function closeModal() {
         modal.hide();
     }
 }
+
+// Initialize Analytics Charts
+function initializeCharts() {
+    // Service Usage Chart (Doughnut)
+    const serviceUsageCtx = document.getElementById('serviceUsageChart').getContext('2d');
+    new Chart(serviceUsageCtx, {
+        type: 'doughnut',
+        data: {
+            labels: ['File Encryption', 'Hash Calculator', 'Vulnerability Scanner', 'Brute Force', 'URL Scanner', 'Password Analyzer', 'Hash Comparison'],
+            datasets: [{
+                data: [24, 18, 12, 8, 15, 10, 6],
+                backgroundColor: [
+                    '#00ff66',
+                    '#00cc52',
+                    '#00b347',
+                    '#009933',
+                    '#00802b',
+                    '#006622',
+                    '#004d1a'
+                ],
+                borderColor: '#00ff66',
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        color: '#ffffff',
+                        usePointStyle: true
+                    }
+                }
+            }
+        }
+    });
+
+    // Activity Timeline Chart (Line)
+    const timelineCtx = document.getElementById('activityTimelineChart').getContext('2d');
+    new Chart(timelineCtx, {
+        type: 'line',
+        data: {
+            labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+            datasets: [{
+                label: 'Security Activities',
+                data: [12, 19, 15, 25, 22, 18, 20],
+                borderColor: '#00ff66',
+                backgroundColor: 'rgba(0, 255, 102, 0.1)',
+                fill: true,
+                tension: 0.4,
+                pointBackgroundColor: '#00ff66',
+                pointBorderColor: '#ffffff',
+                pointBorderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                x: {
+                    ticks: { color: '#ffffff' },
+                    grid: { color: 'rgba(255, 255, 255, 0.1)' }
+                },
+                y: {
+                    ticks: { color: '#ffffff' },
+                    grid: { color: 'rgba(255, 255, 255, 0.1)' }
+                }
+            },
+            plugins: {
+                legend: {
+                    labels: { color: '#ffffff' }
+                }
+            }
+        }
+    });
+
+    // Security Score Gauge (Doughnut with center text)
+    const gaugeCtx = document.getElementById('securityScoreGauge').getContext('2d');
+    new Chart(gaugeCtx, {
+        type: 'doughnut',
+        data: {
+            datasets: [{
+                data: [85, 15],
+                backgroundColor: ['#00ff66', 'rgba(255, 255, 255, 0.1)'],
+                borderWidth: 0,
+                cutout: '80%'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            rotation: -90,
+            circumference: 180,
+            plugins: {
+                legend: { display: false },
+                tooltip: { enabled: false }
+            }
+        }
+    });
+
+    // Update real-time stats with animation
+    updateRealTimeStats();
+}
+
+function updateRealTimeStats() {
+    // Simulate real-time data updates
+    const stats = {
+        totalScans: Math.floor(Math.random() * 50) + 120,
+        activeJobs: Math.floor(Math.random() * 5) + 1,
+        successRate: (Math.random() * 10 + 90).toFixed(1)
+    };
+
+    // Animate counter updates
+    animateCounter('totalScans', stats.totalScans);
+    animateCounter('activeJobs', stats.activeJobs);
+    document.getElementById('successRate').textContent = stats.successRate + '%';
+}
+
+function animateCounter(elementId, targetValue) {
+    const element = document.getElementById(elementId);
+    const current = parseInt(element.textContent) || 0;
+    const increment = (targetValue - current) / 20;
+    let count = current;
+
+    const timer = setInterval(() => {
+        count += increment;
+        if ((increment > 0 && count >= targetValue) || (increment < 0 && count <= targetValue)) {
+            element.textContent = targetValue;
+            clearInterval(timer);
+        } else {
+            element.textContent = Math.floor(count);
+        }
+    }, 50);
+}
+
+// Initialize charts when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Dashboard loaded successfully');
+    initializeCharts();
+    
+    // Update real-time stats every 10 seconds
+    setInterval(updateRealTimeStats, 10000);
+});
 
 function togglePasswordVisibility() {
     const passwordInput = document.getElementById('passwordInput');

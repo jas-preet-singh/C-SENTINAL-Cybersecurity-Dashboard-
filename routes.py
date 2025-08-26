@@ -53,9 +53,31 @@ def about():
 @require_login
 def dashboard():
     """Main dashboard with all security modules"""
-    recent_jobs = Job.query.filter_by(user_id=current_user.id).order_by(Job.created_at.desc()).limit(5).all()
-    recent_scans = ScanResult.query.filter_by(user_id=current_user.id).order_by(ScanResult.created_at.desc()).limit(5).all()
-    return render_template('dashboard.html', recent_jobs=recent_jobs, recent_scans=recent_scans)
+    return render_template('dashboard.html')
+
+@app.route('/activity')
+@require_login
+def activity():
+    """Activity history page"""
+    # Get recent jobs for current user
+    recent_jobs = Job.query.filter_by(user_id=current_user.id).order_by(Job.created_at.desc()).limit(10).all()
+    
+    # Get recent scans for current user
+    recent_scans = ScanResult.query.filter_by(user_id=current_user.id).order_by(ScanResult.created_at.desc()).limit(10).all()
+    
+    # Get statistics
+    total_jobs = Job.query.filter_by(user_id=current_user.id).count()
+    completed_jobs = Job.query.filter_by(user_id=current_user.id, status='completed').count()
+    running_jobs = Job.query.filter_by(user_id=current_user.id, status='running').count()
+    total_scans = ScanResult.query.filter_by(user_id=current_user.id).count()
+    
+    return render_template('activity.html', 
+                         recent_jobs=recent_jobs, 
+                         recent_scans=recent_scans,
+                         total_jobs=total_jobs,
+                         completed_jobs=completed_jobs,
+                         running_jobs=running_jobs,
+                         total_scans=total_scans)
 
 @app.route('/hash', methods=['POST'])
 @require_login
