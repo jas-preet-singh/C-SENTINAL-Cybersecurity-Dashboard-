@@ -98,6 +98,16 @@
 // Wait for everything to load
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Dashboard loaded successfully');
+    
+    // Check for module parameter in URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const moduleParam = urlParams.get('module');
+    if (moduleParam) {
+        // Auto-open the specified module
+        setTimeout(() => {
+            openModule(moduleParam);
+        }, 500);
+    }
 });
 
 function confirmLegality() {
