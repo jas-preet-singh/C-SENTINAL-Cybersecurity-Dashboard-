@@ -116,6 +116,17 @@ function confirmEthicalUse() {
     return confirm("I confirm that I own this website or have explicit written permission to perform security testing. Unauthorized scanning may be illegal.");
 }
 
+function openNetworkTools() {
+    // Open the Network Diagnostic Tools modal
+    const networkModal = document.getElementById('networkModal');
+    if (networkModal) {
+        const modal = new bootstrap.Modal(networkModal);
+        modal.show();
+    } else {
+        console.error('Network Tools modal not found');
+    }
+}
+
 function openModule(moduleType) {
     // Wait for DOM to be ready
     if (document.readyState === 'loading') {
