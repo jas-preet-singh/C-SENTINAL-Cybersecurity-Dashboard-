@@ -12,6 +12,7 @@ from utils.crypto_utils import encrypt_file, decrypt_file
 from utils.password_cracker import start_brute_force, check_job_status
 from utils.scanner_utils import scan_url, scan_file_for_malware, vulnerability_scan
 from utils.password_analyzer import analyze_password_strength, generate_password_suggestions
+from utils.network_utils import ping_host, dns_lookup, port_scan, traceroute, whois_lookup, network_info
 
 app.register_blueprint(make_replit_blueprint(), url_prefix="/auth")
 
@@ -412,6 +413,107 @@ def vulnerability_scan_route():
         flash(f'Vulnerability scan failed: {str(e)}', 'error')
     
     return redirect(url_for('dashboard'))
+
+@app.route('/network/ping', methods=['POST'])
+@require_login
+def network_ping():
+    """Ping a hostname or IP address"""
+    try:
+        hostname = request.form.get('hostname')
+        count = int(request.form.get('count', 4))
+        
+        if not hostname:
+            return jsonify({'success': False, 'error': 'Hostname is required'})
+        
+        result = ping_host(hostname, count)
+        log_activity('network_ping', f'Host: {hostname}')
+        return jsonify(result)
+        
+    except Exception as e:
+        return jsonify({'success': False, 'error': f'Ping failed: {str(e)}'})
+
+@app.route('/network/dns', methods=['POST'])
+@require_login
+def network_dns():
+    """DNS lookup for hostname"""
+    try:
+        hostname = request.form.get('hostname')
+        record_type = request.form.get('record_type', 'A')
+        
+        if not hostname:
+            return jsonify({'success': False, 'error': 'Hostname is required'})
+        
+        result = dns_lookup(hostname, record_type)
+        log_activity('network_dns', f'Host: {hostname}, Type: {record_type}')
+        return jsonify(result)
+        
+    except Exception as e:
+        return jsonify({'success': False, 'error': f'DNS lookup failed: {str(e)}'})
+
+@app.route('/network/portscan', methods=['POST'])
+@require_login
+def network_portscan():
+    """Port scan for hostname"""
+    try:
+        hostname = request.form.get('hostname')
+        ports = request.form.get('ports', '80,443,22,21,25,53,110,143,993,995')
+        
+        if not hostname:
+            return jsonify({'success': False, 'error': 'Hostname is required'})
+        
+        result = port_scan(hostname, ports)
+        log_activity('network_portscan', f'Host: {hostname}, Ports: {ports}')
+        return jsonify(result)
+        
+    except Exception as e:
+        return jsonify({'success': False, 'error': f'Port scan failed: {str(e)}'})
+
+@app.route('/network/traceroute', methods=['POST'])
+@require_login
+def network_traceroute():
+    """Traceroute to hostname"""
+    try:
+        hostname = request.form.get('hostname')
+        max_hops = int(request.form.get('max_hops', 15))
+        
+        if not hostname:
+            return jsonify({'success': False, 'error': 'Hostname is required'})
+        
+        result = traceroute(hostname, max_hops)
+        log_activity('network_traceroute', f'Host: {hostname}')
+        return jsonify(result)
+        
+    except Exception as e:
+        return jsonify({'success': False, 'error': f'Traceroute failed: {str(e)}'})
+
+@app.route('/network/whois', methods=['POST'])
+@require_login
+def network_whois():
+    """WHOIS lookup for domain"""
+    try:
+        domain = request.form.get('domain')
+        
+        if not domain:
+            return jsonify({'success': False, 'error': 'Domain is required'})
+        
+        result = whois_lookup(domain)
+        log_activity('network_whois', f'Domain: {domain}')
+        return jsonify(result)
+        
+    except Exception as e:
+        return jsonify({'success': False, 'error': f'WHOIS lookup failed: {str(e)}'})
+
+@app.route('/network/info', methods=['GET'])
+@require_login
+def network_info_route():
+    """Get network information"""
+    try:
+        result = network_info()
+        log_activity('network_info', 'Network information retrieved')
+        return jsonify(result)
+        
+    except Exception as e:
+        return jsonify({'success': False, 'error': f'Network info failed: {str(e)}'})
 
 @app.route('/admin')
 @require_login
