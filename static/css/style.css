@@ -340,6 +340,49 @@ footer small {
     color: var(--text-secondary) !important;
 }
 
+/* Comprehensive text visibility fixes */
+p, span, div, small, li, td, th, label, h1, h2, h3, h4, h5, h6 {
+    color: inherit;
+}
+
+/* Ensure all text elements have proper contrast */
+.text-muted, .text-secondary {
+    color: var(--text-muted) !important;
+}
+
+.form-text, small.form-text {
+    color: var(--text-secondary) !important;
+}
+
+/* Fix any potential Bootstrap overrides */
+.text-dark {
+    color: var(--text-primary) !important;
+}
+
+/* Ensure tab content text is visible */
+.tab-content, .tab-pane {
+    color: var(--text-primary);
+}
+
+.tab-content p, .tab-content div, .tab-content span, .tab-content label {
+    color: var(--text-secondary);
+}
+
+/* Modal text visibility */
+.modal-body, .modal-header, .modal-footer {
+    color: var(--text-primary);
+}
+
+.modal-body p, .modal-body div, .modal-body span, .modal-body small,
+.modal-body label, .modal-body li {
+    color: var(--text-secondary) !important;
+}
+
+/* Service page text visibility */
+.service-description, .info-card p, .info-card li {
+    color: var(--text-secondary) !important;
+}
+
 /* Alerts */
 .alert {
     border-radius: 10px;
@@ -865,7 +908,7 @@ footer small {
 
 .rank-number {
     background: var(--accent-green);
-    color: var(--bg-dark);
+    color: var(--bg-primary);
     width: 25px;
     height: 25px;
     border-radius: 50%;
