@@ -61,7 +61,17 @@ def detect_file_type(file_path):
     else:
         return 'unknown'
 
-def brute_force_worker(job_id, file_path, wordlist_type):
+def load_custom_wordlist(file_path):
+    """Load custom wordlist from file"""
+    try:
+        with open(file_path, 'r', encoding='utf-8') as f:
+            passwords = [line.strip() for line in f.readlines() if line.strip()]
+        return passwords
+    except Exception as e:
+        print(f"Error loading wordlist: {e}")
+        return COMMON_PASSWORDS
+
+def brute_force_worker(job_id, file_path, wordlist_type, custom_wordlist_path=None):
     """Background worker for brute force attack"""
     from app import app
     
@@ -72,7 +82,12 @@ def brute_force_worker(job_id, file_path, wordlist_type):
                 return
             
             file_type = detect_file_type(file_path)
-            passwords = WORDLIST_PASSWORDS.get(wordlist_type, COMMON_PASSWORDS)
+            
+            # Load passwords based on type
+            if wordlist_type == 'custom' and custom_wordlist_path:
+                passwords = load_custom_wordlist(custom_wordlist_path)
+            else:
+                passwords = WORDLIST_PASSWORDS.get(wordlist_type, COMMON_PASSWORDS)
             
             total_passwords = len(passwords)
             
@@ -81,6 +96,9 @@ def brute_force_worker(job_id, file_path, wordlist_type):
                 job = Job.query.get(job_id)
                 if job.status == 'cancelled':
                     break
+                
+                # Update current password being tested
+                job.result = f'Trying: {password}'
                 
                 # Try password based on file type
                 success = False
@@ -103,7 +121,7 @@ def brute_force_worker(job_id, file_path, wordlist_type):
                 job.progress = progress
                 db.session.commit()
                 
-                time.sleep(0.01)  # Small delay to prevent overwhelming
+                time.sleep(0.1)  # Small delay for better UX
             
             # If we get here, no password was found
             job.status = 'completed'
@@ -117,11 +135,11 @@ def brute_force_worker(job_id, file_path, wordlist_type):
             job.result = f'Error: {str(e)}'
             db.session.commit()
 
-def start_brute_force(job_id, file_path, wordlist_type):
+def start_brute_force(job_id, file_path, wordlist_type, custom_wordlist_path=None):
     """Start brute force attack in background thread"""
     thread = threading.Thread(
         target=brute_force_worker,
-        args=(job_id, file_path, wordlist_type)
+        args=(job_id, file_path, wordlist_type, custom_wordlist_path)
     )
     thread.daemon = True
     thread.start()

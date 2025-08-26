@@ -343,7 +343,7 @@ function getModalContent(moduleType) {
                                     Attempt brute force attacks on protected files (PDF, ZIP, Office documents) for password recovery.
                                 </small>
                             </div>
-                            <form method="POST" action="{{ url_for('start_brute') }}" enctype="multipart/form-data" onsubmit="return confirmLegality()">
+                            <form id="bruteForceForm" method="POST" action="{{ url_for('start_brute') }}" enctype="multipart/form-data" onsubmit="return startBruteForce(event)">
                                 <div class="mb-3">
                                     <label class="form-label">Protected File</label>
                                     <input type="file" name="file" class="form-control" accept=".pdf,.zip,.docx,.pptx,.xlsx" required>
@@ -351,16 +351,47 @@ function getModalContent(moduleType) {
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">Wordlist Type</label>
-                                    <select name="wordlist" class="form-select">
+                                    <select name="wordlist" class="form-select" id="wordlistSelect" onchange="toggleWordlistUpload()">
                                         <option value="common">Common Passwords</option>
                                         <option value="numbers">Numeric (0000-9999)</option>
                                         <option value="years">Years (1900-2029)</option>
+                                        <option value="custom">Custom Wordlist File</option>
                                     </select>
                                 </div>
-                                <button type="submit" class="btn btn-danger btn-glow w-100">
+                                <div class="mb-3" id="customWordlistDiv" style="display: none;">
+                                    <label class="form-label">Custom Wordlist File</label>
+                                    <input type="file" name="wordlist_file" class="form-control" accept=".txt">
+                                    <small class="form-text">Upload a text file with one password per line</small>
+                                </div>
+                                <button type="submit" class="btn btn-danger btn-glow w-100" id="startBruteBtn">
                                     <i class="fas fa-hammer"></i> Start Brute Force
                                 </button>
                             </form>
+                            
+                            <!-- Progress Display -->
+                            <div id="bruteProgress" style="display: none;" class="mt-4">
+                                <h6 class="text-warning"><i class="fas fa-cog fa-spin"></i> Brute Force in Progress</h6>
+                                <div class="progress mb-3">
+                                    <div id="progressBar" class="progress-bar bg-warning" role="progressbar" style="width: 0%"></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <small class="text-muted">Progress:</small>
+                                        <div id="progressText">0%</div>
+                                    </div>
+                                    <div class="col-6">
+                                        <small class="text-muted">Current Password:</small>
+                                        <div id="currentPassword">-</div>
+                                    </div>
+                                </div>
+                                <div class="mt-2">
+                                    <small class="text-muted">Status:</small>
+                                    <div id="statusText">Running...</div>
+                                </div>
+                                <button type="button" class="btn btn-secondary btn-sm mt-3" onclick="cancelBruteForce()">
+                                    <i class="fas fa-stop"></i> Cancel
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -484,6 +515,152 @@ function getModalContent(moduleType) {
     };
     
     return modals[moduleType] || '<div>Module not found</div>';
+}
+
+function confirmLegality() {
+    return confirm('I confirm that I have permission to test this file and will use this tool responsibly and legally.');
+}
+
+function confirmEthicalUse() {
+    return confirm('I confirm that I have permission to scan this website and will use this tool responsibly.');
+}
+
+function toggleWordlistUpload() {
+    const select = document.getElementById('wordlistSelect');
+    const customDiv = document.getElementById('customWordlistDiv');
+    
+    if (select.value === 'custom') {
+        customDiv.style.display = 'block';
+    } else {
+        customDiv.style.display = 'none';
+    }
+}
+
+let currentJobId = null;
+let progressInterval = null;
+
+function startBruteForce(event) {
+    event.preventDefault();
+    
+    if (!confirmLegality()) {
+        return false;
+    }
+    
+    const form = document.getElementById('bruteForceForm');
+    const formData = new FormData(form);
+    
+    // Hide form and show progress
+    form.style.display = 'none';
+    document.getElementById('bruteProgress').style.display = 'block';
+    
+    fetch('{{ url_for('start_brute') }}', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.error) {
+            alert('Error: ' + data.error);
+            resetBruteForceForm();
+        } else {
+            currentJobId = data.job_id;
+            startProgressMonitoring();
+        }
+    })
+    .catch(error => {
+        alert('Error: ' + error);
+        resetBruteForceForm();
+    });
+    
+    return false;
+}
+
+function startProgressMonitoring() {
+    progressInterval = setInterval(() => {
+        if (currentJobId) {
+            fetch(`/api/job_status/${currentJobId}`)
+            .then(response => response.json())
+            .then(data => {
+                updateProgress(data);
+                
+                if (data.status === 'completed' || data.status === 'failed' || data.status === 'cancelled') {
+                    clearInterval(progressInterval);
+                    setTimeout(() => {
+                        resetBruteForceForm();
+                        closeModal();
+                    }, 3000);
+                }
+            });
+        }
+    }, 500); // Update every 500ms
+}
+
+function updateProgress(data) {
+    const progressBar = document.getElementById('progressBar');
+    const progressText = document.getElementById('progressText');
+    const currentPassword = document.getElementById('currentPassword');
+    const statusText = document.getElementById('statusText');
+    
+    progressBar.style.width = data.progress + '%';
+    progressText.textContent = data.progress + '%';
+    statusText.textContent = data.status.charAt(0).toUpperCase() + data.status.slice(1);
+    
+    if (data.result) {
+        if (data.result.startsWith('Trying:')) {
+            currentPassword.textContent = data.result.replace('Trying: ', '');
+        } else if (data.result.startsWith('Password found:')) {
+            currentPassword.textContent = 'SUCCESS!';
+            statusText.innerHTML = '<span class="text-success">' + data.result + '</span>';
+            progressBar.className = 'progress-bar bg-success';
+        } else {
+            currentPassword.textContent = '-';
+            statusText.textContent = data.result;
+            if (data.status === 'failed') {
+                progressBar.className = 'progress-bar bg-danger';
+            }
+        }
+    }
+}
+
+function cancelBruteForce() {
+    if (currentJobId) {
+        fetch(`/api/cancel_job/${currentJobId}`, {
+            method: 'POST'
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (progressInterval) {
+                clearInterval(progressInterval);
+            }
+            resetBruteForceForm();
+        });
+    }
+}
+
+function resetBruteForceForm() {
+    document.getElementById('bruteForceForm').style.display = 'block';
+    document.getElementById('bruteProgress').style.display = 'none';
+    
+    // Reset progress
+    document.getElementById('progressBar').style.width = '0%';
+    document.getElementById('progressBar').className = 'progress-bar bg-warning';
+    document.getElementById('progressText').textContent = '0%';
+    document.getElementById('currentPassword').textContent = '-';
+    document.getElementById('statusText').textContent = 'Running...';
+    
+    currentJobId = null;
+    if (progressInterval) {
+        clearInterval(progressInterval);
+        progressInterval = null;
+    }
+}
+
+function closeModal() {
+    // Close the bootstrap modal
+    const modal = bootstrap.Modal.getInstance(document.getElementById('moduleModal'));
+    if (modal) {
+        modal.hide();
+    }
 }
 </script>
 {% endblock %}

@@ -159,8 +159,7 @@ def start_brute():
     """Start brute force password cracking"""
     try:
         if 'file' not in request.files:
-            flash('No file selected', 'error')
-            return redirect(url_for('dashboard'))
+            return jsonify({'error': 'No file selected'}), 400
         
         file = request.files['file']
         wordlist_type = request.form.get('wordlist', 'common')
@@ -169,6 +168,15 @@ def start_brute():
         filename = secure_filename(file.filename)
         file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(file_path)
+        
+        # Handle custom wordlist upload
+        custom_wordlist_path = None
+        if wordlist_type == 'custom' and 'wordlist_file' in request.files:
+            wordlist_file = request.files['wordlist_file']
+            if wordlist_file.filename:
+                wordlist_filename = secure_filename(wordlist_file.filename)
+                custom_wordlist_path = os.path.join(app.config['UPLOAD_FOLDER'], f'wordlist_{wordlist_filename}')
+                wordlist_file.save(custom_wordlist_path)
         
         # Create job
         job = Job(
@@ -180,15 +188,46 @@ def start_brute():
         db.session.commit()
         
         # Start brute force (in background)
-        start_brute_force(job.id, file_path, wordlist_type)
+        start_brute_force(job.id, file_path, wordlist_type, custom_wordlist_path)
         
         log_activity('brute_force_start', f'File: {file.filename}')
-        flash(f'Brute force attack started (Job #{job.id})', 'info')
+        
+        return jsonify({'job_id': job.id, 'message': 'Brute force attack started'})
         
     except Exception as e:
-        flash(f'Failed to start brute force: {str(e)}', 'error')
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/job_status/<int:job_id>')
+@require_login
+def api_job_status(job_id):
+    """Get status of a job"""
+    job = Job.query.get_or_404(job_id)
     
-    return redirect(url_for('dashboard'))
+    # Ensure user owns this job
+    if job.user_id != current_user.id:
+        return jsonify({'error': 'Access denied'}), 403
+    
+    return jsonify({
+        'status': job.status,
+        'progress': job.progress,
+        'result': job.result,
+        'job_type': job.job_type
+    })
+
+@app.route('/api/cancel_job/<int:job_id>', methods=['POST'])
+@require_login
+def api_cancel_job(job_id):
+    """Cancel a running job"""
+    job = Job.query.get_or_404(job_id)
+    
+    # Ensure user owns this job
+    if job.user_id != current_user.id:
+        return jsonify({'error': 'Access denied'}), 403
+    
+    job.status = 'cancelled'
+    db.session.commit()
+    
+    return jsonify({'message': 'Job cancelled'})
 
 @app.route('/compare', methods=['POST'])
 @require_login
@@ -341,19 +380,6 @@ def admin_panel():
     users = User.query.all()
     return render_template('admin.html', logs=logs, users=users)
 
-@app.route('/job/status/<int:job_id>')
-@require_login
-def job_status(job_id):
-    """Get job status (for AJAX polling)"""
-    job = Job.query.filter_by(id=job_id, user_id=current_user.id).first()
-    if not job:
-        return jsonify({'error': 'Job not found'}), 404
-    
-    return jsonify({
-        'status': job.status,
-        'progress': job.progress,
-        'result': job.result
-    })
 
 @app.route('/uploads/<filename>')
 @require_login
