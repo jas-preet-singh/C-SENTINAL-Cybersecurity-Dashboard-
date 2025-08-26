@@ -543,7 +543,10 @@ function pingHost(event) {
     
     fetch('/network/ping', {
         method: 'POST',
-        body: formData
+        body: formData,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
     })
     .then(response => response.json())
     .then(data => {
@@ -588,7 +591,10 @@ function dnsLookup(event) {
     
     fetch('/network/dns', {
         method: 'POST',
-        body: formData
+        body: formData,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
     })
     .then(response => response.json())
     .then(data => {
@@ -629,7 +635,10 @@ function portScan(event) {
     
     fetch('/network/portscan', {
         method: 'POST',
-        body: formData
+        body: formData,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
     })
     .then(response => response.json())
     .then(data => {
@@ -685,7 +694,10 @@ function tracerouteHost(event) {
     
     fetch('/network/traceroute', {
         method: 'POST',
-        body: formData
+        body: formData,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
     })
     .then(response => response.json())
     .then(data => {
@@ -729,7 +741,10 @@ function whoisLookup(event) {
     
     fetch('/network/whois', {
         method: 'POST',
-        body: formData
+        body: formData,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
     })
     .then(response => response.json())
     .then(data => {
@@ -771,7 +786,10 @@ function getNetworkInfo() {
     resultDiv.style.display = 'block';
     
     fetch('/network/info', {
-        method: 'GET'
+        method: 'GET',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
     })
     .then(response => response.json())
     .then(data => {
