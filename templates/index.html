@@ -222,7 +222,7 @@
                     </div>
                     <h5 class="card-title">Network Tools</h5>
                     <p class="card-text">Network analysis and diagnostic utilities</p>
-                    <button class="btn btn-primary btn-glow" onclick="redirectToModule('network')">
+                    <button class="btn btn-primary btn-glow" onclick="openNetworkToolsModal()">
                         <i class="fas fa-external-link-alt"></i> Click to use
                     </button>
                 </div>
@@ -303,8 +303,213 @@
 </section>
 {% endblock %}
 
+<!-- Network Tools Modal for Home Page -->
+<div class="modal fade" id="networkModal" tabindex="-1" aria-labelledby="networkModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content" style="background: rgba(26, 26, 26, 0.95); border: 1px solid var(--accent-green);">
+            <div class="modal-header">
+                <h5 class="modal-title text-white" id="networkModalLabel">
+                    <i class="fas fa-network-wired"></i> Network Diagnostic Tools
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-info alert-sm mb-3">
+                    <i class="fas fa-info-circle"></i>
+                    Comprehensive network diagnostic tools for connectivity testing, DNS resolution, port scanning, and route tracing.
+                </div>
+                
+                <!-- Network Tools Tabs -->
+                <ul class="nav nav-tabs mb-4" id="networkTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="ping-tab" data-bs-toggle="tab" data-bs-target="#ping" type="button" role="tab">
+                            <i class="fas fa-wifi"></i> Ping
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="dns-tab" data-bs-toggle="tab" data-bs-target="#dns" type="button" role="tab">
+                            <i class="fas fa-server"></i> DNS Lookup
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="portscan-tab" data-bs-toggle="tab" data-bs-target="#portscan" type="button" role="tab">
+                            <i class="fas fa-shield-alt"></i> Port Scan
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="traceroute-tab" data-bs-toggle="tab" data-bs-target="#traceroute" type="button" role="tab">
+                            <i class="fas fa-route"></i> Traceroute
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="whois-tab" data-bs-toggle="tab" data-bs-target="#whois" type="button" role="tab">
+                            <i class="fas fa-info"></i> WHOIS
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="netinfo-tab" data-bs-toggle="tab" data-bs-target="#netinfo" type="button" role="tab">
+                            <i class="fas fa-network-wired"></i> Network Info
+                        </button>
+                    </li>
+                </ul>
+                
+                <!-- Tab Content -->
+                <div class="tab-content" id="networkTabsContent">
+                    <!-- Ping Tab -->
+                    <div class="tab-pane fade show active" id="ping" role="tabpanel">
+                        <form onsubmit="return pingHost(event)">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="mb-3">
+                                        <label class="form-label">Hostname or IP Address</label>
+                                        <input type="text" name="hostname" class="form-control" placeholder="google.com or 8.8.8.8" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label class="form-label">Count</label>
+                                        <select name="count" class="form-select">
+                                            <option value="4">4 packets</option>
+                                            <option value="8">8 packets</option>
+                                            <option value="10">10 packets</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-glow">
+                                <i class="fas fa-play"></i> Ping Host
+                            </button>
+                        </form>
+                        <div id="pingResult" class="mt-3" style="display: none;"></div>
+                    </div>
+                    
+                    <!-- DNS Lookup Tab -->
+                    <div class="tab-pane fade" id="dns" role="tabpanel">
+                        <form onsubmit="return dnsLookup(event)">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="mb-3">
+                                        <label class="form-label">Domain Name</label>
+                                        <input type="text" name="hostname" class="form-control" placeholder="google.com" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label class="form-label">Record Type</label>
+                                        <select name="record_type" class="form-select">
+                                            <option value="A">A (IPv4)</option>
+                                            <option value="AAAA">AAAA (IPv6)</option>
+                                            <option value="MX">MX (Mail)</option>
+                                            <option value="NS">NS (Name Server)</option>
+                                            <option value="TXT">TXT (Text)</option>
+                                            <option value="CNAME">CNAME (Alias)</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-glow">
+                                <i class="fas fa-search"></i> DNS Lookup
+                            </button>
+                        </form>
+                        <div id="dnsResult" class="mt-3" style="display: none;"></div>
+                    </div>
+                    
+                    <!-- Port Scan Tab -->
+                    <div class="tab-pane fade" id="portscan" role="tabpanel">
+                        <form onsubmit="return portScan(event)">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="mb-3">
+                                        <label class="form-label">Hostname or IP Address</label>
+                                        <input type="text" name="hostname" class="form-control" placeholder="google.com or 8.8.8.8" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label class="form-label">Ports (max 50)</label>
+                                        <input type="text" name="ports" class="form-control" placeholder="80,443,22 or 80-100" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="alert alert-warning alert-sm">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                Port scanning is limited to 50 ports for security reasons.
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-glow">
+                                <i class="fas fa-search"></i> Scan Ports
+                            </button>
+                        </form>
+                        <div id="portscanResult" class="mt-3" style="display: none;"></div>
+                    </div>
+                    
+                    <!-- Traceroute Tab -->
+                    <div class="tab-pane fade" id="traceroute" role="tabpanel">
+                        <form onsubmit="return tracerouteHost(event)">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="mb-3">
+                                        <label class="form-label">Hostname or IP Address</label>
+                                        <input type="text" name="hostname" class="form-control" placeholder="google.com or 8.8.8.8" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label class="form-label">Max Hops</label>
+                                        <select name="max_hops" class="form-select">
+                                            <option value="15">15 hops</option>
+                                            <option value="20">20 hops</option>
+                                            <option value="30">30 hops</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-glow">
+                                <i class="fas fa-route"></i> Trace Route
+                            </button>
+                        </form>
+                        <div id="tracerouteResult" class="mt-3" style="display: none;"></div>
+                    </div>
+                    
+                    <!-- WHOIS Tab -->
+                    <div class="tab-pane fade" id="whois" role="tabpanel">
+                        <form onsubmit="return whoisLookup(event)">
+                            <div class="mb-3">
+                                <label class="form-label">Domain Name</label>
+                                <input type="text" name="domain" class="form-control" placeholder="google.com" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-glow">
+                                <i class="fas fa-search"></i> WHOIS Lookup
+                            </button>
+                        </form>
+                        <div id="whoisResult" class="mt-3" style="display: none;"></div>
+                    </div>
+                    
+                    <!-- Network Info Tab -->
+                    <div class="tab-pane fade" id="netinfo" role="tabpanel">
+                        <div class="text-center">
+                            <p class="mb-3">Get information about your current network configuration and connectivity.</p>
+                            <button type="button" class="btn btn-primary btn-glow" onclick="getNetworkInfo()">
+                                <i class="fas fa-info-circle"></i> Get Network Info
+                            </button>
+                        </div>
+                        <div id="netinfoResult" class="mt-3" style="display: none;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 {% block scripts %}
 <script>
+function openNetworkToolsModal() {
+    const networkModal = document.getElementById('networkModal');
+    if (networkModal) {
+        const modal = new bootstrap.Modal(networkModal);
+        modal.show();
+    }
+}
+
 function redirectToModule(moduleType) {
     // Store the module preference
     sessionStorage.setItem('selectedModule', moduleType);
@@ -325,5 +530,293 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+
+// Network Tools Functions (copied from dashboard)
+function pingHost(event) {
+    event.preventDefault();
+    const form = event.target;
+    const formData = new FormData(form);
+    const resultDiv = document.getElementById('pingResult');
+    
+    resultDiv.innerHTML = '<div class="alert alert-info"><i class="fas fa-spinner fa-spin"></i> Pinging host...</div>';
+    resultDiv.style.display = 'block';
+    
+    fetch('/network/ping', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            let html = '<div class="alert alert-success">Ping successful!</div>';
+            html += '<div class="card bg-dark border-success mt-3">';
+            html += '<div class="card-header"><h6><i class="fas fa-wifi"></i> Ping Results</h6></div>';
+            html += '<div class="card-body">';
+            html += `<pre class="bg-black text-success p-3" style="font-family: monospace;">${data.output}</pre>`;
+            
+            if (data.statistics) {
+                html += '<h6 class="mt-3">Statistics:</h6>';
+                html += '<div class="row">';
+                Object.entries(data.statistics).forEach(([key, value]) => {
+                    const displayKey = key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                    html += `<div class="col-md-3 mb-2"><strong>${displayKey}:</strong> ${value}</div>`;
+                });
+                html += '</div>';
+            }
+            
+            html += '</div></div>';
+            resultDiv.innerHTML = html;
+        } else {
+            resultDiv.innerHTML = `<div class="alert alert-danger">Ping failed: ${data.error}</div>`;
+        }
+    })
+    .catch(error => {
+        resultDiv.innerHTML = `<div class="alert alert-danger">Error: ${error}</div>`;
+    });
+    
+    return false;
+}
+
+function dnsLookup(event) {
+    event.preventDefault();
+    const form = event.target;
+    const formData = new FormData(form);
+    const resultDiv = document.getElementById('dnsResult');
+    
+    resultDiv.innerHTML = '<div class="alert alert-info"><i class="fas fa-spinner fa-spin"></i> Looking up DNS records...</div>';
+    resultDiv.style.display = 'block';
+    
+    fetch('/network/dns', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success && data.records.length > 0) {
+            let html = '<div class="alert alert-success">DNS lookup successful!</div>';
+            html += '<div class="card bg-dark border-success mt-3">';
+            html += `<div class="card-header"><h6><i class="fas fa-server"></i> ${data.record_type} Records for ${data.hostname}</h6></div>`;
+            html += '<div class="card-body">';
+            html += '<div class="row">';
+            
+            data.records.forEach((record, index) => {
+                html += `<div class="col-md-6 mb-2">`;
+                html += `<div class="bg-black p-2 rounded text-success"><strong>Record ${index + 1}:</strong> ${record}</div>`;
+                html += `</div>`;
+            });
+            
+            html += '</div></div></div>';
+            resultDiv.innerHTML = html;
+        } else {
+            resultDiv.innerHTML = `<div class="alert alert-warning">No ${formData.get('record_type')} records found for ${formData.get('hostname')}</div>`;
+        }
+    })
+    .catch(error => {
+        resultDiv.innerHTML = `<div class="alert alert-danger">Error: ${error}</div>`;
+    });
+    
+    return false;
+}
+
+function portScan(event) {
+    event.preventDefault();
+    const form = event.target;
+    const formData = new FormData(form);
+    const resultDiv = document.getElementById('portscanResult');
+    
+    resultDiv.innerHTML = '<div class="alert alert-info"><i class="fas fa-spinner fa-spin"></i> Scanning ports...</div>';
+    resultDiv.style.display = 'block';
+    
+    fetch('/network/portscan', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            let html = '<div class="alert alert-success">Port scan completed!</div>';
+            html += '<div class="card bg-dark border-success mt-3">';
+            html += `<div class="card-header"><h6><i class="fas fa-shield-alt"></i> Port Scan Results for ${data.hostname}</h6></div>`;
+            html += '<div class="card-body">';
+            
+            if (data.open_ports.length > 0) {
+                html += '<h6 class="text-success">Open Ports:</h6>';
+                html += '<div class="row mb-3">';
+                data.open_ports.forEach(port => {
+                    html += `<div class="col-md-2 mb-1"><span class="badge bg-success">${port}</span></div>`;
+                });
+                html += '</div>';
+            }
+            
+            if (data.closed_ports.length > 0) {
+                html += '<h6 class="text-muted">Closed Ports:</h6>';
+                html += '<div class="row">';
+                data.closed_ports.slice(0, 20).forEach(port => {
+                    html += `<div class="col-md-2 mb-1"><span class="badge bg-secondary">${port}</span></div>`;
+                });
+                if (data.closed_ports.length > 20) {
+                    html += `<div class="col-12"><small class="text-muted">... and ${data.closed_ports.length - 20} more closed ports</small></div>`;
+                }
+                html += '</div>';
+            }
+            
+            html += `<div class="mt-3"><small class="text-muted">Total scanned: ${data.total_scanned} ports | Open: ${data.open_count}</small></div>`;
+            html += '</div></div>';
+            resultDiv.innerHTML = html;
+        } else {
+            resultDiv.innerHTML = `<div class="alert alert-danger">Port scan failed: ${data.error}</div>`;
+        }
+    })
+    .catch(error => {
+        resultDiv.innerHTML = `<div class="alert alert-danger">Error: ${error}</div>`;
+    });
+    
+    return false;
+}
+
+function tracerouteHost(event) {
+    event.preventDefault();
+    const form = event.target;
+    const formData = new FormData(form);
+    const resultDiv = document.getElementById('tracerouteResult');
+    
+    resultDiv.innerHTML = '<div class="alert alert-info"><i class="fas fa-spinner fa-spin"></i> Tracing route...</div>';
+    resultDiv.style.display = 'block';
+    
+    fetch('/network/traceroute', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            let html = '<div class="alert alert-success">Traceroute completed!</div>';
+            html += '<div class="card bg-dark border-success mt-3">';
+            html += `<div class="card-header"><h6><i class="fas fa-route"></i> Route to ${data.hostname}</h6></div>`;
+            html += '<div class="card-body">';
+            
+            if (data.hops && data.hops.length > 0) {
+                html += '<h6>Route Hops:</h6>';
+                data.hops.forEach(hop => {
+                    html += `<div class="mb-2"><strong>Hop ${hop.hop}:</strong> ${hop.info}</div>`;
+                });
+                html += `<div class="mt-3"><small class="text-muted">Total hops: ${data.hop_count}</small></div>`;
+            } else {
+                html += `<pre class="bg-black text-success p-3" style="font-family: monospace;">${data.output}</pre>`;
+            }
+            
+            html += '</div></div>';
+            resultDiv.innerHTML = html;
+        } else {
+            resultDiv.innerHTML = `<div class="alert alert-danger">Traceroute failed: ${data.error}</div>`;
+        }
+    })
+    .catch(error => {
+        resultDiv.innerHTML = `<div class="alert alert-danger">Error: ${error}</div>`;
+    });
+    
+    return false;
+}
+
+function whoisLookup(event) {
+    event.preventDefault();
+    const form = event.target;
+    const formData = new FormData(form);
+    const resultDiv = document.getElementById('whoisResult');
+    
+    resultDiv.innerHTML = '<div class="alert alert-info"><i class="fas fa-spinner fa-spin"></i> Looking up WHOIS...</div>';
+    resultDiv.style.display = 'block';
+    
+    fetch('/network/whois', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            let html = '<div class="alert alert-success">WHOIS lookup successful!</div>';
+            html += '<div class="card bg-dark border-success mt-3">';
+            html += `<div class="card-header"><h6><i class="fas fa-info"></i> WHOIS Information for ${data.domain}</h6></div>`;
+            html += '<div class="card-body">';
+            
+            if (data.parsed_info && Object.keys(data.parsed_info).length > 0) {
+                html += '<h6>Key Information:</h6>';
+                html += '<div class="row mb-3">';
+                Object.entries(data.parsed_info).forEach(([key, value]) => {
+                    const displayKey = key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                    html += `<div class="col-md-6 mb-2"><strong>${displayKey}:</strong> ${value}</div>`;
+                });
+                html += '</div>';
+            }
+            
+            html += '<h6>Raw WHOIS Data:</h6>';
+            html += `<pre class="bg-black text-success p-3" style="font-family: monospace; font-size: 12px; max-height: 400px; overflow-y: auto;">${data.output}</pre>`;
+            html += '</div></div>';
+            resultDiv.innerHTML = html;
+        } else {
+            resultDiv.innerHTML = `<div class="alert alert-danger">WHOIS lookup failed: ${data.error}</div>`;
+        }
+    })
+    .catch(error => {
+        resultDiv.innerHTML = `<div class="alert alert-danger">Error: ${error}</div>`;
+    });
+    
+    return false;
+}
+
+function getNetworkInfo() {
+    const resultDiv = document.getElementById('netinfoResult');
+    
+    resultDiv.innerHTML = '<div class="alert alert-info"><i class="fas fa-spinner fa-spin"></i> Getting network information...</div>';
+    resultDiv.style.display = 'block';
+    
+    fetch('/network/info', {
+        method: 'GET'
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            let html = '<div class="alert alert-success">Network information retrieved!</div>';
+            html += '<div class="card bg-dark border-success mt-3">';
+            html += '<div class="card-header"><h6><i class="fas fa-network-wired"></i> Network Information</h6></div>';
+            html += '<div class="card-body">';
+            html += '<div class="row">';
+            
+            Object.entries(data.network_info).forEach(([key, value]) => {
+                const displayKey = key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                let iconClass = 'fas fa-info-circle';
+                let textClass = 'text-white';
+                
+                if (key === 'internet_connectivity') {
+                    iconClass = value === 'Connected' ? 'fas fa-check-circle' : 'fas fa-exclamation-triangle';
+                    textClass = value === 'Connected' ? 'text-success' : 'text-warning';
+                } else if (key === 'dns_resolution') {
+                    iconClass = value === 'Working' ? 'fas fa-check-circle' : 'fas fa-exclamation-triangle';
+                    textClass = value === 'Working' ? 'text-success' : 'text-warning';
+                } else if (key === 'local_ip') {
+                    iconClass = 'fas fa-map-marker-alt';
+                } else if (key === 'hostname') {
+                    iconClass = 'fas fa-server';
+                }
+                
+                html += `<div class="col-md-6 mb-3">`;
+                html += `<div class="d-flex align-items-center">`;
+                html += `<i class="${iconClass} ${textClass} me-2"></i>`;
+                html += `<div>`;
+                html += `<strong class="text-white">${displayKey}:</strong><br>`;
+                html += `<span class="${textClass}">${value}</span>`;
+                html += `</div></div></div>`;
+            });
+            
+            html += '</div></div></div>';
+            resultDiv.innerHTML = html;
+        } else {
+            resultDiv.innerHTML = `<div class="alert alert-danger">Failed to get network information: ${data.error}</div>`;
+        }
+    })
+    .catch(error => {
+        resultDiv.innerHTML = `<div class="alert alert-danger">Error: ${error}</div>`;
+    });
+}
 </script>
 {% endblock %}
