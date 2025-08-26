@@ -301,7 +301,6 @@
         </div>
     </div>
 </section>
-{% endblock %}
 
 <!-- Network Tools Modal for Home Page -->
 <div class="modal fade" id="networkModal" tabindex="-1" aria-labelledby="networkModalLabel" aria-hidden="true">
@@ -500,28 +499,182 @@
     </div>
 </div>
 
+<!-- Network Tools Modal -->
+<div class="modal fade" id="networkModal" tabindex="-1" aria-labelledby="networkModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content" style="background: rgba(26, 26, 26, 0.95); border: 1px solid var(--accent-green);">
+            <div class="modal-header">
+                <h5 class="modal-title text-white" id="networkModalLabel">
+                    <i class="fas fa-network-wired"></i> Network Diagnostic Tools
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-info alert-sm mb-3">
+                    <i class="fas fa-info-circle"></i>
+                    Comprehensive network diagnostic tools for connectivity testing, DNS resolution, port scanning, and route tracing.
+                </div>
+                
+                <!-- Network Tools Tabs -->
+                <ul class="nav nav-tabs mb-4" id="networkTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="ping-tab" data-bs-toggle="tab" data-bs-target="#ping" type="button" role="tab">
+                            <i class="fas fa-wifi"></i> Ping
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="dns-tab" data-bs-toggle="tab" data-bs-target="#dns" type="button" role="tab">
+                            <i class="fas fa-server"></i> DNS Lookup
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="portscan-tab" data-bs-toggle="tab" data-bs-target="#portscan" type="button" role="tab">
+                            <i class="fas fa-shield-alt"></i> Port Scan
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="traceroute-tab" data-bs-toggle="tab" data-bs-target="#traceroute" type="button" role="tab">
+                            <i class="fas fa-route"></i> Traceroute
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="whois-tab" data-bs-toggle="tab" data-bs-target="#whois" type="button" role="tab">
+                            <i class="fas fa-info"></i> WHOIS
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="netinfo-tab" data-bs-toggle="tab" data-bs-target="#netinfo" type="button" role="tab">
+                            <i class="fas fa-info-circle"></i> Network Info
+                        </button>
+                    </li>
+                </ul>
+                
+                <div class="tab-content" id="networkTabsContent">
+                    <!-- Ping Tab -->
+                    <div class="tab-pane fade show active" id="ping" role="tabpanel">
+                        <form onsubmit="pingHost(event)">
+                            <div class="mb-3">
+                                <label class="form-label">Target Host</label>
+                                <input type="text" name="host" class="form-control" placeholder="example.com or 8.8.8.8" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-glow">
+                                <i class="fas fa-wifi"></i> Ping Host
+                            </button>
+                        </form>
+                        <div id="pingResult" class="mt-3" style="display: none;"></div>
+                    </div>
+                    
+                    <!-- DNS Lookup Tab -->
+                    <div class="tab-pane fade" id="dns" role="tabpanel">
+                        <form onsubmit="dnsLookup(event)">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="mb-3">
+                                        <label class="form-label">Domain Name</label>
+                                        <input type="text" name="domain" class="form-control" placeholder="example.com" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label class="form-label">Record Type</label>
+                                        <select name="record_type" class="form-select">
+                                            <option value="A">A (IPv4)</option>
+                                            <option value="AAAA">AAAA (IPv6)</option>
+                                            <option value="MX">MX (Mail)</option>
+                                            <option value="NS">NS (Name Server)</option>
+                                            <option value="TXT">TXT (Text)</option>
+                                            <option value="CNAME">CNAME (Alias)</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-glow">
+                                <i class="fas fa-search"></i> DNS Lookup
+                            </button>
+                        </form>
+                        <div id="dnsResult" class="mt-3" style="display: none;"></div>
+                    </div>
+                    
+                    <!-- Port Scanner Tab -->
+                    <div class="tab-pane fade" id="portscan" role="tabpanel">
+                        <div class="alert alert-warning">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <strong>Security Notice:</strong> Only scan hosts you own or have permission to test. Limited to 50 ports for security.
+                        </div>
+                        <form onsubmit="portScan(event)">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Target Host</label>
+                                        <input type="text" name="host" class="form-control" placeholder="example.com or 127.0.0.1" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Port Range</label>
+                                        <input type="text" name="ports" class="form-control" placeholder="80,443,22 or 1-100" required>
+                                        <small class="form-text text-muted">Comma-separated ports or range (max 50 ports)</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-warning btn-glow">
+                                <i class="fas fa-shield-alt"></i> Scan Ports
+                            </button>
+                        </form>
+                        <div id="portscanResult" class="mt-3" style="display: none;"></div>
+                    </div>
+                    
+                    <!-- Traceroute Tab -->
+                    <div class="tab-pane fade" id="traceroute" role="tabpanel">
+                        <form onsubmit="traceroute(event)">
+                            <div class="mb-3">
+                                <label class="form-label">Target Host</label>
+                                <input type="text" name="host" class="form-control" placeholder="example.com or 8.8.8.8" required>
+                            </div>
+                            <button type="submit" class="btn btn-info btn-glow">
+                                <i class="fas fa-route"></i> Trace Route
+                            </button>
+                        </form>
+                        <div id="tracerouteResult" class="mt-3" style="display: none;"></div>
+                    </div>
+                    
+                    <!-- WHOIS Tab -->
+                    <div class="tab-pane fade" id="whois" role="tabpanel">
+                        <form onsubmit="whoisLookup(event)">
+                            <div class="mb-3">
+                                <label class="form-label">Domain Name</label>
+                                <input type="text" name="domain" class="form-control" placeholder="example.com" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-glow">
+                                <i class="fas fa-search"></i> WHOIS Lookup
+                            </button>
+                        </form>
+                        <div id="whoisResult" class="mt-3" style="display: none;"></div>
+                    </div>
+                    
+                    <!-- Network Info Tab -->
+                    <div class="tab-pane fade" id="netinfo" role="tabpanel">
+                        <div class="text-center">
+                            <p class="mb-3">Get information about your current network configuration and connectivity.</p>
+                            <button type="button" class="btn btn-primary btn-glow" onclick="getNetworkInfo()">
+                                <i class="fas fa-info-circle"></i> Get Network Info
+                            </button>
+                        </div>
+                        <div id="netinfoResult" class="mt-3" style="display: none;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 {% block scripts %}
 <script>
 function openNetworkToolsModal() {
-    console.log('Opening Network Tools modal...');
     const networkModal = document.getElementById('networkModal');
-    console.log('Network modal element:', networkModal);
-    
     if (networkModal) {
-        try {
-            const modal = new bootstrap.Modal(networkModal);
-            modal.show();
-            console.log('Modal shown successfully');
-        } catch (error) {
-            console.error('Error showing modal:', error);
-            // Fallback: try to show modal directly
-            networkModal.style.display = 'block';
-            networkModal.classList.add('show');
-            document.body.classList.add('modal-open');
-        }
-    } else {
-        console.error('Network modal element not found');
-        alert('Network Tools modal not found. Please refresh the page and try again.');
+        const modal = new bootstrap.Modal(networkModal);
+        modal.show();
     }
 }
 
@@ -868,4 +1021,5 @@ function getNetworkInfo() {
     });
 }
 </script>
+{% endblock %}
 {% endblock %}
