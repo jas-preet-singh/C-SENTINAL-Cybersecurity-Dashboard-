@@ -668,6 +668,65 @@ span, div, p {
     color: inherit;
 }
 
+/* Comprehensive list item visibility fixes */
+li {
+    color: var(--text-secondary) !important;
+}
+
+/* Security tips and recommendations - force visibility */
+.card-body ul li,
+.card-body ol li,
+.module-card ul li,
+.module-card ol li {
+    color: var(--text-secondary) !important;
+}
+
+/* All unstyled lists */
+.list-unstyled li {
+    color: var(--text-secondary) !important;
+}
+
+/* Force all small text to be visible */
+.small {
+    color: var(--text-secondary) !important;
+}
+
+/* Text in paragraphs within cards */
+.card p,
+.module-card p {
+    color: var(--text-secondary) !important;
+}
+
+/* Specific scanner check lists */
+.mt-3 ul li,
+.security-tips ul li,
+.best-practices ul li {
+    color: var(--text-secondary) !important;
+}
+
+/* Override any Bootstrap text utilities that might hide text */
+.text-muted,
+.text-secondary,
+.text-dark {
+    color: var(--text-secondary) !important;
+}
+
+/* Force visibility for any remaining invisible elements */
+* {
+    color: inherit !important;
+}
+
+/* But ensure primary text elements use the right color */
+h1, h2, h3, h4, h5, h6 {
+    color: var(--text-primary) !important;
+}
+
+/* And accent elements use accent color */
+.card-title,
+.navbar-brand {
+    color: var(--accent-green) !important;
+}
+
 /* Alerts */
 .alert {
     border-radius: 10px;
