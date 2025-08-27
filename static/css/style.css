@@ -668,8 +668,9 @@ span, div, p {
     color: inherit;
 }
 
-/* Comprehensive list item visibility fixes */
-li {
+/* Specific list item visibility fixes */
+.card-body li,
+.module-card li {
     color: var(--text-secondary) !important;
 }
 
@@ -711,21 +712,7 @@ li {
     color: var(--text-secondary) !important;
 }
 
-/* Force visibility for any remaining invisible elements */
-* {
-    color: inherit !important;
-}
-
-/* But ensure primary text elements use the right color */
-h1, h2, h3, h4, h5, h6 {
-    color: var(--text-primary) !important;
-}
-
-/* And accent elements use accent color */
-.card-title,
-.navbar-brand {
-    color: var(--accent-green) !important;
-}
+/* Targeted text visibility fixes without breaking existing styles */
 
 /* Alerts */
 .alert {
