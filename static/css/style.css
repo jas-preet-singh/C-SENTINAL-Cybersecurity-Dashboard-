@@ -202,9 +202,22 @@ body {
 }
 
 .card-title {
-    color: var(--accent-green);
+    color: var(--accent-green) !important;
     margin: 0;
     font-weight: 600;
+}
+
+/* Service card title visibility fixes */
+.module-card .card-title,
+.overview-card .card-title {
+    color: var(--text-primary) !important;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+/* Ensure card titles are always visible */
+h1.card-title, h2.card-title, h3.card-title, h4.card-title, h5.card-title, h6.card-title {
+    color: var(--text-primary) !important;
 }
 
 .education-info {
