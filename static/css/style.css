@@ -107,6 +107,7 @@ body {
 .main-content {
     margin-top: 80px;
     min-height: calc(100vh - 160px);
+    padding-bottom: 6rem;
 }
 
 /* Cards */
@@ -1108,10 +1109,11 @@ small {
 
 /* Footer */
 .footer {
-    background: rgba(26, 26, 26, 0.9);
+    background: rgba(26, 26, 26, 0.95);
     border-top: 1px solid var(--accent-green);
-    padding: 2rem 0 1rem;
+    padding: 2rem 0 1.5rem;
     backdrop-filter: blur(10px);
+    margin-top: 3rem;
 }
 
 /* About Page Professional Styling */
