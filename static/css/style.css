@@ -1110,7 +1110,7 @@ small {
 .footer {
     background: rgba(26, 26, 26, 0.9);
     border-top: 1px solid var(--accent-green);
-    padding: 3rem 0 1rem;
+    padding: 2rem 0 1rem;
     backdrop-filter: blur(10px);
 }
 
