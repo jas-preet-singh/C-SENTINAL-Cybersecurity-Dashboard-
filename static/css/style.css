@@ -552,6 +552,122 @@ input[type="file"]:not(:valid) {
     color: var(--bg-primary) !important;
 }
 
+/* URL Scanner and scanning features text visibility */
+.scanning-features,
+.security-tips,
+.feature-list {
+    color: var(--text-secondary) !important;
+}
+
+.scanning-features ul li,
+.security-tips ul li,
+.feature-list li {
+    color: var(--text-secondary) !important;
+    margin-bottom: 8px;
+}
+
+.scanning-features h6,
+.security-tips h6,
+.feature-section h6 {
+    color: var(--text-primary) !important;
+}
+
+/* Scanner result text */
+.scan-result,
+.scan-status,
+.scan-details {
+    color: var(--text-primary) !important;
+}
+
+/* URL input and form help text */
+.form-text.text-muted,
+small.text-muted {
+    color: var(--text-muted) !important;
+}
+
+/* Warning and info boxes */
+.info-box,
+.warning-box,
+.tips-box {
+    color: var(--text-secondary) !important;
+}
+
+.info-box h6,
+.warning-box h6,
+.tips-box h6 {
+    color: var(--text-primary) !important;
+}
+
+/* Scanner icons and text combinations */
+.scanner-icon + span,
+.feature-icon + span {
+    color: var(--text-secondary) !important;
+}
+
+/* File size limits and restrictions text */
+.file-restrictions,
+.size-limit,
+.format-info {
+    color: var(--text-muted) !important;
+}
+
+/* Security recommendation text */
+.security-recommendations li,
+.safety-tips li,
+.best-practices li {
+    color: var(--text-secondary) !important;
+}
+
+/* URL placeholder and input text */
+.form-control::-webkit-input-placeholder {
+    color: var(--text-muted) !important;
+    opacity: 0.7;
+}
+
+.form-control::-moz-placeholder {
+    color: var(--text-muted) !important;
+    opacity: 0.7;
+}
+
+.form-control:-ms-input-placeholder {
+    color: var(--text-muted) !important;
+    opacity: 0.7;
+}
+
+/* Ensure bullet points and list indicators are visible */
+ul li::marker {
+    color: var(--accent-green) !important;
+}
+
+ol li::marker {
+    color: var(--accent-green) !important;
+}
+
+/* Specific fixes for URL scanner lists and small text */
+.list-unstyled li,
+.small,
+.text-start li {
+    color: var(--text-secondary) !important;
+}
+
+/* Small text in card bodies */
+.card-body .small,
+.card-body small,
+.p-3 .small {
+    color: var(--text-secondary) !important;
+}
+
+/* Text-start lists */
+.text-start ul li,
+.text-start ol li {
+    color: var(--text-secondary) !important;
+}
+
+/* Any remaining invisible text fixes */
+span, div, p {
+    color: inherit;
+}
+
 /* Alerts */
 .alert {
     border-radius: 10px;
