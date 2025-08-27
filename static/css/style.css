@@ -742,6 +742,37 @@ small.text-muted,
     color: var(--text-secondary) !important;
 }
 
+/* Comprehensive text visibility fix for all remaining elements */
+.card-body ul li,
+.card-body ol li,
+.module-card ul li,
+.module-card ol li,
+.list-unstyled li,
+.small,
+small {
+    color: var(--text-secondary) !important;
+}
+
+/* Security best practices text */
+.text-center.p-3 li,
+.text-start li,
+.p-3 li {
+    color: var(--text-secondary) !important;
+}
+
+/* Any text within cards that might be invisible */
+.card p,
+.card span,
+.card div:not(.alert):not(.btn):not(.badge) {
+    color: var(--text-secondary) !important;
+}
+
+/* Form elements and help text */
+.form-text,
+.help-text {
+    color: var(--text-muted) !important;
+}
+
 /* Alerts */
 .alert {
     border-radius: 10px;
