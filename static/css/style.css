@@ -714,6 +714,34 @@ span, div, p {
 
 /* Targeted text visibility fixes without breaking existing styles */
 
+/* Fix invisible list items in scanner sections */
+.card-body .list-unstyled li,
+.card-body .mt-3 ul li,
+.card-body .small,
+.card-body small.text-start li {
+    color: var(--text-secondary) !important;
+}
+
+/* Fix invisible text in security tips sections */
+.text-center.p-3 ul li,
+.text-center.p-3 .small,
+.p-3.text-start ul li {
+    color: var(--text-secondary) !important;
+}
+
+/* Fix any remaining invisible help text */
+.form-text.text-muted,
+small.text-muted,
+.text-muted.small {
+    color: var(--text-muted) !important;
+}
+
+/* Fix invisible text in scanner feature lists */
+.mt-3 h6 + ul li,
+.card-body h6 + ul li {
+    color: var(--text-secondary) !important;
+}
+
 /* Alerts */
 .alert {
     border-radius: 10px;
