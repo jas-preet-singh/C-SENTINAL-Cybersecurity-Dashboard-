@@ -91,6 +91,12 @@ def password_analyzer_page():
     """Password Strength Analyzer service page"""
     return render_template('services/password_analyzer.html')
 
+@app.route('/network-tools')
+@require_login
+def network_tools_page():
+    """Network Diagnostic Tools service page"""
+    return render_template('services/network_tools.html')
+
 @app.route('/dashboard')
 @require_login
 def dashboard():

@@ -1,0 +1,493 @@
+{% extends "base.html" %}
+
+{% block title %}Network Tools - CyberSec Dashboard{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2><i class="fas fa-network-wired"></i> Network Diagnostic Tools</h2>
+                <a href="{{ url_for('index') }}" class="btn btn-outline-primary">
+                    <i class="fas fa-home"></i> Back to Home
+                </a>
+            </div>
+            
+            <!-- Network Tools Tabs -->
+            <div class="card module-card">
+                <div class="card-body">
+                    <!-- Nav tabs -->
+                    <ul class="nav nav-tabs" id="networkToolsTab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="ping-tab" data-bs-toggle="tab" data-bs-target="#ping" type="button" role="tab">
+                                <i class="fas fa-satellite-dish"></i> Ping
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="dns-tab" data-bs-toggle="tab" data-bs-target="#dns" type="button" role="tab">
+                                <i class="fas fa-search"></i> DNS Lookup
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="portscan-tab" data-bs-toggle="tab" data-bs-target="#portscan" type="button" role="tab">
+                                <i class="fas fa-door-open"></i> Port Scan
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="traceroute-tab" data-bs-toggle="tab" data-bs-target="#traceroute" type="button" role="tab">
+                                <i class="fas fa-route"></i> Traceroute
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="whois-tab" data-bs-toggle="tab" data-bs-target="#whois" type="button" role="tab">
+                                <i class="fas fa-info-circle"></i> WHOIS
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="netinfo-tab" data-bs-toggle="tab" data-bs-target="#netinfo" type="button" role="tab">
+                                <i class="fas fa-network-wired"></i> Network Info
+                            </button>
+                        </li>
+                    </ul>
+                    
+                    <!-- Tab content -->
+                    <div class="tab-content mt-4" id="networkToolsTabContent">
+                        <!-- Ping Tab -->
+                        <div class="tab-pane fade show active" id="ping" role="tabpanel">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h5><i class="fas fa-satellite-dish"></i> Ping Host</h5>
+                                    <form id="pingForm">
+                                        <div class="mb-3">
+                                            <label class="form-label">Hostname or IP Address</label>
+                                            <input type="text" name="hostname" class="form-control" placeholder="google.com or 8.8.8.8" required>
+                                            <small class="form-text text-muted">Enter a hostname or IP address to test connectivity</small>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Packet Count</label>
+                                            <select name="count" class="form-control">
+                                                <option value="4" selected>4 packets</option>
+                                                <option value="8">8 packets</option>
+                                                <option value="10">10 packets</option>
+                                            </select>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary btn-glow">
+                                            <i class="fas fa-satellite-dish"></i> Ping Host
+                                        </button>
+                                    </form>
+                                </div>
+                                <div class="col-md-6">
+                                    <h5><i class="fas fa-chart-line"></i> Results</h5>
+                                    <div id="pingResults" class="results-container" style="display: none;">
+                                        <pre id="pingOutput" class="network-output"></pre>
+                                        <div id="pingStats" class="mt-3"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- DNS Lookup Tab -->
+                        <div class="tab-pane fade" id="dns" role="tabpanel">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h5><i class="fas fa-search"></i> DNS Lookup</h5>
+                                    <form id="dnsForm">
+                                        <div class="mb-3">
+                                            <label class="form-label">Hostname</label>
+                                            <input type="text" name="hostname" class="form-control" placeholder="example.com" required>
+                                            <small class="form-text text-muted">Enter a domain name to resolve</small>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Record Type</label>
+                                            <select name="record_type" class="form-control">
+                                                <option value="A" selected>A (IPv4 Address)</option>
+                                                <option value="AAAA">AAAA (IPv6 Address)</option>
+                                                <option value="MX">MX (Mail Exchange)</option>
+                                                <option value="NS">NS (Name Server)</option>
+                                                <option value="TXT">TXT (Text Record)</option>
+                                                <option value="CNAME">CNAME (Canonical Name)</option>
+                                            </select>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary btn-glow">
+                                            <i class="fas fa-search"></i> Lookup DNS
+                                        </button>
+                                    </form>
+                                </div>
+                                <div class="col-md-6">
+                                    <h5><i class="fas fa-list"></i> DNS Records</h5>
+                                    <div id="dnsResults" class="results-container" style="display: none;">
+                                        <div id="dnsOutput"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Port Scan Tab -->
+                        <div class="tab-pane fade" id="portscan" role="tabpanel">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h5><i class="fas fa-door-open"></i> Port Scanner</h5>
+                                    <form id="portscanForm">
+                                        <div class="mb-3">
+                                            <label class="form-label">Hostname or IP Address</label>
+                                            <input type="text" name="hostname" class="form-control" placeholder="example.com" required>
+                                            <small class="form-text text-muted">Target host for port scanning</small>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Ports to Scan</label>
+                                            <input type="text" name="ports" class="form-control" value="80,443,22,21,25,53,110,143,993,995" placeholder="80,443,22">
+                                            <small class="form-text text-muted">Comma-separated port numbers (max 50 ports)</small>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary btn-glow">
+                                            <i class="fas fa-door-open"></i> Scan Ports
+                                        </button>
+                                    </form>
+                                </div>
+                                <div class="col-md-6">
+                                    <h5><i class="fas fa-list-ul"></i> Open Ports</h5>
+                                    <div id="portscanResults" class="results-container" style="display: none;">
+                                        <div id="portscanOutput"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Traceroute Tab -->
+                        <div class="tab-pane fade" id="traceroute" role="tabpanel">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h5><i class="fas fa-route"></i> Traceroute</h5>
+                                    <form id="tracerouteForm">
+                                        <div class="mb-3">
+                                            <label class="form-label">Hostname or IP Address</label>
+                                            <input type="text" name="hostname" class="form-control" placeholder="google.com" required>
+                                            <small class="form-text text-muted">Trace the route to destination</small>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Max Hops</label>
+                                            <select name="max_hops" class="form-control">
+                                                <option value="15" selected>15 hops</option>
+                                                <option value="30">30 hops</option>
+                                                <option value="50">50 hops</option>
+                                            </select>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary btn-glow">
+                                            <i class="fas fa-route"></i> Trace Route
+                                        </button>
+                                    </form>
+                                </div>
+                                <div class="col-md-6">
+                                    <h5><i class="fas fa-list-ol"></i> Route Hops</h5>
+                                    <div id="tracerouteResults" class="results-container" style="display: none;">
+                                        <pre id="tracerouteOutput" class="network-output"></pre>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- WHOIS Tab -->
+                        <div class="tab-pane fade" id="whois" role="tabpanel">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h5><i class="fas fa-info-circle"></i> WHOIS Lookup</h5>
+                                    <form id="whoisForm">
+                                        <div class="mb-3">
+                                            <label class="form-label">Domain Name</label>
+                                            <input type="text" name="domain" class="form-control" placeholder="example.com" required>
+                                            <small class="form-text text-muted">Enter a domain name (without www)</small>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary btn-glow">
+                                            <i class="fas fa-info-circle"></i> WHOIS Lookup
+                                        </button>
+                                    </form>
+                                </div>
+                                <div class="col-md-6">
+                                    <h5><i class="fas fa-file-alt"></i> Domain Information</h5>
+                                    <div id="whoisResults" class="results-container" style="display: none;">
+                                        <pre id="whoisOutput" class="network-output"></pre>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Network Info Tab -->
+                        <div class="tab-pane fade" id="netinfo" role="tabpanel">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h5><i class="fas fa-network-wired"></i> Network Information</h5>
+                                    <p class="text-muted">Get local network information and connectivity status.</p>
+                                    <button id="getNetworkInfo" class="btn btn-primary btn-glow">
+                                        <i class="fas fa-info"></i> Get Network Info
+                                    </button>
+                                </div>
+                                <div class="col-md-6">
+                                    <h5><i class="fas fa-server"></i> Network Status</h5>
+                                    <div id="netinfoResults" class="results-container" style="display: none;">
+                                        <div id="netinfoOutput"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Network Security Tips -->
+            <div class="card module-card mt-4">
+                <div class="card-body">
+                    <h5><i class="fas fa-shield-alt"></i> Network Security Best Practices</h5>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <ul>
+                                <li>Regularly monitor open ports on your systems</li>
+                                <li>Use strong firewall rules to restrict access</li>
+                                <li>Keep DNS configurations secure and updated</li>
+                                <li>Monitor network traffic for suspicious activity</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <ul>
+                                <li>Use VPNs for secure remote connections</li>
+                                <li>Implement network segmentation for critical systems</li>
+                                <li>Regularly audit network configurations</li>
+                                <li>Keep network equipment firmware updated</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.network-output {
+    background-color: var(--secondary-dark);
+    color: var(--text-primary);
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid var(--accent-green);
+    font-family: 'Courier New', monospace;
+    white-space: pre-wrap;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.results-container {
+    background-color: var(--card-dark);
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+}
+
+.nav-tabs .nav-link {
+    color: var(--text-secondary);
+    background-color: var(--secondary-dark);
+    border-color: var(--border-color);
+}
+
+.nav-tabs .nav-link.active {
+    color: var(--accent-green);
+    background-color: var(--card-dark);
+    border-color: var(--accent-green);
+}
+
+.nav-tabs .nav-link:hover {
+    color: var(--accent-green);
+    background-color: var(--secondary-dark);
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Form event listeners
+    document.getElementById('pingForm').addEventListener('submit', handlePing);
+    document.getElementById('dnsForm').addEventListener('submit', handleDNS);
+    document.getElementById('portscanForm').addEventListener('submit', handlePortScan);
+    document.getElementById('tracerouteForm').addEventListener('submit', handleTraceroute);
+    document.getElementById('whoisForm').addEventListener('submit', handleWHOIS);
+    document.getElementById('getNetworkInfo').addEventListener('click', handleNetworkInfo);
+});
+
+// Handle form submissions for each tool
+async function handlePing(event) {
+    event.preventDefault();
+    const formData = new FormData(event.target);
+    const submitBtn = event.target.querySelector('button[type="submit"]');
+    
+    await submitNetworkRequest('/network/ping', formData, submitBtn, 'pingResults', 'pingOutput', displayPingResults);
+}
+
+async function handleDNS(event) {
+    event.preventDefault();
+    const formData = new FormData(event.target);
+    const submitBtn = event.target.querySelector('button[type="submit"]');
+    
+    await submitNetworkRequest('/network/dns', formData, submitBtn, 'dnsResults', 'dnsOutput', displayDNSResults);
+}
+
+async function handlePortScan(event) {
+    event.preventDefault();
+    const formData = new FormData(event.target);
+    const submitBtn = event.target.querySelector('button[type="submit"]');
+    
+    await submitNetworkRequest('/network/portscan', formData, submitBtn, 'portscanResults', 'portscanOutput', displayPortScanResults);
+}
+
+async function handleTraceroute(event) {
+    event.preventDefault();
+    const formData = new FormData(event.target);
+    const submitBtn = event.target.querySelector('button[type="submit"]');
+    
+    await submitNetworkRequest('/network/traceroute', formData, submitBtn, 'tracerouteResults', 'tracerouteOutput', displayTracerouteResults);
+}
+
+async function handleWHOIS(event) {
+    event.preventDefault();
+    const formData = new FormData(event.target);
+    const submitBtn = event.target.querySelector('button[type="submit"]');
+    
+    await submitNetworkRequest('/network/whois', formData, submitBtn, 'whoisResults', 'whoisOutput', displayWHOISResults);
+}
+
+async function handleNetworkInfo() {
+    const submitBtn = document.getElementById('getNetworkInfo');
+    
+    await submitNetworkRequest('/network/info', null, submitBtn, 'netinfoResults', 'netinfoOutput', displayNetworkInfoResults, 'GET');
+}
+
+// Generic function to submit network requests
+async function submitNetworkRequest(url, formData, submitBtn, resultsId, outputId, displayFunction, method = 'POST') {
+    const originalText = submitBtn.innerHTML;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+    submitBtn.disabled = true;
+    
+    try {
+        const options = {
+            method: method,
+            headers: method === 'GET' ? {} : undefined,
+            body: method === 'POST' ? formData : undefined
+        };
+        
+        const response = await fetch(url, options);
+        const data = await response.json();
+        
+        if (data.success) {
+            displayFunction(data, outputId);
+            document.getElementById(resultsId).style.display = 'block';
+        } else {
+            alert('Error: ' + (data.error || 'Unknown error'));
+        }
+    } catch (error) {
+        alert('Error: ' + error.message);
+    } finally {
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+    }
+}
+
+// Display functions for each tool
+function displayPingResults(data, outputId) {
+    document.getElementById(outputId).textContent = data.output;
+    
+    if (data.statistics) {
+        const statsHtml = `
+            <div class="row">
+                <div class="col-6"><strong>Packet Loss:</strong> ${data.statistics.packet_loss}</div>
+                <div class="col-6"><strong>Avg RTT:</strong> ${data.statistics.avg_rtt}</div>
+            </div>
+            <div class="row mt-2">
+                <div class="col-6"><strong>Min RTT:</strong> ${data.statistics.min_rtt}</div>
+                <div class="col-6"><strong>Max RTT:</strong> ${data.statistics.max_rtt}</div>
+            </div>
+        `;
+        document.getElementById('pingStats').innerHTML = statsHtml;
+        document.getElementById('pingStats').style.display = 'block';
+    }
+}
+
+function displayDNSResults(data, outputId) {
+    const outputDiv = document.getElementById(outputId);
+    let html = `
+        <div class="mb-3">
+            <strong>Hostname:</strong> ${data.hostname}<br>
+            <strong>Record Type:</strong> ${data.record_type}<br>
+            <strong>Records Found:</strong> ${data.count}
+        </div>
+        <h6>DNS Records:</h6>
+        <ul class="list-unstyled">
+    `;
+    
+    data.results.forEach(record => {
+        html += `<li><i class="fas fa-circle text-success" style="font-size: 0.5rem;"></i> ${record}</li>`;
+    });
+    
+    html += '</ul>';
+    outputDiv.innerHTML = html;
+}
+
+function displayPortScanResults(data, outputId) {
+    const outputDiv = document.getElementById(outputId);
+    let html = `
+        <div class="mb-3">
+            <strong>Target:</strong> ${data.hostname}<br>
+            <strong>Total Scanned:</strong> ${data.total_scanned}<br>
+            <strong>Open Ports:</strong> ${data.open_count}
+        </div>
+    `;
+    
+    if (data.open_ports.length > 0) {
+        html += '<h6>Open Ports:</h6><ul class="list-unstyled">';
+        data.open_ports.forEach(port => {
+            html += `<li><i class="fas fa-door-open text-success"></i> Port ${port} - Open</li>`;
+        });
+        html += '</ul>';
+    }
+    
+    if (data.closed_ports.length > 0) {
+        html += '<h6>Closed/Filtered Ports:</h6><ul class="list-unstyled">';
+        data.closed_ports.slice(0, 10).forEach(port => {
+            html += `<li><i class="fas fa-door-closed text-muted"></i> Port ${port} - Closed</li>`;
+        });
+        if (data.closed_ports.length > 10) {
+            html += `<li><small class="text-muted">... and ${data.closed_ports.length - 10} more closed ports</small></li>`;
+        }
+        html += '</ul>';
+    }
+    
+    outputDiv.innerHTML = html;
+}
+
+function displayTracerouteResults(data, outputId) {
+    document.getElementById(outputId).textContent = data.output;
+}
+
+function displayWHOISResults(data, outputId) {
+    document.getElementById(outputId).textContent = data.output;
+}
+
+function displayNetworkInfoResults(data, outputId) {
+    const outputDiv = document.getElementById(outputId);
+    let html = '<h6>Network Information:</h6>';
+    
+    if (data.interfaces) {
+        html += '<div class="mb-3"><strong>Network Interfaces:</strong>';
+        data.interfaces.forEach(iface => {
+            html += `<div class="mt-2"><strong>${iface.name}:</strong> ${iface.address || 'N/A'}</div>`;
+        });
+        html += '</div>';
+    }
+    
+    if (data.connectivity) {
+        html += '<div class="mb-3"><strong>Connectivity Status:</strong>';
+        for (const [service, status] of Object.entries(data.connectivity)) {
+            const statusIcon = status.reachable ? 'fa-check-circle text-success' : 'fa-times-circle text-danger';
+            html += `<div><i class="fas ${statusIcon}"></i> ${service}: ${status.reachable ? 'Reachable' : 'Unreachable'}</div>`;
+        }
+        html += '</div>';
+    }
+    
+    outputDiv.innerHTML = html;
+}
+</script>
+{% endblock %}

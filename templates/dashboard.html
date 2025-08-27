@@ -314,14 +314,8 @@ function confirmEthicalUse() {
 }
 
 function openNetworkTools() {
-    // Open the Network Diagnostic Tools modal
-    const networkModal = document.getElementById('networkModal');
-    if (networkModal) {
-        const modal = new bootstrap.Modal(networkModal);
-        modal.show();
-    } else {
-        console.error('Network Tools modal not found');
-    }
+    // Redirect to standalone Network Tools page
+    window.location.href = "{{ url_for('network_tools_page') }}";
 }
 
 function openModule(moduleType) {
@@ -333,9 +327,9 @@ function openModule(moduleType) {
         return;
     }
     
-    // Special case for network tools
+    // Special case for network tools - redirect to standalone page
     if (moduleType === 'network') {
-        openNetworkTools();
+        window.location.href = "{{ url_for('network_tools_page') }}";
         return;
     }
     
