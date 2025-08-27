@@ -4,23 +4,23 @@
 
 {% block content %}
 <div class="container">
-    <div class="row justify-content-center min-vh-100 align-items-center">
-        <div class="col-md-6 col-lg-4">
-            <div class="card login-card">
-                <div class="card-body text-center">
-                    <div class="login-icon">
-                        <i class="fas fa-shield-alt"></i>
-                    </div>
-                    <h3 class="card-title">Access Denied</h3>
-                    <p class="card-text">
-                        You need to be logged in to access the cybersecurity dashboard.
-                    </p>
-                    <a href="{{ url_for('replit_auth.login') }}" class="btn btn-primary btn-glow">
-                        <i class="fas fa-sign-in-alt"></i> Login to Continue
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
+ <div class="row justify-content-center min-vh-100 align-items-center">
+ <div class="col-md-6 col-lg-4">
+ <div class="card login-card">
+ <div class="card-body text-center">
+ <div class="login-icon">
+ <i class="fas fa-shield-alt"></i>
+ </div>
+ <h3 class="card-title">Access Denied</h3>
+ <p class="card-text">
+ You need to be logged in to access the cybersecurity dashboard.
+ </p>
+ <a href="{{ url_for('replit_auth.login') }}" class="btn btn-primary btn-glow">
+ <i class="fas fa-sign-in-alt"></i> Login to Continue
+ </a>
+ </div>
+ </div>
+ </div>
+ </div>
 </div>
 {% endblock %}

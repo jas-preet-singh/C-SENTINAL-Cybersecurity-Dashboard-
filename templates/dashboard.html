@@ -4,80 +4,78 @@
 
 {% block content %}
 <div class="container">
-    
-    
-    <!-- Analytics Dashboard -->
-    <div class="row mt-5">
-        <!-- Service Usage Chart -->
-        <div class="col-lg-6 mb-4">
-            <div class="card analytics-card">
-                <div class="card-header">
-                    <h6><i class="fas fa-chart-bar"></i> Service Usage Analytics</h6>
-                </div>
-                <div class="card-body">
-                    <canvas id="serviceUsageChart" width="400" height="300"></canvas>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Activity Timeline -->
-        <div class="col-lg-6 mb-4">
-            <div class="card analytics-card">
-                <div class="card-header">
-                    <h6><i class="fas fa-clock"></i> Activity Timeline (Last 7 Days)</h6>
-                </div>
-                <div class="card-body">
-                    <canvas id="activityTimelineChart" width="400" height="300"></canvas>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Additional Analytics Row -->
-    <div class="row mt-4">
-        
-        <!-- Top Services -->
-        <div class="col-lg-6 mb-4">
-            <div class="card analytics-card">
-                <div class="card-header">
-                    <h6><i class="fas fa-trophy"></i> Most Used Services</h6>
-                </div>
-                <div class="card-body">
-                    {% for service_key, service_data in service_usage %}
-                    <div class="service-rank-item">
-                        <span class="rank-number">{{ loop.index }}</span>
-                        <i class="{{ service_data.icon }} rank-icon"></i>
-                        <span class="rank-name">{{ service_data.name }}</span>
-                        <span class="rank-count">{{ service_data.count }} uses</span>
-                    </div>
-                    {% endfor %}
-                </div>
-            </div>
-        </div>
-        
-        <!-- Real-time Stats -->
-        <div class="col-lg-6 mb-4">
-            <div class="card analytics-card">
-                <div class="card-header">
-                    <h6><i class="fas fa-pulse"></i> Real-time Statistics</h6>
-                </div>
-                <div class="card-body">
-                    <div class="stat-item">
-                        <h3 class="stat-number" id="totalScans">142</h3>
-                        <small class="text-muted">Total Scans Today</small>
-                    </div>
-                    <div class="stat-item mt-3">
-                        <h3 class="stat-number text-warning" id="activeJobs">3</h3>
-                        <small class="text-muted">Active Jobs</small>
-                    </div>
-                    <div class="stat-item mt-3">
-                        <h3 class="stat-number text-success" id="successRate">94%</h3>
-                        <small class="text-muted">Success Rate</small>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+ <!-- Analytics Dashboard -->
+ <div class="row mt-5">
+ <!-- Service Usage Chart -->
+ <div class="col-lg-6 mb-4">
+ <div class="card analytics-card">
+ <div class="card-header">
+ <h6><i class="fas fa-chart-bar"></i> Service Usage Analytics</h6>
+ </div>
+ <div class="card-body">
+ <canvas id="serviceUsageChart" width="400" height="300"></canvas>
+ </div>
+ </div>
+ </div>
+
+ <!-- Activity Timeline -->
+ <div class="col-lg-6 mb-4">
+ <div class="card analytics-card">
+ <div class="card-header">
+ <h6><i class="fas fa-clock"></i> Activity Timeline (Last 7 Days)</h6>
+ </div>
+ <div class="card-body">
+ <canvas id="activityTimelineChart" width="400" height="300"></canvas>
+ </div>
+ </div>
+ </div>
+ </div>
+
+ <!-- Additional Analytics Row -->
+ <div class="row mt-4">
+
+ <!-- Top Services -->
+ <div class="col-lg-6 mb-4">
+ <div class="card analytics-card">
+ <div class="card-header">
+ <h6><i class="fas fa-trophy"></i> Most Used Services</h6>
+ </div>
+ <div class="card-body">
+ {% for service_key, service_data in service_usage %}
+ <div class="service-rank-item">
+ <span class="rank-number">{{ loop.index }}</span>
+ <i class="{{ service_data.icon }} rank-icon"></i>
+ <span class="rank-name">{{ service_data.name }}</span>
+ <span class="rank-count">{{ service_data.count }} uses</span>
+ </div>
+ {% endfor %}
+ </div>
+ </div>
+ </div>
+
+ <!-- Real-time Stats -->
+ <div class="col-lg-6 mb-4">
+ <div class="card analytics-card">
+ <div class="card-header">
+ <h6><i class="fas fa-pulse"></i> Real-time Statistics</h6>
+ </div>
+ <div class="card-body">
+ <div class="stat-item">
+ <h3 class="stat-number" id="totalScans">142</h3>
+ <small class="text-muted">Total Scans Today</small>
+ </div>
+ <div class="stat-item mt-3">
+ <h3 class="stat-number text-warning" id="activeJobs">3</h3>
+ <small class="text-muted">Active Jobs</small>
+ </div>
+ <div class="stat-item mt-3">
+ <h3 class="stat-number text-success" id="successRate">94%</h3>
+ <small class="text-muted">Success Rate</small>
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
 </div>
 {% endblock %}
 
@@ -87,1522 +85,1522 @@
 
 <!-- Network Diagnostic Tools Modal -->
 <div class="modal fade" id="networkModal" tabindex="-1" aria-labelledby="networkModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl">
-        <div class="modal-content" style="background: rgba(26, 26, 26, 0.95); border: 1px solid var(--accent-green);">
-            <div class="modal-header">
-                <h5 class="modal-title text-white" id="networkModalLabel">
-                    <i class="fas fa-network-wired"></i> Network Diagnostic Tools
-                </h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="alert alert-info alert-sm mb-3">
-                    <i class="fas fa-info-circle"></i>
-                    Comprehensive network diagnostic tools for connectivity testing, DNS resolution, port scanning, and route tracing.
-                </div>
-                
-                <!-- Network Tools Tabs -->
-                <ul class="nav nav-tabs mb-4" id="networkTabs" role="tablist">
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link active" id="ping-tab" data-bs-toggle="tab" data-bs-target="#ping" type="button" role="tab">
-                            <i class="fas fa-wifi"></i> Ping
-                        </button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="dns-tab" data-bs-toggle="tab" data-bs-target="#dns" type="button" role="tab">
-                            <i class="fas fa-server"></i> DNS Lookup
-                        </button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="portscan-tab" data-bs-toggle="tab" data-bs-target="#portscan" type="button" role="tab">
-                            <i class="fas fa-shield-alt"></i> Port Scan
-                        </button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="traceroute-tab" data-bs-toggle="tab" data-bs-target="#traceroute" type="button" role="tab">
-                            <i class="fas fa-route"></i> Traceroute
-                        </button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="whois-tab" data-bs-toggle="tab" data-bs-target="#whois" type="button" role="tab">
-                            <i class="fas fa-info"></i> WHOIS
-                        </button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="netinfo-tab" data-bs-toggle="tab" data-bs-target="#netinfo" type="button" role="tab">
-                            <i class="fas fa-network-wired"></i> Network Info
-                        </button>
-                    </li>
-                </ul>
-                
-                <!-- Tab Content -->
-                <div class="tab-content" id="networkTabsContent">
-                    <!-- Ping Tab -->
-                    <div class="tab-pane fade show active" id="ping" role="tabpanel">
-                        <form onsubmit="return pingHost(event)">
-                            <div class="row">
-                                <div class="col-md-8">
-                                    <div class="mb-3">
-                                        <label class="form-label">Hostname or IP Address</label>
-                                        <input type="text" name="hostname" class="form-control" placeholder="google.com or 8.8.8.8" required>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="mb-3">
-                                        <label class="form-label">Count</label>
-                                        <select name="count" class="form-select">
-                                            <option value="4">4 packets</option>
-                                            <option value="8">8 packets</option>
-                                            <option value="10">10 packets</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <button type="submit" class="btn btn-primary btn-glow">
-                                <i class="fas fa-play"></i> Ping Host
-                            </button>
-                        </form>
-                        <div id="pingResult" class="mt-3" style="display: none;"></div>
-                    </div>
-                    
-                    <!-- DNS Lookup Tab -->
-                    <div class="tab-pane fade" id="dns" role="tabpanel">
-                        <form onsubmit="return dnsLookup(event)">
-                            <div class="row">
-                                <div class="col-md-8">
-                                    <div class="mb-3">
-                                        <label class="form-label">Domain Name</label>
-                                        <input type="text" name="hostname" class="form-control" placeholder="google.com" required>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="mb-3">
-                                        <label class="form-label">Record Type</label>
-                                        <select name="record_type" class="form-select">
-                                            <option value="A">A (IPv4)</option>
-                                            <option value="AAAA">AAAA (IPv6)</option>
-                                            <option value="MX">MX (Mail)</option>
-                                            <option value="NS">NS (Name Server)</option>
-                                            <option value="TXT">TXT (Text)</option>
-                                            <option value="CNAME">CNAME (Alias)</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <button type="submit" class="btn btn-primary btn-glow">
-                                <i class="fas fa-search"></i> DNS Lookup
-                            </button>
-                        </form>
-                        <div id="dnsResult" class="mt-3" style="display: none;"></div>
-                    </div>
-                    
-                    <!-- Port Scan Tab -->
-                    <div class="tab-pane fade" id="portscan" role="tabpanel">
-                        <form onsubmit="return portScan(event)">
-                            <div class="row">
-                                <div class="col-md-8">
-                                    <div class="mb-3">
-                                        <label class="form-label">Hostname or IP Address</label>
-                                        <input type="text" name="hostname" class="form-control" placeholder="google.com or 8.8.8.8" required>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="mb-3">
-                                        <label class="form-label">Ports (max 50)</label>
-                                        <input type="text" name="ports" class="form-control" placeholder="80,443,22 or 80-100" required>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="alert alert-warning alert-sm">
-                                <i class="fas fa-exclamation-triangle"></i>
-                                Port scanning is limited to 50 ports for security reasons.
-                            </div>
-                            <button type="submit" class="btn btn-primary btn-glow">
-                                <i class="fas fa-search"></i> Scan Ports
-                            </button>
-                        </form>
-                        <div id="portscanResult" class="mt-3" style="display: none;"></div>
-                    </div>
-                    
-                    <!-- Traceroute Tab -->
-                    <div class="tab-pane fade" id="traceroute" role="tabpanel">
-                        <form onsubmit="return tracerouteHost(event)">
-                            <div class="row">
-                                <div class="col-md-8">
-                                    <div class="mb-3">
-                                        <label class="form-label">Hostname or IP Address</label>
-                                        <input type="text" name="hostname" class="form-control" placeholder="google.com or 8.8.8.8" required>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="mb-3">
-                                        <label class="form-label">Max Hops</label>
-                                        <select name="max_hops" class="form-select">
-                                            <option value="15">15 hops</option>
-                                            <option value="20">20 hops</option>
-                                            <option value="30">30 hops</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <button type="submit" class="btn btn-primary btn-glow">
-                                <i class="fas fa-route"></i> Trace Route
-                            </button>
-                        </form>
-                        <div id="tracerouteResult" class="mt-3" style="display: none;"></div>
-                    </div>
-                    
-                    <!-- WHOIS Tab -->
-                    <div class="tab-pane fade" id="whois" role="tabpanel">
-                        <form onsubmit="return whoisLookup(event)">
-                            <div class="mb-3">
-                                <label class="form-label">Domain Name</label>
-                                <input type="text" name="domain" class="form-control" placeholder="google.com" required>
-                            </div>
-                            <button type="submit" class="btn btn-primary btn-glow">
-                                <i class="fas fa-search"></i> WHOIS Lookup
-                            </button>
-                        </form>
-                        <div id="whoisResult" class="mt-3" style="display: none;"></div>
-                    </div>
-                    
-                    <!-- Network Info Tab -->
-                    <div class="tab-pane fade" id="netinfo" role="tabpanel">
-                        <div class="text-center">
-                            <p class="mb-3">Get information about your current network configuration and connectivity.</p>
-                            <button type="button" class="btn btn-primary btn-glow" onclick="getNetworkInfo()">
-                                <i class="fas fa-info-circle"></i> Get Network Info
-                            </button>
-                        </div>
-                        <div id="netinfoResult" class="mt-3" style="display: none;"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+ <div class="modal-dialog modal-xl">
+ <div class="modal-content" style="background: rgba(26, 26, 26, 0.95); border: 1px solid var(--accent-green);">
+ <div class="modal-header">
+ <h5 class="modal-title text-white" id="networkModalLabel">
+ <i class="fas fa-network-wired"></i> Network Diagnostic Tools
+ </h5>
+ <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+ </div>
+ <div class="modal-body">
+ <div class="alert alert-info alert-sm mb-3">
+ <i class="fas fa-info-circle"></i>
+ Comprehensive network diagnostic tools for connectivity testing, DNS resolution, port scanning, and route tracing.
+ </div>
+
+ <!-- Network Tools Tabs -->
+ <ul class="nav nav-tabs mb-4" id="networkTabs" role="tablist">
+ <li class="nav-item" role="presentation">
+ <button class="nav-link active" id="ping-tab" data-bs-toggle="tab" data-bs-target="#ping" type="button" role="tab">
+ <i class="fas fa-wifi"></i> Ping
+ </button>
+ </li>
+ <li class="nav-item" role="presentation">
+ <button class="nav-link" id="dns-tab" data-bs-toggle="tab" data-bs-target="#dns" type="button" role="tab">
+ <i class="fas fa-server"></i> DNS Lookup
+ </button>
+ </li>
+ <li class="nav-item" role="presentation">
+ <button class="nav-link" id="portscan-tab" data-bs-toggle="tab" data-bs-target="#portscan" type="button" role="tab">
+ <i class="fas fa-shield-alt"></i> Port Scan
+ </button>
+ </li>
+ <li class="nav-item" role="presentation">
+ <button class="nav-link" id="traceroute-tab" data-bs-toggle="tab" data-bs-target="#traceroute" type="button" role="tab">
+ <i class="fas fa-route"></i> Traceroute
+ </button>
+ </li>
+ <li class="nav-item" role="presentation">
+ <button class="nav-link" id="whois-tab" data-bs-toggle="tab" data-bs-target="#whois" type="button" role="tab">
+ <i class="fas fa-info"></i> WHOIS
+ </button>
+ </li>
+ <li class="nav-item" role="presentation">
+ <button class="nav-link" id="netinfo-tab" data-bs-toggle="tab" data-bs-target="#netinfo" type="button" role="tab">
+ <i class="fas fa-network-wired"></i> Network Info
+ </button>
+ </li>
+ </ul>
+
+ <!-- Tab Content -->
+ <div class="tab-content" id="networkTabsContent">
+ <!-- Ping Tab -->
+ <div class="tab-pane fade show active" id="ping" role="tabpanel">
+ <form onsubmit="return pingHost(event)">
+ <div class="row">
+ <div class="col-md-8">
+ <div class="mb-3">
+ <label class="form-label">Hostname or IP Address</label>
+ <input type="text" name="hostname" class="form-control" placeholder="google.com or 8.8.8.8" required>
+ </div>
+ </div>
+ <div class="col-md-4">
+ <div class="mb-3">
+ <label class="form-label">Count</label>
+ <select name="count" class="form-select">
+ <option value="4">4 packets</option>
+ <option value="8">8 packets</option>
+ <option value="10">10 packets</option>
+ </select>
+ </div>
+ </div>
+ </div>
+ <button type="submit" class="btn btn-primary btn-glow">
+ <i class="fas fa-play"></i> Ping Host
+ </button>
+ </form>
+ <div id="pingResult" class="mt-3" style="display: none;"></div>
+ </div>
+
+ <!-- DNS Lookup Tab -->
+ <div class="tab-pane fade" id="dns" role="tabpanel">
+ <form onsubmit="return dnsLookup(event)">
+ <div class="row">
+ <div class="col-md-8">
+ <div class="mb-3">
+ <label class="form-label">Domain Name</label>
+ <input type="text" name="hostname" class="form-control" placeholder="google.com" required>
+ </div>
+ </div>
+ <div class="col-md-4">
+ <div class="mb-3">
+ <label class="form-label">Record Type</label>
+ <select name="record_type" class="form-select">
+ <option value="A">A (IPv4)</option>
+ <option value="AAAA">AAAA (IPv6)</option>
+ <option value="MX">MX (Mail)</option>
+ <option value="NS">NS (Name Server)</option>
+ <option value="TXT">TXT (Text)</option>
+ <option value="CNAME">CNAME (Alias)</option>
+ </select>
+ </div>
+ </div>
+ </div>
+ <button type="submit" class="btn btn-primary btn-glow">
+ <i class="fas fa-search"></i> DNS Lookup
+ </button>
+ </form>
+ <div id="dnsResult" class="mt-3" style="display: none;"></div>
+ </div>
+
+ <!-- Port Scan Tab -->
+ <div class="tab-pane fade" id="portscan" role="tabpanel">
+ <form onsubmit="return portScan(event)">
+ <div class="row">
+ <div class="col-md-8">
+ <div class="mb-3">
+ <label class="form-label">Hostname or IP Address</label>
+ <input type="text" name="hostname" class="form-control" placeholder="google.com or 8.8.8.8" required>
+ </div>
+ </div>
+ <div class="col-md-4">
+ <div class="mb-3">
+ <label class="form-label">Ports (max 50)</label>
+ <input type="text" name="ports" class="form-control" placeholder="80,443,22 or 80-100" required>
+ </div>
+ </div>
+ </div>
+ <div class="alert alert-warning alert-sm">
+ <i class="fas fa-exclamation-triangle"></i>
+ Port scanning is limited to 50 ports for security reasons.
+ </div>
+ <button type="submit" class="btn btn-primary btn-glow">
+ <i class="fas fa-search"></i> Scan Ports
+ </button>
+ </form>
+ <div id="portscanResult" class="mt-3" style="display: none;"></div>
+ </div>
+
+ <!-- Traceroute Tab -->
+ <div class="tab-pane fade" id="traceroute" role="tabpanel">
+ <form onsubmit="return tracerouteHost(event)">
+ <div class="row">
+ <div class="col-md-8">
+ <div class="mb-3">
+ <label class="form-label">Hostname or IP Address</label>
+ <input type="text" name="hostname" class="form-control" placeholder="google.com or 8.8.8.8" required>
+ </div>
+ </div>
+ <div class="col-md-4">
+ <div class="mb-3">
+ <label class="form-label">Max Hops</label>
+ <select name="max_hops" class="form-select">
+ <option value="15">15 hops</option>
+ <option value="20">20 hops</option>
+ <option value="30">30 hops</option>
+ </select>
+ </div>
+ </div>
+ </div>
+ <button type="submit" class="btn btn-primary btn-glow">
+ <i class="fas fa-route"></i> Trace Route
+ </button>
+ </form>
+ <div id="tracerouteResult" class="mt-3" style="display: none;"></div>
+ </div>
+
+ <!-- WHOIS Tab -->
+ <div class="tab-pane fade" id="whois" role="tabpanel">
+ <form onsubmit="return whoisLookup(event)">
+ <div class="mb-3">
+ <label class="form-label">Domain Name</label>
+ <input type="text" name="domain" class="form-control" placeholder="google.com" required>
+ </div>
+ <button type="submit" class="btn btn-primary btn-glow">
+ <i class="fas fa-search"></i> WHOIS Lookup
+ </button>
+ </form>
+ <div id="whoisResult" class="mt-3" style="display: none;"></div>
+ </div>
+
+ <!-- Network Info Tab -->
+ <div class="tab-pane fade" id="netinfo" role="tabpanel">
+ <div class="text-center">
+ <p class="mb-3">Get information about your current network configuration and connectivity.</p>
+ <button type="button" class="btn btn-primary btn-glow" onclick="getNetworkInfo()">
+ <i class="fas fa-info-circle"></i> Get Network Info
+ </button>
+ </div>
+ <div id="netinfoResult" class="mt-3" style="display: none;"></div>
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
 </div>
 <script>
 // Wait for everything to load
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('Dashboard loaded successfully');
-    
-    // Check for module parameter in URL or sessionStorage
-    const urlParams = new URLSearchParams(window.location.search);
-    let moduleParam = urlParams.get('module');
-    
-    // Also check sessionStorage for module preference
-    if (!moduleParam) {
-        moduleParam = sessionStorage.getItem('selectedModule');
-        sessionStorage.removeItem('selectedModule'); // Clean up
-    }
-    
-    if (moduleParam) {
-        console.log('Auto-opening module:', moduleParam);
-        // Auto-open the specified module
-        setTimeout(() => {
-            openModule(moduleParam);
-        }, 500);
-    }
+ console.log('Dashboard loaded successfully');
+
+ // Check for module parameter in URL or sessionStorage
+ const urlParams = new URLSearchParams(window.location.search);
+ let moduleParam = urlParams.get('module');
+
+ // Also check sessionStorage for module preference
+ if (!moduleParam) {
+ moduleParam = sessionStorage.getItem('selectedModule');
+ sessionStorage.removeItem('selectedModule'); // Clean up
+ }
+
+ if (moduleParam) {
+ console.log('Auto-opening module:', moduleParam);
+ // Auto-open the specified module
+ setTimeout(() => {
+ openModule(moduleParam);
+ }, 500);
+ }
 });
 
 function confirmLegality() {
-    return confirm("I confirm that I own this file or have explicit permission to attempt password recovery. Unauthorized access is illegal and may result in criminal charges.");
+ return confirm("I confirm that I own this file or have explicit permission to attempt password recovery. Unauthorized access is illegal and may result in criminal charges.");
 }
 
 function confirmEthicalUse() {
-    return confirm("I confirm that I own this website or have explicit written permission to perform security testing. Unauthorized scanning may be illegal.");
+ return confirm("I confirm that I own this website or have explicit written permission to perform security testing. Unauthorized scanning may be illegal.");
 }
 
 function openNetworkTools() {
-    // Redirect to standalone Network Tools page
-    window.location.href = "{{ url_for('network_tools_page') }}";
+ // Redirect to standalone Network Tools page
+ window.location.href = "{{ url_for('network_tools_page') }}";
 }
 
 function openModule(moduleType) {
-    // Wait for DOM to be ready
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', function() {
-            openModule(moduleType);
-        });
-        return;
-    }
-    
-    // Special case for network tools - redirect to standalone page
-    if (moduleType === 'network') {
-        window.location.href = "{{ url_for('network_tools_page') }}";
-        return;
-    }
-    
-    const modalContainer = document.getElementById('moduleModalContainer');
-    if (!modalContainer) {
-        console.error('Modal container not found');
-        return;
-    }
-    
-    const modalContent = getModalContent(moduleType);
-    modalContainer.innerHTML = modalContent;
-    
-    const modalElement = document.getElementById('moduleModal');
-    if (!modalElement) {
-        console.error('Modal element not found');
-        return;
-    }
-    
-    const modal = new bootstrap.Modal(modalElement);
-    modal.show();
-    
-    // Clean up when modal is hidden
-    modalElement.addEventListener('hidden.bs.modal', function() {
-        modalContainer.innerHTML = '';
-    }, { once: true });
+ // Wait for DOM to be ready
+ if (document.readyState === 'loading') {
+ document.addEventListener('DOMContentLoaded', function() {
+ openModule(moduleType);
+ });
+ return;
+ }
+
+ // Special case for network tools - redirect to standalone page
+ if (moduleType === 'network') {
+ window.location.href = "{{ url_for('network_tools_page') }}";
+ return;
+ }
+
+ const modalContainer = document.getElementById('moduleModalContainer');
+ if (!modalContainer) {
+ console.error('Modal container not found');
+ return;
+ }
+
+ const modalContent = getModalContent(moduleType);
+ modalContainer.innerHTML = modalContent;
+
+ const modalElement = document.getElementById('moduleModal');
+ if (!modalElement) {
+ console.error('Modal element not found');
+ return;
+ }
+
+ const modal = new bootstrap.Modal(modalElement);
+ modal.show();
+
+ // Clean up when modal is hidden
+ modalElement.addEventListener('hidden.bs.modal', function() {
+ modalContainer.innerHTML = '';
+ }, { once: true });
 }
 
 function getModalContent(moduleType) {
-    const modals = {
-        hash: `
-            <div class="modal fade" id="moduleModal" tabindex="-1">
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content" style="background: rgba(26, 26, 26, 0.95); border: 1px solid var(--accent-green);">
-                        <div class="modal-header">
-                            <h5 class="modal-title text-white"><i class="fas fa-hash"></i> Hash Calculator</h5>
-                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="education-info mb-3">
-                                <small class="text-muted">
-                                    <i class="fas fa-info-circle"></i>
-                                    Generate cryptographic hashes (MD5, SHA-1, SHA-256, SHA-512) for data integrity verification.
-                                </small>
-                            </div>
-                            <form method="POST" action="{{ url_for('hash_calculator') }}" enctype="multipart/form-data">
-                                <div class="mb-3">
-                                    <label class="form-label">Hash Type</label>
-                                    <select name="hash_type" class="form-select">
-                                        <option value="md5">MD5</option>
-                                        <option value="sha1">SHA-1</option>
-                                        <option value="sha256" selected>SHA-256</option>
-                                        <option value="sha512">SHA-512</option>
-                                    </select>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Input Text</label>
-                                    <textarea name="text" class="form-control" rows="2" placeholder="Enter text to hash..."></textarea>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Or Upload File</label>
-                                    <input type="file" name="file" class="form-control">
-                                </div>
-                                <button type="submit" class="btn btn-primary btn-glow w-100">
-                                    <i class="fas fa-calculator"></i> Calculate Hash
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>`,
-        
-        encrypt: `
-            <div class="modal fade" id="moduleModal" tabindex="-1">
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content" style="background: rgba(26, 26, 26, 0.95); border: 1px solid var(--accent-green);">
-                        <div class="modal-header">
-                            <h5 class="modal-title text-white"><i class="fas fa-lock"></i> File Encrypt/Decrypt</h5>
-                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="education-info mb-3">
-                                <small class="text-muted">
-                                    <i class="fas fa-info-circle"></i>
-                                    Secure files using AES encryption with password-based key derivation (PBKDF2).
-                                </small>
-                            </div>
-                            <form method="POST" action="{{ url_for('encrypt') }}" enctype="multipart/form-data">
-                                <h6 class="text-center mb-3 text-success">Encrypt File</h6>
-                                <div class="mb-3">
-                                    <label class="form-label">File to Encrypt</label>
-                                    <input type="file" name="file" class="form-control" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Encryption Password</label>
-                                    <input type="password" name="password" class="form-control" required>
-                                </div>
-                                <button type="submit" class="btn btn-success btn-glow w-100 mb-3">
-                                    <i class="fas fa-shield-alt"></i> Encrypt File
-                                </button>
-                            </form>
-                            <hr>
-                            <form method="POST" action="{{ url_for('decrypt') }}" enctype="multipart/form-data">
-                                <h6 class="text-center mb-3 text-warning">Decrypt File</h6>
-                                <div class="mb-3">
-                                    <label class="form-label">Encrypted File</label>
-                                    <input type="file" name="file" class="form-control" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Decryption Password</label>
-                                    <input type="password" name="password" class="form-control" required>
-                                </div>
-                                <button type="submit" class="btn btn-warning btn-glow w-100">
-                                    <i class="fas fa-unlock"></i> Decrypt File
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>`,
-        
-        brute: `
-            <div class="modal fade" id="moduleModal" tabindex="-1">
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content" style="background: rgba(26, 26, 26, 0.95); border: 1px solid var(--accent-green);">
-                        <div class="modal-header">
-                            <h5 class="modal-title text-white"><i class="fas fa-hammer"></i> Brute Force Simulator</h5>
-                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="alert alert-danger alert-sm">
-                                <i class="fas fa-exclamation-triangle"></i>
-                                <strong>Legal Notice:</strong> Only use on files you own or have explicit permission to test.
-                            </div>
-                            <div class="education-info mb-3">
-                                <small class="text-muted">
-                                    <i class="fas fa-info-circle"></i>
-                                    Attempt brute force attacks on protected files (PDF, ZIP, Office documents) for password recovery.
-                                </small>
-                            </div>
-                            <form id="bruteForceForm" method="POST" action="{{ url_for('start_brute') }}" enctype="multipart/form-data" onsubmit="return startBruteForce(event)">
-                                <div class="mb-3">
-                                    <label class="form-label">Protected File</label>
-                                    <input type="file" name="file" class="form-control" accept=".pdf,.zip,.docx,.pptx,.xlsx" required>
-                                    <small class="form-text">Supports: PDF, ZIP, DOCX, PPTX, XLSX</small>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Wordlist Type</label>
-                                    <select name="wordlist" class="form-select" id="wordlistSelect" onchange="toggleWordlistUpload()">
-                                        <option value="common">Common Passwords</option>
-                                        <option value="numbers">Numeric (0000-9999)</option>
-                                        <option value="years">Years (1900-2029)</option>
-                                        <option value="custom">Custom Wordlist File</option>
-                                    </select>
-                                </div>
-                                <div class="mb-3" id="customWordlistDiv" style="display: none;">
-                                    <label class="form-label">Custom Wordlist File</label>
-                                    <input type="file" name="wordlist_file" class="form-control" accept=".txt">
-                                    <small class="form-text">Upload a text file with one password per line</small>
-                                </div>
-                                <button type="submit" class="btn btn-danger btn-glow w-100" id="startBruteBtn">
-                                    <i class="fas fa-hammer"></i> Start Brute Force
-                                </button>
-                            </form>
-                            
-                            <!-- Progress Display -->
-                            <div id="bruteProgress" style="display: none;" class="mt-4">
-                                <h6 class="text-warning"><i class="fas fa-cog fa-spin"></i> Brute Force in Progress</h6>
-                                <div class="progress mb-3">
-                                    <div id="progressBar" class="progress-bar bg-warning" role="progressbar" style="width: 0%"></div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-6">
-                                        <small class="text-muted">Progress:</small>
-                                        <div id="progressText">0%</div>
-                                    </div>
-                                    <div class="col-6">
-                                        <small class="text-muted">Current Password:</small>
-                                        <div id="currentPassword">-</div>
-                                    </div>
-                                </div>
-                                <div class="mt-2">
-                                    <small class="text-muted">Status:</small>
-                                    <div id="statusText">Running...</div>
-                                </div>
-                                <button type="button" class="btn btn-secondary btn-sm mt-3" onclick="cancelBruteForce()">
-                                    <i class="fas fa-stop"></i> Cancel
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>`,
-        
-        compare: `
-            <div class="modal fade" id="moduleModal" tabindex="-1">
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content" style="background: rgba(26, 26, 26, 0.95); border: 1px solid var(--accent-green);">
-                        <div class="modal-header">
-                            <h5 class="modal-title text-white"><i class="fas fa-balance-scale"></i> Hash Comparison</h5>
-                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="education-info mb-3">
-                                <small class="text-muted">
-                                    <i class="fas fa-info-circle"></i>
-                                    Compare cryptographic hashes of two files to verify integrity and detect tampering.
-                                </small>
-                            </div>
-                            <form method="POST" action="{{ url_for('compare') }}" enctype="multipart/form-data">
-                                <div class="mb-3">
-                                    <label class="form-label">Hash Type</label>
-                                    <select name="hash_type" class="form-select">
-                                        <option value="md5">MD5</option>
-                                        <option value="sha1">SHA-1</option>
-                                        <option value="sha256" selected>SHA-256</option>
-                                        <option value="sha512">SHA-512</option>
-                                    </select>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">First File</label>
-                                    <input type="file" name="file1" class="form-control" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Second File</label>
-                                    <input type="file" name="file2" class="form-control" required>
-                                </div>
-                                <button type="submit" class="btn btn-info btn-glow w-100">
-                                    <i class="fas fa-equals"></i> Compare Hashes
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>`,
-        
-        scanner: `
-            <div class="modal fade" id="moduleModal" tabindex="-1">
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content" style="background: rgba(26, 26, 26, 0.95); border: 1px solid var(--accent-green);">
-                        <div class="modal-header">
-                            <h5 class="modal-title text-white"><i class="fas fa-globe"></i> URL & Malware Scanner</h5>
-                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="education-info mb-3">
-                                <small class="text-muted">
-                                    <i class="fas fa-info-circle"></i>
-                                    Scan URLs for safety and files for malware signatures using basic detection algorithms.
-                                </small>
-                            </div>
-                            <form method="POST" action="{{ url_for('scan_url_route') }}">
-                                <h6 class="text-center mb-3 text-warning">URL Scanner</h6>
-                                <div class="mb-3">
-                                    <label class="form-label">URL to Scan</label>
-                                    <input type="url" name="url" class="form-control" placeholder="https://example.com" required>
-                                </div>
-                                <button type="submit" class="btn btn-warning btn-glow w-100 mb-3">
-                                    <i class="fas fa-search"></i> Scan URL
-                                </button>
-                            </form>
-                            <hr>
-                            <form method="POST" action="{{ url_for('scan_file_route') }}" enctype="multipart/form-data">
-                                <h6 class="text-center mb-3 text-danger">File Scanner</h6>
-                                <div class="mb-3">
-                                    <label class="form-label">File to Scan</label>
-                                    <input type="file" name="file" class="form-control" required>
-                                </div>
-                                <button type="submit" class="btn btn-danger btn-glow w-100">
-                                    <i class="fas fa-virus"></i> Scan for Malware
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>`,
-        
-        vuln: `
-            <div class="modal fade" id="moduleModal" tabindex="-1">
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content" style="background: rgba(26, 26, 26, 0.95); border: 1px solid var(--accent-green);">
-                        <div class="modal-header">
-                            <h5 class="modal-title text-white"><i class="fas fa-bug"></i> Vulnerability Scanner</h5>
-                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="alert alert-warning alert-sm">
-                                <i class="fas fa-exclamation-triangle"></i>
-                                <strong>Ethical Use:</strong> Only scan websites you own or have explicit permission to test.
-                            </div>
-                            <div class="education-info mb-3">
-                                <small class="text-muted">
-                                    <i class="fas fa-info-circle"></i>
-                                    Test websites for common vulnerabilities like SQL injection, XSS, and missing security headers.
-                                </small>
-                            </div>
-                            <form method="POST" action="{{ url_for('vulnerability_scan_route') }}" onsubmit="return confirmEthicalUse()">
-                                <div class="mb-3">
-                                    <label class="form-label">Target URL</label>
-                                    <input type="url" name="url" class="form-control" placeholder="https://target.com" required>
-                                </div>
-                                <button type="submit" class="btn btn-dark btn-glow w-100">
-                                    <i class="fas fa-search-plus"></i> Scan Vulnerabilities
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>`,
-        
-        password: `
-            <div class="modal fade" id="moduleModal" tabindex="-1">
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content" style="background: rgba(26, 26, 26, 0.95); border: 1px solid var(--accent-green);">
-                        <div class="modal-header">
-                            <h5 class="modal-title text-white"><i class="fas fa-shield-check"></i> Password Strength Analyzer</h5>
-                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="education-info mb-3">
-                                <small class="text-muted">
-                                    <i class="fas fa-info-circle"></i>
-                                    Analyze password security, entropy, patterns, and get detailed strength recommendations.
-                                </small>
-                            </div>
-                            <form id="passwordAnalyzerForm" onsubmit="return analyzePassword(event)">
-                                <div class="mb-3">
-                                    <label class="form-label">Password to Analyze</label>
-                                    <div class="input-group">
-                                        <input type="password" id="passwordInput" name="password" class="form-control" placeholder="Enter password..." required>
-                                        <button type="button" class="btn btn-outline-secondary" onclick="togglePasswordVisibility()">
-                                            <i id="toggleIcon" class="fas fa-eye"></i>
-                                        </button>
-                                    </div>
-                                    <small class="form-text">Your password is analyzed locally and not stored</small>
-                                </div>
-                                <button type="submit" class="btn btn-success btn-glow w-100">
-                                    <i class="fas fa-check-circle"></i> Analyze Strength
-                                </button>
-                            </form>
-                            
-                            <!-- Analysis Results -->
-                            <div id="analysisResults" style="display: none;" class="mt-4">
-                                <div class="card" style="background: rgba(0, 0, 0, 0.3); border: 1px solid var(--accent-green);">
-                                    <div class="card-header">
-                                        <h6><i class="fas fa-chart-bar"></i> Strength Analysis</h6>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="row mb-3">
-                                            <div class="col-6">
-                                                <div class="text-center">
-                                                    <h2 id="strengthScore" class="text-success">0</h2>
-                                                    <small class="text-muted">Security Score</small>
-                                                </div>
-                                            </div>
-                                            <div class="col-6">
-                                                <div class="text-center">
-                                                    <h5 id="strengthLevel" class="text-success">Very Strong</h5>
-                                                    <small class="text-muted">Strength Level</small>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="progress mb-3">
-                                            <div id="strengthBar" class="progress-bar bg-success" role="progressbar" style="width: 0%"></div>
-                                        </div>
-                                        
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <h6><i class="fas fa-info-circle"></i> Details</h6>
-                                                <ul id="detailsList" class="list-unstyled">
-                                                </ul>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <h6><i class="fas fa-exclamation-triangle"></i> Feedback</h6>
-                                                <ul id="feedbackList" class="list-unstyled">
-                                                </ul>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="mt-3">
-                                            <h6><i class="fas fa-clock"></i> Estimated Crack Time</h6>
-                                            <p id="crackTime" class="text-warning">-</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <!-- Password Suggestions -->
-                                <div class="card mt-3" style="background: rgba(0, 0, 0, 0.3); border: 1px solid var(--accent-green);">
-                                    <div class="card-header">
-                                        <h6><i class="fas fa-lightbulb"></i> Password Tips</h6>
-                                    </div>
-                                    <div class="card-body">
-                                        <ul id="suggestionsList" class="list-unstyled">
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>`,
-        
-        network: `
-            <div class="modal fade" id="moduleModal" tabindex="-1">
-                <div class="modal-dialog modal-xl">
-                    <div class="modal-content" style="background: rgba(26, 26, 26, 0.95); border: 1px solid var(--accent-green);">
-                        <div class="modal-header">
-                            <h5 class="modal-title text-white"><i class="fas fa-network-wired"></i> Network Diagnostic Tools</h5>
-                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="education-info mb-4">
-                                <small class="text-muted">
-                                    <i class="fas fa-info-circle"></i>
-                                    Comprehensive network diagnostic tools for connectivity testing, DNS resolution, port scanning, and route tracing.
-                                </small>
-                            </div>
-                            
-                            <!-- Network Tool Tabs -->
-                            <ul class="nav nav-pills mb-4" id="networkTabs" role="tablist">
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link active" id="ping-tab" data-bs-toggle="pill" data-bs-target="#ping" type="button" role="tab">
-                                        <i class="fas fa-satellite-dish"></i> Ping
-                                    </button>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link" id="dns-tab" data-bs-toggle="pill" data-bs-target="#dns" type="button" role="tab">
-                                        <i class="fas fa-server"></i> DNS Lookup
-                                    </button>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link" id="port-tab" data-bs-toggle="pill" data-bs-target="#port" type="button" role="tab">
-                                        <i class="fas fa-door-open"></i> Port Scan
-                                    </button>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link" id="trace-tab" data-bs-toggle="pill" data-bs-target="#trace" type="button" role="tab">
-                                        <i class="fas fa-route"></i> Traceroute
-                                    </button>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link" id="whois-tab" data-bs-toggle="pill" data-bs-target="#whois" type="button" role="tab">
-                                        <i class="fas fa-info"></i> WHOIS
-                                    </button>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link" id="netinfo-tab" data-bs-toggle="pill" data-bs-target="#netinfo" type="button" role="tab">
-                                        <i class="fas fa-network-wired"></i> Network Info
-                                    </button>
-                                </li>
-                            </ul>
-                            
-                            <!-- Tab Content -->
-                            <div class="tab-content" id="networkTabContent">
-                                <!-- Ping Tab -->
-                                <div class="tab-pane fade show active" id="ping" role="tabpanel">
-                                    <form onsubmit="return runPing(event)">
-                                        <div class="row">
-                                            <div class="col-md-8">
-                                                <label for="pingHost" class="form-label text-white">Hostname or IP Address</label>
-                                                <input type="text" class="form-control bg-dark text-white border-success" 
-                                                       id="pingHost" name="hostname" required 
-                                                       placeholder="google.com or 8.8.8.8">
-                                            </div>
-                                            <div class="col-md-4">
-                                                <label for="pingCount" class="form-label text-white">Ping Count</label>
-                                                <select class="form-control bg-dark text-white border-success" id="pingCount" name="count">
-                                                    <option value="4">4 packets</option>
-                                                    <option value="8">8 packets</option>
-                                                    <option value="10">10 packets</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <button type="submit" class="btn btn-success btn-glow mt-3">
-                                            <i class="fas fa-satellite-dish"></i> Run Ping
-                                        </button>
-                                    </form>
-                                    <div id="pingResult" class="mt-3" style="display: none;"></div>
-                                </div>
-                                
-                                <!-- DNS Lookup Tab -->
-                                <div class="tab-pane fade" id="dns" role="tabpanel">
-                                    <form onsubmit="return runDNS(event)">
-                                        <div class="row">
-                                            <div class="col-md-8">
-                                                <label for="dnsHost" class="form-label text-white">Hostname</label>
-                                                <input type="text" class="form-control bg-dark text-white border-success" 
-                                                       id="dnsHost" name="hostname" required 
-                                                       placeholder="google.com">
-                                            </div>
-                                            <div class="col-md-4">
-                                                <label for="dnsType" class="form-label text-white">Record Type</label>
-                                                <select class="form-control bg-dark text-white border-success" id="dnsType" name="record_type">
-                                                    <option value="A">A (IPv4)</option>
-                                                    <option value="AAAA">AAAA (IPv6)</option>
-                                                    <option value="MX">MX (Mail)</option>
-                                                    <option value="NS">NS (Name Server)</option>
-                                                    <option value="TXT">TXT (Text)</option>
-                                                    <option value="CNAME">CNAME (Alias)</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <button type="submit" class="btn btn-success btn-glow mt-3">
-                                            <i class="fas fa-server"></i> Lookup DNS
-                                        </button>
-                                    </form>
-                                    <div id="dnsResult" class="mt-3" style="display: none;"></div>
-                                </div>
-                                
-                                <!-- Port Scan Tab -->
-                                <div class="tab-pane fade" id="port" role="tabpanel">
-                                    <form onsubmit="return runPortScan(event)">
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <label for="portHost" class="form-label text-white">Hostname or IP</label>
-                                                <input type="text" class="form-control bg-dark text-white border-success" 
-                                                       id="portHost" name="hostname" required 
-                                                       placeholder="google.com">
-                                            </div>
-                                            <div class="col-md-6">
-                                                <label for="portList" class="form-label text-white">Ports (comma-separated or ranges)</label>
-                                                <input type="text" class="form-control bg-dark text-white border-success" 
-                                                       id="portList" name="ports" 
-                                                       value="80,443,22,21,25,53" 
-                                                       placeholder="80,443,22 or 80-90">
-                                            </div>
-                                        </div>
-                                        <small class="text-muted">Examples: 80,443,22 or 80-90 or 20-25,80,443 (max 50 ports)</small>
-                                        <button type="submit" class="btn btn-success btn-glow mt-3">
-                                            <i class="fas fa-door-open"></i> Scan Ports
-                                        </button>
-                                    </form>
-                                    <div id="portResult" class="mt-3" style="display: none;"></div>
-                                </div>
-                                
-                                <!-- Traceroute Tab -->
-                                <div class="tab-pane fade" id="trace" role="tabpanel">
-                                    <form onsubmit="return runTraceroute(event)">
-                                        <div class="row">
-                                            <div class="col-md-8">
-                                                <label for="traceHost" class="form-label text-white">Hostname or IP</label>
-                                                <input type="text" class="form-control bg-dark text-white border-success" 
-                                                       id="traceHost" name="hostname" required 
-                                                       placeholder="google.com">
-                                            </div>
-                                            <div class="col-md-4">
-                                                <label for="traceHops" class="form-label text-white">Max Hops</label>
-                                                <select class="form-control bg-dark text-white border-success" id="traceHops" name="max_hops">
-                                                    <option value="15">15 hops</option>
-                                                    <option value="20">20 hops</option>
-                                                    <option value="30">30 hops</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <button type="submit" class="btn btn-success btn-glow mt-3">
-                                            <i class="fas fa-route"></i> Run Traceroute
-                                        </button>
-                                    </form>
-                                    <div id="traceResult" class="mt-3" style="display: none;"></div>
-                                </div>
-                                
-                                <!-- WHOIS Tab -->
-                                <div class="tab-pane fade" id="whois" role="tabpanel">
-                                    <form onsubmit="return runWhois(event)">
-                                        <div class="mb-3">
-                                            <label for="whoisDomain" class="form-label text-white">Domain Name</label>
-                                            <input type="text" class="form-control bg-dark text-white border-success" 
-                                                   id="whoisDomain" name="domain" required 
-                                                   placeholder="google.com">
-                                        </div>
-                                        <button type="submit" class="btn btn-success btn-glow">
-                                            <i class="fas fa-info"></i> WHOIS Lookup
-                                        </button>
-                                    </form>
-                                    <div id="whoisResult" class="mt-3" style="display: none;"></div>
-                                </div>
-                                
-                                <!-- Network Info Tab -->
-                                <div class="tab-pane fade" id="netinfo" role="tabpanel">
-                                    <div class="text-center">
-                                        <button onclick="getNetworkInfo()" class="btn btn-success btn-glow">
-                                            <i class="fas fa-network-wired"></i> Get Network Information
-                                        </button>
-                                    </div>
-                                    <div id="netinfoResult" class="mt-3" style="display: none;"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>`
-    };
-    
-    return modals[moduleType] || '<div>Module not found</div>';
+ const modals = {
+ hash: `
+ <div class="modal fade" id="moduleModal" tabindex="-1">
+ <div class="modal-dialog modal-lg">
+ <div class="modal-content" style="background: rgba(26, 26, 26, 0.95); border: 1px solid var(--accent-green);">
+ <div class="modal-header">
+ <h5 class="modal-title text-white"><i class="fas fa-hash"></i> Hash Calculator</h5>
+ <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+ </div>
+ <div class="modal-body">
+ <div class="education-info mb-3">
+ <small class="text-muted">
+ <i class="fas fa-info-circle"></i>
+ Generate cryptographic hashes (MD5, SHA-1, SHA-256, SHA-512) for data integrity verification.
+ </small>
+ </div>
+ <form method="POST" action="{{ url_for('hash_calculator') }}" enctype="multipart/form-data">
+ <div class="mb-3">
+ <label class="form-label">Hash Type</label>
+ <select name="hash_type" class="form-select">
+ <option value="md5">MD5</option>
+ <option value="sha1">SHA-1</option>
+ <option value="sha256" selected>SHA-256</option>
+ <option value="sha512">SHA-512</option>
+ </select>
+ </div>
+ <div class="mb-3">
+ <label class="form-label">Input Text</label>
+ <textarea name="text" class="form-control" rows="2" placeholder="Enter text to hash..."></textarea>
+ </div>
+ <div class="mb-3">
+ <label class="form-label">Or Upload File</label>
+ <input type="file" name="file" class="form-control">
+ </div>
+ <button type="submit" class="btn btn-primary btn-glow w-100">
+ <i class="fas fa-calculator"></i> Calculate Hash
+ </button>
+ </form>
+ </div>
+ </div>
+ </div>
+ </div>`,
+
+ encrypt: `
+ <div class="modal fade" id="moduleModal" tabindex="-1">
+ <div class="modal-dialog modal-lg">
+ <div class="modal-content" style="background: rgba(26, 26, 26, 0.95); border: 1px solid var(--accent-green);">
+ <div class="modal-header">
+ <h5 class="modal-title text-white"><i class="fas fa-lock"></i> File Encrypt/Decrypt</h5>
+ <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+ </div>
+ <div class="modal-body">
+ <div class="education-info mb-3">
+ <small class="text-muted">
+ <i class="fas fa-info-circle"></i>
+ Secure files using AES encryption with password-based key derivation (PBKDF2).
+ </small>
+ </div>
+ <form method="POST" action="{{ url_for('encrypt') }}" enctype="multipart/form-data">
+ <h6 class="text-center mb-3 text-success">Encrypt File</h6>
+ <div class="mb-3">
+ <label class="form-label">File to Encrypt</label>
+ <input type="file" name="file" class="form-control" required>
+ </div>
+ <div class="mb-3">
+ <label class="form-label">Encryption Password</label>
+ <input type="password" name="password" class="form-control" required>
+ </div>
+ <button type="submit" class="btn btn-success btn-glow w-100 mb-3">
+ <i class="fas fa-shield-alt"></i> Encrypt File
+ </button>
+ </form>
+ <hr>
+ <form method="POST" action="{{ url_for('decrypt') }}" enctype="multipart/form-data">
+ <h6 class="text-center mb-3 text-warning">Decrypt File</h6>
+ <div class="mb-3">
+ <label class="form-label">Encrypted File</label>
+ <input type="file" name="file" class="form-control" required>
+ </div>
+ <div class="mb-3">
+ <label class="form-label">Decryption Password</label>
+ <input type="password" name="password" class="form-control" required>
+ </div>
+ <button type="submit" class="btn btn-warning btn-glow w-100">
+ <i class="fas fa-unlock"></i> Decrypt File
+ </button>
+ </form>
+ </div>
+ </div>
+ </div>
+ </div>`,
+
+ brute: `
+ <div class="modal fade" id="moduleModal" tabindex="-1">
+ <div class="modal-dialog modal-lg">
+ <div class="modal-content" style="background: rgba(26, 26, 26, 0.95); border: 1px solid var(--accent-green);">
+ <div class="modal-header">
+ <h5 class="modal-title text-white"><i class="fas fa-hammer"></i> Brute Force Simulator</h5>
+ <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+ </div>
+ <div class="modal-body">
+ <div class="alert alert-danger alert-sm">
+ <i class="fas fa-exclamation-triangle"></i>
+ <strong>Legal Notice:</strong> Only use on files you own or have explicit permission to test.
+ </div>
+ <div class="education-info mb-3">
+ <small class="text-muted">
+ <i class="fas fa-info-circle"></i>
+ Attempt brute force attacks on protected files (PDF, ZIP, Office documents) for password recovery.
+ </small>
+ </div>
+ <form id="bruteForceForm" method="POST" action="{{ url_for('start_brute') }}" enctype="multipart/form-data" onsubmit="return startBruteForce(event)">
+ <div class="mb-3">
+ <label class="form-label">Protected File</label>
+ <input type="file" name="file" class="form-control" accept=".pdf,.zip,.docx,.pptx,.xlsx" required>
+ <small class="form-text">Supports: PDF, ZIP, DOCX, PPTX, XLSX</small>
+ </div>
+ <div class="mb-3">
+ <label class="form-label">Wordlist Type</label>
+ <select name="wordlist" class="form-select" id="wordlistSelect" onchange="toggleWordlistUpload()">
+ <option value="common">Common Passwords</option>
+ <option value="numbers">Numeric (0000-9999)</option>
+ <option value="years">Years (1900-2029)</option>
+ <option value="custom">Custom Wordlist File</option>
+ </select>
+ </div>
+ <div class="mb-3" id="customWordlistDiv" style="display: none;">
+ <label class="form-label">Custom Wordlist File</label>
+ <input type="file" name="wordlist_file" class="form-control" accept=".txt">
+ <small class="form-text">Upload a text file with one password per line</small>
+ </div>
+ <button type="submit" class="btn btn-danger btn-glow w-100" id="startBruteBtn">
+ <i class="fas fa-hammer"></i> Start Brute Force
+ </button>
+ </form>
+
+ <!-- Progress Display -->
+ <div id="bruteProgress" style="display: none;" class="mt-4">
+ <h6 class="text-warning"><i class="fas fa-cog fa-spin"></i> Brute Force in Progress</h6>
+ <div class="progress mb-3">
+ <div id="progressBar" class="progress-bar bg-warning" role="progressbar" style="width: 0%"></div>
+ </div>
+ <div class="row">
+ <div class="col-6">
+ <small class="text-muted">Progress:</small>
+ <div id="progressText">0%</div>
+ </div>
+ <div class="col-6">
+ <small class="text-muted">Current Password:</small>
+ <div id="currentPassword">-</div>
+ </div>
+ </div>
+ <div class="mt-2">
+ <small class="text-muted">Status:</small>
+ <div id="statusText">Running...</div>
+ </div>
+ <button type="button" class="btn btn-secondary btn-sm mt-3" onclick="cancelBruteForce()">
+ <i class="fas fa-stop"></i> Cancel
+ </button>
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>`,
+
+ compare: `
+ <div class="modal fade" id="moduleModal" tabindex="-1">
+ <div class="modal-dialog modal-lg">
+ <div class="modal-content" style="background: rgba(26, 26, 26, 0.95); border: 1px solid var(--accent-green);">
+ <div class="modal-header">
+ <h5 class="modal-title text-white"><i class="fas fa-balance-scale"></i> Hash Comparison</h5>
+ <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+ </div>
+ <div class="modal-body">
+ <div class="education-info mb-3">
+ <small class="text-muted">
+ <i class="fas fa-info-circle"></i>
+ Compare cryptographic hashes of two files to verify integrity and detect tampering.
+ </small>
+ </div>
+ <form method="POST" action="{{ url_for('compare') }}" enctype="multipart/form-data">
+ <div class="mb-3">
+ <label class="form-label">Hash Type</label>
+ <select name="hash_type" class="form-select">
+ <option value="md5">MD5</option>
+ <option value="sha1">SHA-1</option>
+ <option value="sha256" selected>SHA-256</option>
+ <option value="sha512">SHA-512</option>
+ </select>
+ </div>
+ <div class="mb-3">
+ <label class="form-label">First File</label>
+ <input type="file" name="file1" class="form-control" required>
+ </div>
+ <div class="mb-3">
+ <label class="form-label">Second File</label>
+ <input type="file" name="file2" class="form-control" required>
+ </div>
+ <button type="submit" class="btn btn-info btn-glow w-100">
+ <i class="fas fa-equals"></i> Compare Hashes
+ </button>
+ </form>
+ </div>
+ </div>
+ </div>
+ </div>`,
+
+ scanner: `
+ <div class="modal fade" id="moduleModal" tabindex="-1">
+ <div class="modal-dialog modal-lg">
+ <div class="modal-content" style="background: rgba(26, 26, 26, 0.95); border: 1px solid var(--accent-green);">
+ <div class="modal-header">
+ <h5 class="modal-title text-white"><i class="fas fa-globe"></i> URL & Malware Scanner</h5>
+ <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+ </div>
+ <div class="modal-body">
+ <div class="education-info mb-3">
+ <small class="text-muted">
+ <i class="fas fa-info-circle"></i>
+ Scan URLs for safety and files for malware signatures using basic detection algorithms.
+ </small>
+ </div>
+ <form method="POST" action="{{ url_for('scan_url_route') }}">
+ <h6 class="text-center mb-3 text-warning">URL Scanner</h6>
+ <div class="mb-3">
+ <label class="form-label">URL to Scan</label>
+ <input type="url" name="url" class="form-control" placeholder="https://example.com" required>
+ </div>
+ <button type="submit" class="btn btn-warning btn-glow w-100 mb-3">
+ <i class="fas fa-search"></i> Scan URL
+ </button>
+ </form>
+ <hr>
+ <form method="POST" action="{{ url_for('scan_file_route') }}" enctype="multipart/form-data">
+ <h6 class="text-center mb-3 text-danger">File Scanner</h6>
+ <div class="mb-3">
+ <label class="form-label">File to Scan</label>
+ <input type="file" name="file" class="form-control" required>
+ </div>
+ <button type="submit" class="btn btn-danger btn-glow w-100">
+ <i class="fas fa-virus"></i> Scan for Malware
+ </button>
+ </form>
+ </div>
+ </div>
+ </div>
+ </div>`,
+
+ vuln: `
+ <div class="modal fade" id="moduleModal" tabindex="-1">
+ <div class="modal-dialog modal-lg">
+ <div class="modal-content" style="background: rgba(26, 26, 26, 0.95); border: 1px solid var(--accent-green);">
+ <div class="modal-header">
+ <h5 class="modal-title text-white"><i class="fas fa-bug"></i> Vulnerability Scanner</h5>
+ <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+ </div>
+ <div class="modal-body">
+ <div class="alert alert-warning alert-sm">
+ <i class="fas fa-exclamation-triangle"></i>
+ <strong>Ethical Use:</strong> Only scan websites you own or have explicit permission to test.
+ </div>
+ <div class="education-info mb-3">
+ <small class="text-muted">
+ <i class="fas fa-info-circle"></i>
+ Test websites for common vulnerabilities like SQL injection, XSS, and missing security headers.
+ </small>
+ </div>
+ <form method="POST" action="{{ url_for('vulnerability_scan_route') }}" onsubmit="return confirmEthicalUse()">
+ <div class="mb-3">
+ <label class="form-label">Target URL</label>
+ <input type="url" name="url" class="form-control" placeholder="https://target.com" required>
+ </div>
+ <button type="submit" class="btn btn-dark btn-glow w-100">
+ <i class="fas fa-search-plus"></i> Scan Vulnerabilities
+ </button>
+ </form>
+ </div>
+ </div>
+ </div>
+ </div>`,
+
+ password: `
+ <div class="modal fade" id="moduleModal" tabindex="-1">
+ <div class="modal-dialog modal-lg">
+ <div class="modal-content" style="background: rgba(26, 26, 26, 0.95); border: 1px solid var(--accent-green);">
+ <div class="modal-header">
+ <h5 class="modal-title text-white"><i class="fas fa-shield-check"></i> Password Strength Analyzer</h5>
+ <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+ </div>
+ <div class="modal-body">
+ <div class="education-info mb-3">
+ <small class="text-muted">
+ <i class="fas fa-info-circle"></i>
+ Analyze password security, entropy, patterns, and get detailed strength recommendations.
+ </small>
+ </div>
+ <form id="passwordAnalyzerForm" onsubmit="return analyzePassword(event)">
+ <div class="mb-3">
+ <label class="form-label">Password to Analyze</label>
+ <div class="input-group">
+ <input type="password" id="passwordInput" name="password" class="form-control" placeholder="Enter password..." required>
+ <button type="button" class="btn btn-outline-secondary" onclick="togglePasswordVisibility()">
+ <i id="toggleIcon" class="fas fa-eye"></i>
+ </button>
+ </div>
+ <small class="form-text">Your password is analyzed locally and not stored</small>
+ </div>
+ <button type="submit" class="btn btn-success btn-glow w-100">
+ <i class="fas fa-check-circle"></i> Analyze Strength
+ </button>
+ </form>
+
+ <!-- Analysis Results -->
+ <div id="analysisResults" style="display: none;" class="mt-4">
+ <div class="card" style="background: rgba(0, 0, 0, 0.3); border: 1px solid var(--accent-green);">
+ <div class="card-header">
+ <h6><i class="fas fa-chart-bar"></i> Strength Analysis</h6>
+ </div>
+ <div class="card-body">
+ <div class="row mb-3">
+ <div class="col-6">
+ <div class="text-center">
+ <h2 id="strengthScore" class="text-success">0</h2>
+ <small class="text-muted">Security Score</small>
+ </div>
+ </div>
+ <div class="col-6">
+ <div class="text-center">
+ <h5 id="strengthLevel" class="text-success">Very Strong</h5>
+ <small class="text-muted">Strength Level</small>
+ </div>
+ </div>
+ </div>
+
+ <div class="progress mb-3">
+ <div id="strengthBar" class="progress-bar bg-success" role="progressbar" style="width: 0%"></div>
+ </div>
+
+ <div class="row">
+ <div class="col-md-6">
+ <h6><i class="fas fa-info-circle"></i> Details</h6>
+ <ul id="detailsList" class="list-unstyled">
+ </ul>
+ </div>
+ <div class="col-md-6">
+ <h6><i class="fas fa-exclamation-triangle"></i> Feedback</h6>
+ <ul id="feedbackList" class="list-unstyled">
+ </ul>
+ </div>
+ </div>
+
+ <div class="mt-3">
+ <h6><i class="fas fa-clock"></i> Estimated Crack Time</h6>
+ <p id="crackTime" class="text-warning">-</p>
+ </div>
+ </div>
+ </div>
+
+ <!-- Password Suggestions -->
+ <div class="card mt-3" style="background: rgba(0, 0, 0, 0.3); border: 1px solid var(--accent-green);">
+ <div class="card-header">
+ <h6><i class="fas fa-lightbulb"></i> Password Tips</h6>
+ </div>
+ <div class="card-body">
+ <ul id="suggestionsList" class="list-unstyled">
+ </ul>
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>`,
+
+ network: `
+ <div class="modal fade" id="moduleModal" tabindex="-1">
+ <div class="modal-dialog modal-xl">
+ <div class="modal-content" style="background: rgba(26, 26, 26, 0.95); border: 1px solid var(--accent-green);">
+ <div class="modal-header">
+ <h5 class="modal-title text-white"><i class="fas fa-network-wired"></i> Network Diagnostic Tools</h5>
+ <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+ </div>
+ <div class="modal-body">
+ <div class="education-info mb-4">
+ <small class="text-muted">
+ <i class="fas fa-info-circle"></i>
+ Comprehensive network diagnostic tools for connectivity testing, DNS resolution, port scanning, and route tracing.
+ </small>
+ </div>
+
+ <!-- Network Tool Tabs -->
+ <ul class="nav nav-pills mb-4" id="networkTabs" role="tablist">
+ <li class="nav-item" role="presentation">
+ <button class="nav-link active" id="ping-tab" data-bs-toggle="pill" data-bs-target="#ping" type="button" role="tab">
+ <i class="fas fa-satellite-dish"></i> Ping
+ </button>
+ </li>
+ <li class="nav-item" role="presentation">
+ <button class="nav-link" id="dns-tab" data-bs-toggle="pill" data-bs-target="#dns" type="button" role="tab">
+ <i class="fas fa-server"></i> DNS Lookup
+ </button>
+ </li>
+ <li class="nav-item" role="presentation">
+ <button class="nav-link" id="port-tab" data-bs-toggle="pill" data-bs-target="#port" type="button" role="tab">
+ <i class="fas fa-door-open"></i> Port Scan
+ </button>
+ </li>
+ <li class="nav-item" role="presentation">
+ <button class="nav-link" id="trace-tab" data-bs-toggle="pill" data-bs-target="#trace" type="button" role="tab">
+ <i class="fas fa-route"></i> Traceroute
+ </button>
+ </li>
+ <li class="nav-item" role="presentation">
+ <button class="nav-link" id="whois-tab" data-bs-toggle="pill" data-bs-target="#whois" type="button" role="tab">
+ <i class="fas fa-info"></i> WHOIS
+ </button>
+ </li>
+ <li class="nav-item" role="presentation">
+ <button class="nav-link" id="netinfo-tab" data-bs-toggle="pill" data-bs-target="#netinfo" type="button" role="tab">
+ <i class="fas fa-network-wired"></i> Network Info
+ </button>
+ </li>
+ </ul>
+
+ <!-- Tab Content -->
+ <div class="tab-content" id="networkTabContent">
+ <!-- Ping Tab -->
+ <div class="tab-pane fade show active" id="ping" role="tabpanel">
+ <form onsubmit="return runPing(event)">
+ <div class="row">
+ <div class="col-md-8">
+ <label for="pingHost" class="form-label text-white">Hostname or IP Address</label>
+ <input type="text" class="form-control bg-dark text-white border-success"
+ id="pingHost" name="hostname" required
+ placeholder="google.com or 8.8.8.8">
+ </div>
+ <div class="col-md-4">
+ <label for="pingCount" class="form-label text-white">Ping Count</label>
+ <select class="form-control bg-dark text-white border-success" id="pingCount" name="count">
+ <option value="4">4 packets</option>
+ <option value="8">8 packets</option>
+ <option value="10">10 packets</option>
+ </select>
+ </div>
+ </div>
+ <button type="submit" class="btn btn-success btn-glow mt-3">
+ <i class="fas fa-satellite-dish"></i> Run Ping
+ </button>
+ </form>
+ <div id="pingResult" class="mt-3" style="display: none;"></div>
+ </div>
+
+ <!-- DNS Lookup Tab -->
+ <div class="tab-pane fade" id="dns" role="tabpanel">
+ <form onsubmit="return runDNS(event)">
+ <div class="row">
+ <div class="col-md-8">
+ <label for="dnsHost" class="form-label text-white">Hostname</label>
+ <input type="text" class="form-control bg-dark text-white border-success"
+ id="dnsHost" name="hostname" required
+ placeholder="google.com">
+ </div>
+ <div class="col-md-4">
+ <label for="dnsType" class="form-label text-white">Record Type</label>
+ <select class="form-control bg-dark text-white border-success" id="dnsType" name="record_type">
+ <option value="A">A (IPv4)</option>
+ <option value="AAAA">AAAA (IPv6)</option>
+ <option value="MX">MX (Mail)</option>
+ <option value="NS">NS (Name Server)</option>
+ <option value="TXT">TXT (Text)</option>
+ <option value="CNAME">CNAME (Alias)</option>
+ </select>
+ </div>
+ </div>
+ <button type="submit" class="btn btn-success btn-glow mt-3">
+ <i class="fas fa-server"></i> Lookup DNS
+ </button>
+ </form>
+ <div id="dnsResult" class="mt-3" style="display: none;"></div>
+ </div>
+
+ <!-- Port Scan Tab -->
+ <div class="tab-pane fade" id="port" role="tabpanel">
+ <form onsubmit="return runPortScan(event)">
+ <div class="row">
+ <div class="col-md-6">
+ <label for="portHost" class="form-label text-white">Hostname or IP</label>
+ <input type="text" class="form-control bg-dark text-white border-success"
+ id="portHost" name="hostname" required
+ placeholder="google.com">
+ </div>
+ <div class="col-md-6">
+ <label for="portList" class="form-label text-white">Ports (comma-separated or ranges)</label>
+ <input type="text" class="form-control bg-dark text-white border-success"
+ id="portList" name="ports"
+ value="80,443,22,21,25,53"
+ placeholder="80,443,22 or 80-90">
+ </div>
+ </div>
+ <small class="text-muted">Examples: 80,443,22 or 80-90 or 20-25,80,443 (max 50 ports)</small>
+ <button type="submit" class="btn btn-success btn-glow mt-3">
+ <i class="fas fa-door-open"></i> Scan Ports
+ </button>
+ </form>
+ <div id="portResult" class="mt-3" style="display: none;"></div>
+ </div>
+
+ <!-- Traceroute Tab -->
+ <div class="tab-pane fade" id="trace" role="tabpanel">
+ <form onsubmit="return runTraceroute(event)">
+ <div class="row">
+ <div class="col-md-8">
+ <label for="traceHost" class="form-label text-white">Hostname or IP</label>
+ <input type="text" class="form-control bg-dark text-white border-success"
+ id="traceHost" name="hostname" required
+ placeholder="google.com">
+ </div>
+ <div class="col-md-4">
+ <label for="traceHops" class="form-label text-white">Max Hops</label>
+ <select class="form-control bg-dark text-white border-success" id="traceHops" name="max_hops">
+ <option value="15">15 hops</option>
+ <option value="20">20 hops</option>
+ <option value="30">30 hops</option>
+ </select>
+ </div>
+ </div>
+ <button type="submit" class="btn btn-success btn-glow mt-3">
+ <i class="fas fa-route"></i> Run Traceroute
+ </button>
+ </form>
+ <div id="traceResult" class="mt-3" style="display: none;"></div>
+ </div>
+
+ <!-- WHOIS Tab -->
+ <div class="tab-pane fade" id="whois" role="tabpanel">
+ <form onsubmit="return runWhois(event)">
+ <div class="mb-3">
+ <label for="whoisDomain" class="form-label text-white">Domain Name</label>
+ <input type="text" class="form-control bg-dark text-white border-success"
+ id="whoisDomain" name="domain" required
+ placeholder="google.com">
+ </div>
+ <button type="submit" class="btn btn-success btn-glow">
+ <i class="fas fa-info"></i> WHOIS Lookup
+ </button>
+ </form>
+ <div id="whoisResult" class="mt-3" style="display: none;"></div>
+ </div>
+
+ <!-- Network Info Tab -->
+ <div class="tab-pane fade" id="netinfo" role="tabpanel">
+ <div class="text-center">
+ <button onclick="getNetworkInfo()" class="btn btn-success btn-glow">
+ <i class="fas fa-network-wired"></i> Get Network Information
+ </button>
+ </div>
+ <div id="netinfoResult" class="mt-3" style="display: none;"></div>
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>`
+ };
+
+ return modals[moduleType] || '<div>Module not found</div>';
 }
 
 function confirmLegality() {
-    return confirm('I confirm that I have permission to test this file and will use this tool responsibly and legally.');
+ return confirm('I confirm that I have permission to test this file and will use this tool responsibly and legally.');
 }
 
 function confirmEthicalUse() {
-    return confirm('I confirm that I have permission to scan this website and will use this tool responsibly.');
+ return confirm('I confirm that I have permission to scan this website and will use this tool responsibly.');
 }
 
 function toggleWordlistUpload() {
-    const select = document.getElementById('wordlistSelect');
-    const customDiv = document.getElementById('customWordlistDiv');
-    
-    if (select.value === 'custom') {
-        customDiv.style.display = 'block';
-    } else {
-        customDiv.style.display = 'none';
-    }
+ const select = document.getElementById('wordlistSelect');
+ const customDiv = document.getElementById('customWordlistDiv');
+
+ if (select.value === 'custom') {
+ customDiv.style.display = 'block';
+ } else {
+ customDiv.style.display = 'none';
+ }
 }
 
 let currentJobId = null;
 let progressInterval = null;
 
 function startBruteForce(event) {
-    event.preventDefault();
-    
-    if (!confirmLegality()) {
-        return false;
-    }
-    
-    const form = document.getElementById('bruteForceForm');
-    const formData = new FormData(form);
-    
-    // Hide form and show progress
-    form.style.display = 'none';
-    document.getElementById('bruteProgress').style.display = 'block';
-    
-    fetch('{{ url_for('start_brute') }}', {
-        method: 'POST',
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.error) {
-            alert('Error: ' + data.error);
-            resetBruteForceForm();
-        } else {
-            currentJobId = data.job_id;
-            startProgressMonitoring();
-        }
-    })
-    .catch(error => {
-        alert('Error: ' + error);
-        resetBruteForceForm();
-    });
-    
-    return false;
+ event.preventDefault();
+
+ if (!confirmLegality()) {
+ return false;
+ }
+
+ const form = document.getElementById('bruteForceForm');
+ const formData = new FormData(form);
+
+ // Hide form and show progress
+ form.style.display = 'none';
+ document.getElementById('bruteProgress').style.display = 'block';
+
+ fetch('{{ url_for('start_brute') }}', {
+ method: 'POST',
+ body: formData
+ })
+ .then(response => response.json())
+ .then(data => {
+ if (data.error) {
+ alert('Error: ' + data.error);
+ resetBruteForceForm();
+ } else {
+ currentJobId = data.job_id;
+ startProgressMonitoring();
+ }
+ })
+ .catch(error => {
+ alert('Error: ' + error);
+ resetBruteForceForm();
+ });
+
+ return false;
 }
 
 function startProgressMonitoring() {
-    progressInterval = setInterval(() => {
-        if (currentJobId) {
-            fetch(`/api/job_status/${currentJobId}`)
-            .then(response => response.json())
-            .then(data => {
-                updateProgress(data);
-                
-                if (data.status === 'completed' || data.status === 'failed' || data.status === 'cancelled') {
-                    clearInterval(progressInterval);
-                    setTimeout(() => {
-                        resetBruteForceForm();
-                        closeModal();
-                    }, 3000);
-                }
-            });
-        }
-    }, 500); // Update every 500ms
+ progressInterval = setInterval(() => {
+ if (currentJobId) {
+ fetch(`/api/job_status/${currentJobId}`)
+ .then(response => response.json())
+ .then(data => {
+ updateProgress(data);
+
+ if (data.status === 'completed' || data.status === 'failed' || data.status === 'cancelled') {
+ clearInterval(progressInterval);
+ setTimeout(() => {
+ resetBruteForceForm();
+ closeModal();
+ }, 3000);
+ }
+ });
+ }
+ }, 500); // Update every 500ms
 }
 
 function updateProgress(data) {
-    const progressBar = document.getElementById('progressBar');
-    const progressText = document.getElementById('progressText');
-    const currentPassword = document.getElementById('currentPassword');
-    const statusText = document.getElementById('statusText');
-    
-    progressBar.style.width = data.progress + '%';
-    progressText.textContent = data.progress + '%';
-    statusText.textContent = data.status.charAt(0).toUpperCase() + data.status.slice(1);
-    
-    if (data.result) {
-        if (data.result.startsWith('Trying:')) {
-            currentPassword.textContent = data.result.replace('Trying: ', '');
-        } else if (data.result.startsWith('Password found:')) {
-            currentPassword.textContent = 'SUCCESS!';
-            statusText.innerHTML = '<span class="text-success">' + data.result + '</span>';
-            progressBar.className = 'progress-bar bg-success';
-        } else {
-            currentPassword.textContent = '-';
-            statusText.textContent = data.result;
-            if (data.status === 'failed') {
-                progressBar.className = 'progress-bar bg-danger';
-            }
-        }
-    }
+ const progressBar = document.getElementById('progressBar');
+ const progressText = document.getElementById('progressText');
+ const currentPassword = document.getElementById('currentPassword');
+ const statusText = document.getElementById('statusText');
+
+ progressBar.style.width = data.progress + '%';
+ progressText.textContent = data.progress + '%';
+ statusText.textContent = data.status.charAt(0).toUpperCase() + data.status.slice(1);
+
+ if (data.result) {
+ if (data.result.startsWith('Trying:')) {
+ currentPassword.textContent = data.result.replace('Trying: ', '');
+ } else if (data.result.startsWith('Password found:')) {
+ currentPassword.textContent = 'SUCCESS!';
+ statusText.innerHTML = '<span class="text-success">' + data.result + '</span>';
+ progressBar.className = 'progress-bar bg-success';
+ } else {
+ currentPassword.textContent = '-';
+ statusText.textContent = data.result;
+ if (data.status === 'failed') {
+ progressBar.className = 'progress-bar bg-danger';
+ }
+ }
+ }
 }
 
 function cancelBruteForce() {
-    if (currentJobId) {
-        fetch(`/api/cancel_job/${currentJobId}`, {
-            method: 'POST'
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (progressInterval) {
-                clearInterval(progressInterval);
-            }
-            resetBruteForceForm();
-        });
-    }
+ if (currentJobId) {
+ fetch(`/api/cancel_job/${currentJobId}`, {
+ method: 'POST'
+ })
+ .then(response => response.json())
+ .then(data => {
+ if (progressInterval) {
+ clearInterval(progressInterval);
+ }
+ resetBruteForceForm();
+ });
+ }
 }
 
 function resetBruteForceForm() {
-    document.getElementById('bruteForceForm').style.display = 'block';
-    document.getElementById('bruteProgress').style.display = 'none';
-    
-    // Reset progress
-    document.getElementById('progressBar').style.width = '0%';
-    document.getElementById('progressBar').className = 'progress-bar bg-warning';
-    document.getElementById('progressText').textContent = '0%';
-    document.getElementById('currentPassword').textContent = '-';
-    document.getElementById('statusText').textContent = 'Running...';
-    
-    currentJobId = null;
-    if (progressInterval) {
-        clearInterval(progressInterval);
-        progressInterval = null;
-    }
+ document.getElementById('bruteForceForm').style.display = 'block';
+ document.getElementById('bruteProgress').style.display = 'none';
+
+ // Reset progress
+ document.getElementById('progressBar').style.width = '0%';
+ document.getElementById('progressBar').className = 'progress-bar bg-warning';
+ document.getElementById('progressText').textContent = '0%';
+ document.getElementById('currentPassword').textContent = '-';
+ document.getElementById('statusText').textContent = 'Running...';
+
+ currentJobId = null;
+ if (progressInterval) {
+ clearInterval(progressInterval);
+ progressInterval = null;
+ }
 }
 
 function closeModal() {
-    // Close the bootstrap modal
-    const modal = bootstrap.Modal.getInstance(document.getElementById('moduleModal'));
-    if (modal) {
-        modal.hide();
-    }
+ // Close the bootstrap modal
+ const modal = bootstrap.Modal.getInstance(document.getElementById('moduleModal'));
+ if (modal) {
+ modal.hide();
+ }
 }
 
 // Network Tools Functions
 function runPing(event) {
-    event.preventDefault();
-    const form = event.target;
-    const formData = new FormData(form);
-    const resultDiv = document.getElementById('pingResult');
-    
-    resultDiv.innerHTML = '<div class="alert alert-info"><i class="fas fa-spinner fa-spin"></i> Running ping...</div>';
-    resultDiv.style.display = 'block';
-    
-    fetch('/network/ping', {
-        method: 'POST',
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            let html = '<div class="alert alert-success">Ping successful!</div>';
-            html += '<div class="card bg-dark border-success mt-3">';
-            html += '<div class="card-header"><h6><i class="fas fa-satellite-dish"></i> Ping Results</h6></div>';
-            html += '<div class="card-body">';
-            
-            if (data.statistics) {
-                html += '<div class="row mb-3">';
-                if (data.statistics.packet_loss) {
-                    html += `<div class="col-md-6"><strong>Packet Loss:</strong> ${data.statistics.packet_loss}</div>`;
-                }
-                if (data.statistics.avg_rtt) {
-                    html += `<div class="col-md-6"><strong>Average RTT:</strong> ${data.statistics.avg_rtt}</div>`;
-                }
-                html += '</div>';
-            }
-            
-            html += '<h6>Raw Output:</h6>';
-            html += `<pre class="bg-black text-success p-3" style="font-family: monospace; font-size: 12px;">${data.output}</pre>`;
-            html += '</div></div>';
-            resultDiv.innerHTML = html;
-        } else {
-            resultDiv.innerHTML = `<div class="alert alert-danger">Ping failed: ${data.error}</div>`;
-        }
-    })
-    .catch(error => {
-        resultDiv.innerHTML = `<div class="alert alert-danger">Error: ${error}</div>`;
-    });
-    
-    return false;
+ event.preventDefault();
+ const form = event.target;
+ const formData = new FormData(form);
+ const resultDiv = document.getElementById('pingResult');
+
+ resultDiv.innerHTML = '<div class="alert alert-info"><i class="fas fa-spinner fa-spin"></i> Running ping...</div>';
+ resultDiv.style.display = 'block';
+
+ fetch('/network/ping', {
+ method: 'POST',
+ body: formData
+ })
+ .then(response => response.json())
+ .then(data => {
+ if (data.success) {
+ let html = '<div class="alert alert-success">Ping successful!</div>';
+ html += '<div class="card bg-dark border-success mt-3">';
+ html += '<div class="card-header"><h6><i class="fas fa-satellite-dish"></i> Ping Results</h6></div>';
+ html += '<div class="card-body">';
+
+ if (data.statistics) {
+ html += '<div class="row mb-3">';
+ if (data.statistics.packet_loss) {
+ html += `<div class="col-md-6"><strong>Packet Loss:</strong> ${data.statistics.packet_loss}</div>`;
+ }
+ if (data.statistics.avg_rtt) {
+ html += `<div class="col-md-6"><strong>Average RTT:</strong> ${data.statistics.avg_rtt}</div>`;
+ }
+ html += '</div>';
+ }
+
+ html += '<h6>Raw Output:</h6>';
+ html += `<pre class="bg-black text-success p-3" style="font-family: monospace; font-size: 12px;">${data.output}</pre>`;
+ html += '</div></div>';
+ resultDiv.innerHTML = html;
+ } else {
+ resultDiv.innerHTML = `<div class="alert alert-danger">Ping failed: ${data.error}</div>`;
+ }
+ })
+ .catch(error => {
+ resultDiv.innerHTML = `<div class="alert alert-danger">Error: ${error}</div>`;
+ });
+
+ return false;
 }
 
 function runDNS(event) {
-    event.preventDefault();
-    const form = event.target;
-    const formData = new FormData(form);
-    const resultDiv = document.getElementById('dnsResult');
-    
-    resultDiv.innerHTML = '<div class="alert alert-info"><i class="fas fa-spinner fa-spin"></i> Looking up DNS...</div>';
-    resultDiv.style.display = 'block';
-    
-    fetch('/network/dns', {
-        method: 'POST',
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            let html = '<div class="alert alert-success">DNS lookup successful!</div>';
-            html += '<div class="card bg-dark border-success mt-3">';
-            html += `<div class="card-header"><h6><i class="fas fa-server"></i> ${data.record_type} Records for ${data.hostname}</h6></div>`;
-            html += '<div class="card-body">';
-            html += `<p><strong>Record Count:</strong> ${data.count}</p>`;
-            html += '<h6>Results:</h6>';
-            html += '<ul class="list-unstyled">';
-            data.results.forEach(result => {
-                html += `<li class="text-success"><i class="fas fa-arrow-right"></i> ${result}</li>`;
-            });
-            html += '</ul>';
-            html += '</div></div>';
-            resultDiv.innerHTML = html;
-        } else {
-            resultDiv.innerHTML = `<div class="alert alert-danger">DNS lookup failed: ${data.error}</div>`;
-        }
-    })
-    .catch(error => {
-        resultDiv.innerHTML = `<div class="alert alert-danger">Error: ${error}</div>`;
-    });
-    
-    return false;
+ event.preventDefault();
+ const form = event.target;
+ const formData = new FormData(form);
+ const resultDiv = document.getElementById('dnsResult');
+
+ resultDiv.innerHTML = '<div class="alert alert-info"><i class="fas fa-spinner fa-spin"></i> Looking up DNS...</div>';
+ resultDiv.style.display = 'block';
+
+ fetch('/network/dns', {
+ method: 'POST',
+ body: formData
+ })
+ .then(response => response.json())
+ .then(data => {
+ if (data.success) {
+ let html = '<div class="alert alert-success">DNS lookup successful!</div>';
+ html += '<div class="card bg-dark border-success mt-3">';
+ html += `<div class="card-header"><h6><i class="fas fa-server"></i> ${data.record_type} Records for ${data.hostname}</h6></div>`;
+ html += '<div class="card-body">';
+ html += `<p><strong>Record Count:</strong> ${data.count}</p>`;
+ html += '<h6>Results:</h6>';
+ html += '<ul class="list-unstyled">';
+ data.results.forEach(result => {
+ html += `<li class="text-success"><i class="fas fa-arrow-right"></i> ${result}</li>`;
+ });
+ html += '</ul>';
+ html += '</div></div>';
+ resultDiv.innerHTML = html;
+ } else {
+ resultDiv.innerHTML = `<div class="alert alert-danger">DNS lookup failed: ${data.error}</div>`;
+ }
+ })
+ .catch(error => {
+ resultDiv.innerHTML = `<div class="alert alert-danger">Error: ${error}</div>`;
+ });
+
+ return false;
 }
 
 function runPortScan(event) {
-    event.preventDefault();
-    const form = event.target;
-    const formData = new FormData(form);
-    const resultDiv = document.getElementById('portResult');
-    
-    resultDiv.innerHTML = '<div class="alert alert-info"><i class="fas fa-spinner fa-spin"></i> Scanning ports...</div>';
-    resultDiv.style.display = 'block';
-    
-    fetch('/network/portscan', {
-        method: 'POST',
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            let html = '<div class="alert alert-success">Port scan completed!</div>';
-            html += '<div class="card bg-dark border-success mt-3">';
-            html += `<div class="card-header"><h6><i class="fas fa-door-open"></i> Port Scan Results for ${data.hostname}</h6></div>`;
-            html += '<div class="card-body">';
-            
-            html += '<div class="row mb-3">';
-            html += `<div class="col-md-4"><strong>Total Scanned:</strong> ${data.total_scanned}</div>`;
-            html += `<div class="col-md-4"><strong>Open Ports:</strong> ${data.open_count}</div>`;
-            html += `<div class="col-md-4"><strong>Closed Ports:</strong> ${data.closed_ports.length}</div>`;
-            html += '</div>';
-            
-            if (data.open_ports.length > 0) {
-                html += '<h6 class="text-success">Open Ports:</h6>';
-                html += '<div class="row">';
-                data.open_ports.forEach(port => {
-                    html += `<div class="col-md-2 mb-2"><span class="badge bg-success">${port}</span></div>`;
-                });
-                html += '</div>';
-            }
-            
-            if (data.closed_ports.length > 0 && data.closed_ports.length <= 20) {
-                html += '<h6 class="text-muted mt-3">Closed Ports:</h6>';
-                html += '<div class="row">';
-                data.closed_ports.forEach(port => {
-                    html += `<div class="col-md-2 mb-2"><span class="badge bg-secondary">${port}</span></div>`;
-                });
-                html += '</div>';
-            }
-            
-            html += '</div></div>';
-            resultDiv.innerHTML = html;
-        } else {
-            resultDiv.innerHTML = `<div class="alert alert-danger">Port scan failed: ${data.error}</div>`;
-        }
-    })
-    .catch(error => {
-        resultDiv.innerHTML = `<div class="alert alert-danger">Error: ${error}</div>`;
-    });
-    
-    return false;
+ event.preventDefault();
+ const form = event.target;
+ const formData = new FormData(form);
+ const resultDiv = document.getElementById('portResult');
+
+ resultDiv.innerHTML = '<div class="alert alert-info"><i class="fas fa-spinner fa-spin"></i> Scanning ports...</div>';
+ resultDiv.style.display = 'block';
+
+ fetch('/network/portscan', {
+ method: 'POST',
+ body: formData
+ })
+ .then(response => response.json())
+ .then(data => {
+ if (data.success) {
+ let html = '<div class="alert alert-success">Port scan completed!</div>';
+ html += '<div class="card bg-dark border-success mt-3">';
+ html += `<div class="card-header"><h6><i class="fas fa-door-open"></i> Port Scan Results for ${data.hostname}</h6></div>`;
+ html += '<div class="card-body">';
+
+ html += '<div class="row mb-3">';
+ html += `<div class="col-md-4"><strong>Total Scanned:</strong> ${data.total_scanned}</div>`;
+ html += `<div class="col-md-4"><strong>Open Ports:</strong> ${data.open_count}</div>`;
+ html += `<div class="col-md-4"><strong>Closed Ports:</strong> ${data.closed_ports.length}</div>`;
+ html += '</div>';
+
+ if (data.open_ports.length > 0) {
+ html += '<h6 class="text-success">Open Ports:</h6>';
+ html += '<div class="row">';
+ data.open_ports.forEach(port => {
+ html += `<div class="col-md-2 mb-2"><span class="badge bg-success">${port}</span></div>`;
+ });
+ html += '</div>';
+ }
+
+ if (data.closed_ports.length > 0 && data.closed_ports.length <= 20) {
+ html += '<h6 class="text-muted mt-3">Closed Ports:</h6>';
+ html += '<div class="row">';
+ data.closed_ports.forEach(port => {
+ html += `<div class="col-md-2 mb-2"><span class="badge bg-secondary">${port}</span></div>`;
+ });
+ html += '</div>';
+ }
+
+ html += '</div></div>';
+ resultDiv.innerHTML = html;
+ } else {
+ resultDiv.innerHTML = `<div class="alert alert-danger">Port scan failed: ${data.error}</div>`;
+ }
+ })
+ .catch(error => {
+ resultDiv.innerHTML = `<div class="alert alert-danger">Error: ${error}</div>`;
+ });
+
+ return false;
 }
 
 function runTraceroute(event) {
-    event.preventDefault();
-    const form = event.target;
-    const formData = new FormData(form);
-    const resultDiv = document.getElementById('traceResult');
-    
-    resultDiv.innerHTML = '<div class="alert alert-info"><i class="fas fa-spinner fa-spin"></i> Running traceroute...</div>';
-    resultDiv.style.display = 'block';
-    
-    fetch('/network/traceroute', {
-        method: 'POST',
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            let html = '<div class="alert alert-success">Traceroute completed!</div>';
-            html += '<div class="card bg-dark border-success mt-3">';
-            html += `<div class="card-header"><h6><i class="fas fa-route"></i> Route to ${data.hostname}</h6></div>`;
-            html += '<div class="card-body">';
-            html += `<p><strong>Total Hops:</strong> ${data.hop_count}</p>`;
-            
-            if (data.hops && data.hops.length > 0) {
-                html += '<h6>Route Hops:</h6>';
-                html += '<div class="table-responsive">';
-                html += '<table class="table table-dark table-sm">';
-                html += '<thead><tr><th>Hop</th><th>Router Information</th></tr></thead>';
-                html += '<tbody>';
-                data.hops.forEach(hop => {
-                    html += `<tr><td>${hop.hop}</td><td><code class="text-success">${hop.info}</code></td></tr>`;
-                });
-                html += '</tbody></table>';
-                html += '</div>';
-            }
-            
-            html += '<h6>Raw Output:</h6>';
-            html += `<pre class="bg-black text-success p-3" style="font-family: monospace; font-size: 12px;">${data.output}</pre>`;
-            html += '</div></div>';
-            resultDiv.innerHTML = html;
-        } else {
-            resultDiv.innerHTML = `<div class="alert alert-danger">Traceroute failed: ${data.error}</div>`;
-        }
-    })
-    .catch(error => {
-        resultDiv.innerHTML = `<div class="alert alert-danger">Error: ${error}</div>`;
-    });
-    
-    return false;
+ event.preventDefault();
+ const form = event.target;
+ const formData = new FormData(form);
+ const resultDiv = document.getElementById('traceResult');
+
+ resultDiv.innerHTML = '<div class="alert alert-info"><i class="fas fa-spinner fa-spin"></i> Running traceroute...</div>';
+ resultDiv.style.display = 'block';
+
+ fetch('/network/traceroute', {
+ method: 'POST',
+ body: formData
+ })
+ .then(response => response.json())
+ .then(data => {
+ if (data.success) {
+ let html = '<div class="alert alert-success">Traceroute completed!</div>';
+ html += '<div class="card bg-dark border-success mt-3">';
+ html += `<div class="card-header"><h6><i class="fas fa-route"></i> Route to ${data.hostname}</h6></div>`;
+ html += '<div class="card-body">';
+ html += `<p><strong>Total Hops:</strong> ${data.hop_count}</p>`;
+
+ if (data.hops && data.hops.length > 0) {
+ html += '<h6>Route Hops:</h6>';
+ html += '<div class="table-responsive">';
+ html += '<table class="table table-dark table-sm">';
+ html += '<thead><tr><th>Hop</th><th>Router Information</th></tr></thead>';
+ html += '<tbody>';
+ data.hops.forEach(hop => {
+ html += `<tr><td>${hop.hop}</td><td><code class="text-success">${hop.info}</code></td></tr>`;
+ });
+ html += '</tbody></table>';
+ html += '</div>';
+ }
+
+ html += '<h6>Raw Output:</h6>';
+ html += `<pre class="bg-black text-success p-3" style="font-family: monospace; font-size: 12px;">${data.output}</pre>`;
+ html += '</div></div>';
+ resultDiv.innerHTML = html;
+ } else {
+ resultDiv.innerHTML = `<div class="alert alert-danger">Traceroute failed: ${data.error}</div>`;
+ }
+ })
+ .catch(error => {
+ resultDiv.innerHTML = `<div class="alert alert-danger">Error: ${error}</div>`;
+ });
+
+ return false;
 }
 
 function runWhois(event) {
-    event.preventDefault();
-    const form = event.target;
-    const formData = new FormData(form);
-    const resultDiv = document.getElementById('whoisResult');
-    
-    resultDiv.innerHTML = '<div class="alert alert-info"><i class="fas fa-spinner fa-spin"></i> Looking up WHOIS...</div>';
-    resultDiv.style.display = 'block';
-    
-    fetch('/network/whois', {
-        method: 'POST',
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            let html = '<div class="alert alert-success">WHOIS lookup successful!</div>';
-            html += '<div class="card bg-dark border-success mt-3">';
-            html += `<div class="card-header"><h6><i class="fas fa-info"></i> WHOIS Information for ${data.domain}</h6></div>`;
-            html += '<div class="card-body">';
-            
-            if (data.parsed_info && Object.keys(data.parsed_info).length > 0) {
-                html += '<h6>Key Information:</h6>';
-                html += '<div class="row mb-3">';
-                Object.entries(data.parsed_info).forEach(([key, value]) => {
-                    const displayKey = key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-                    html += `<div class="col-md-6 mb-2"><strong>${displayKey}:</strong> ${value}</div>`;
-                });
-                html += '</div>';
-            }
-            
-            html += '<h6>Raw WHOIS Data:</h6>';
-            html += `<pre class="bg-black text-success p-3" style="font-family: monospace; font-size: 12px; max-height: 400px; overflow-y: auto;">${data.output}</pre>`;
-            html += '</div></div>';
-            resultDiv.innerHTML = html;
-        } else {
-            resultDiv.innerHTML = `<div class="alert alert-danger">WHOIS lookup failed: ${data.error}</div>`;
-        }
-    })
-    .catch(error => {
-        resultDiv.innerHTML = `<div class="alert alert-danger">Error: ${error}</div>`;
-    });
-    
-    return false;
+ event.preventDefault();
+ const form = event.target;
+ const formData = new FormData(form);
+ const resultDiv = document.getElementById('whoisResult');
+
+ resultDiv.innerHTML = '<div class="alert alert-info"><i class="fas fa-spinner fa-spin"></i> Looking up WHOIS...</div>';
+ resultDiv.style.display = 'block';
+
+ fetch('/network/whois', {
+ method: 'POST',
+ body: formData
+ })
+ .then(response => response.json())
+ .then(data => {
+ if (data.success) {
+ let html = '<div class="alert alert-success">WHOIS lookup successful!</div>';
+ html += '<div class="card bg-dark border-success mt-3">';
+ html += `<div class="card-header"><h6><i class="fas fa-info"></i> WHOIS Information for ${data.domain}</h6></div>`;
+ html += '<div class="card-body">';
+
+ if (data.parsed_info && Object.keys(data.parsed_info).length > 0) {
+ html += '<h6>Key Information:</h6>';
+ html += '<div class="row mb-3">';
+ Object.entries(data.parsed_info).forEach(([key, value]) => {
+ const displayKey = key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+ html += `<div class="col-md-6 mb-2"><strong>${displayKey}:</strong> ${value}</div>`;
+ });
+ html += '</div>';
+ }
+
+ html += '<h6>Raw WHOIS Data:</h6>';
+ html += `<pre class="bg-black text-success p-3" style="font-family: monospace; font-size: 12px; max-height: 400px; overflow-y: auto;">${data.output}</pre>`;
+ html += '</div></div>';
+ resultDiv.innerHTML = html;
+ } else {
+ resultDiv.innerHTML = `<div class="alert alert-danger">WHOIS lookup failed: ${data.error}</div>`;
+ }
+ })
+ .catch(error => {
+ resultDiv.innerHTML = `<div class="alert alert-danger">Error: ${error}</div>`;
+ });
+
+ return false;
 }
 
 function getNetworkInfo() {
-    const resultDiv = document.getElementById('netinfoResult');
-    
-    resultDiv.innerHTML = '<div class="alert alert-info"><i class="fas fa-spinner fa-spin"></i> Getting network information...</div>';
-    resultDiv.style.display = 'block';
-    
-    fetch('/network/info', {
-        method: 'GET'
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            let html = '<div class="alert alert-success">Network information retrieved!</div>';
-            html += '<div class="card bg-dark border-success mt-3">';
-            html += '<div class="card-header"><h6><i class="fas fa-network-wired"></i> Network Information</h6></div>';
-            html += '<div class="card-body">';
-            html += '<div class="row">';
-            
-            Object.entries(data.network_info).forEach(([key, value]) => {
-                const displayKey = key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-                let iconClass = 'fas fa-info-circle';
-                let textClass = 'text-white';
-                
-                if (key === 'internet_connectivity') {
-                    iconClass = value === 'Connected' ? 'fas fa-check-circle' : 'fas fa-exclamation-triangle';
-                    textClass = value === 'Connected' ? 'text-success' : 'text-warning';
-                } else if (key === 'dns_resolution') {
-                    iconClass = value === 'Working' ? 'fas fa-check-circle' : 'fas fa-exclamation-triangle';
-                    textClass = value === 'Working' ? 'text-success' : 'text-warning';
-                } else if (key === 'local_ip') {
-                    iconClass = 'fas fa-map-marker-alt';
-                } else if (key === 'hostname') {
-                    iconClass = 'fas fa-server';
-                }
-                
-                html += `<div class="col-md-6 mb-3">`;
-                html += `<div class="d-flex align-items-center">`;
-                html += `<i class="${iconClass} ${textClass} me-2"></i>`;
-                html += `<strong>${displayKey}:</strong>`;
-                html += `<span class="${textClass} ms-2">${value}</span>`;
-                html += `</div>`;
-                html += `</div>`;
-            });
-            
-            html += '</div>';
-            html += '</div></div>';
-            resultDiv.innerHTML = html;
-        } else {
-            resultDiv.innerHTML = `<div class="alert alert-danger">Failed to get network info: ${data.error}</div>`;
-        }
-    })
-    .catch(error => {
-        resultDiv.innerHTML = `<div class="alert alert-danger">Error: ${error}</div>`;
-    });
+ const resultDiv = document.getElementById('netinfoResult');
+
+ resultDiv.innerHTML = '<div class="alert alert-info"><i class="fas fa-spinner fa-spin"></i> Getting network information...</div>';
+ resultDiv.style.display = 'block';
+
+ fetch('/network/info', {
+ method: 'GET'
+ })
+ .then(response => response.json())
+ .then(data => {
+ if (data.success) {
+ let html = '<div class="alert alert-success">Network information retrieved!</div>';
+ html += '<div class="card bg-dark border-success mt-3">';
+ html += '<div class="card-header"><h6><i class="fas fa-network-wired"></i> Network Information</h6></div>';
+ html += '<div class="card-body">';
+ html += '<div class="row">';
+
+ Object.entries(data.network_info).forEach(([key, value]) => {
+ const displayKey = key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+ let iconClass = 'fas fa-info-circle';
+ let textClass = 'text-white';
+
+ if (key === 'internet_connectivity') {
+ iconClass = value === 'Connected' ? 'fas fa-check-circle' : 'fas fa-exclamation-triangle';
+ textClass = value === 'Connected' ? 'text-success' : 'text-warning';
+ } else if (key === 'dns_resolution') {
+ iconClass = value === 'Working' ? 'fas fa-check-circle' : 'fas fa-exclamation-triangle';
+ textClass = value === 'Working' ? 'text-success' : 'text-warning';
+ } else if (key === 'local_ip') {
+ iconClass = 'fas fa-map-marker-alt';
+ } else if (key === 'hostname') {
+ iconClass = 'fas fa-server';
+ }
+
+ html += `<div class="col-md-6 mb-3">`;
+ html += `<div class="d-flex align-items-center">`;
+ html += `<i class="${iconClass} ${textClass} me-2"></i>`;
+ html += `<strong>${displayKey}:</strong>`;
+ html += `<span class="${textClass} ms-2">${value}</span>`;
+ html += `</div>`;
+ html += `</div>`;
+ });
+
+ html += '</div>';
+ html += '</div></div>';
+ resultDiv.innerHTML = html;
+ } else {
+ resultDiv.innerHTML = `<div class="alert alert-danger">Failed to get network info: ${data.error}</div>`;
+ }
+ })
+ .catch(error => {
+ resultDiv.innerHTML = `<div class="alert alert-danger">Error: ${error}</div>`;
+ });
 }
 
 // Initialize Analytics Charts
 function initializeCharts() {
-    // Service Usage Chart (Doughnut)
-    const serviceUsageCtx = document.getElementById('serviceUsageChart').getContext('2d');
-    new Chart(serviceUsageCtx, {
-        type: 'doughnut',
-        data: {
-            labels: ['File Encryption', 'Hash Calculator', 'Vulnerability Scanner', 'Brute Force', 'URL Scanner', 'Password Analyzer', 'Hash Comparison'],
-            datasets: [{
-                data: [24, 18, 12, 8, 15, 10, 6],
-                backgroundColor: [
-                    '#00ff66',  // Green - File Encryption
-                    '#ff6b6b',  // Red - Hash Calculator
-                    '#4ecdc4',  // Teal - Vulnerability Scanner
-                    '#45b7d1',  // Blue - Brute Force
-                    '#f9ca24',  // Yellow - URL Scanner
-                    '#f0932b',  // Orange - Password Analyzer
-                    '#eb4d4b'   // Dark Red - Hash Comparison
-                ],
-                borderColor: '#00ff66',
-                borderWidth: 2
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    position: 'bottom',
-                    labels: {
-                        color: '#ffffff',
-                        usePointStyle: true
-                    }
-                }
-            }
-        }
-    });
+ // Service Usage Chart (Doughnut)
+ const serviceUsageCtx = document.getElementById('serviceUsageChart').getContext('2d');
+ new Chart(serviceUsageCtx, {
+ type: 'doughnut',
+ data: {
+ labels: ['File Encryption', 'Hash Calculator', 'Vulnerability Scanner', 'Brute Force', 'URL Scanner', 'Password Analyzer', 'Hash Comparison'],
+ datasets: [{
+ data: [24, 18, 12, 8, 15, 10, 6],
+ backgroundColor: [
+ '#00ff66', // Green - File Encryption
+ '#ff6b6b', // Red - Hash Calculator
+ '#4ecdc4', // Teal - Vulnerability Scanner
+ '#45b7d1', // Blue - Brute Force
+ '#f9ca24', // Yellow - URL Scanner
+ '#f0932b', // Orange - Password Analyzer
+ '#eb4d4b' // Dark Red - Hash Comparison
+ ],
+ borderColor: '#00ff66',
+ borderWidth: 2
+ }]
+ },
+ options: {
+ responsive: true,
+ maintainAspectRatio: false,
+ plugins: {
+ legend: {
+ position: 'bottom',
+ labels: {
+ color: '#ffffff',
+ usePointStyle: true
+ }
+ }
+ }
+ }
+ });
 
-    // Activity Timeline Chart (Line)
-    const timelineCtx = document.getElementById('activityTimelineChart').getContext('2d');
-    new Chart(timelineCtx, {
-        type: 'line',
-        data: {
-            labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-            datasets: [{
-                label: 'Security Activities',
-                data: [12, 19, 15, 25, 22, 18, 20],
-                borderColor: '#00ff66',
-                backgroundColor: 'rgba(0, 255, 102, 0.1)',
-                fill: true,
-                tension: 0.4,
-                pointBackgroundColor: '#00ff66',
-                pointBorderColor: '#ffffff',
-                pointBorderWidth: 2
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-                x: {
-                    ticks: { color: '#ffffff' },
-                    grid: { color: 'rgba(255, 255, 255, 0.1)' }
-                },
-                y: {
-                    ticks: { color: '#ffffff' },
-                    grid: { color: 'rgba(255, 255, 255, 0.1)' }
-                }
-            },
-            plugins: {
-                legend: {
-                    labels: { color: '#ffffff' }
-                }
-            }
-        }
-    });
+ // Activity Timeline Chart (Line)
+ const timelineCtx = document.getElementById('activityTimelineChart').getContext('2d');
+ new Chart(timelineCtx, {
+ type: 'line',
+ data: {
+ labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+ datasets: [{
+ label: 'Security Activities',
+ data: [12, 19, 15, 25, 22, 18, 20],
+ borderColor: '#00ff66',
+ backgroundColor: 'rgba(0, 255, 102, 0.1)',
+ fill: true,
+ tension: 0.4,
+ pointBackgroundColor: '#00ff66',
+ pointBorderColor: '#ffffff',
+ pointBorderWidth: 2
+ }]
+ },
+ options: {
+ responsive: true,
+ maintainAspectRatio: false,
+ scales: {
+ x: {
+ ticks: { color: '#ffffff' },
+ grid: { color: 'rgba(255, 255, 255, 0.1)' }
+ },
+ y: {
+ ticks: { color: '#ffffff' },
+ grid: { color: 'rgba(255, 255, 255, 0.1)' }
+ }
+ },
+ plugins: {
+ legend: {
+ labels: { color: '#ffffff' }
+ }
+ }
+ }
+ });
 
 
-    // Update real-time stats with animation
-    updateRealTimeStats();
+ // Update real-time stats with animation
+ updateRealTimeStats();
 }
 
 function updateRealTimeStats() {
-    // Simulate real-time data updates
-    const stats = {
-        totalScans: Math.floor(Math.random() * 50) + 120,
-        activeJobs: Math.floor(Math.random() * 5) + 1,
-        successRate: (Math.random() * 10 + 90).toFixed(1)
-    };
+ // Simulate real-time data updates
+ const stats = {
+ totalScans: Math.floor(Math.random() * 50) + 120,
+ activeJobs: Math.floor(Math.random() * 5) + 1,
+ successRate: (Math.random() * 10 + 90).toFixed(1)
+ };
 
-    // Animate counter updates
-    animateCounter('totalScans', stats.totalScans);
-    animateCounter('activeJobs', stats.activeJobs);
-    document.getElementById('successRate').textContent = stats.successRate + '%';
+ // Animate counter updates
+ animateCounter('totalScans', stats.totalScans);
+ animateCounter('activeJobs', stats.activeJobs);
+ document.getElementById('successRate').textContent = stats.successRate + '%';
 }
 
 function animateCounter(elementId, targetValue) {
-    const element = document.getElementById(elementId);
-    const current = parseInt(element.textContent) || 0;
-    const increment = (targetValue - current) / 20;
-    let count = current;
+ const element = document.getElementById(elementId);
+ const current = parseInt(element.textContent) || 0;
+ const increment = (targetValue - current) / 20;
+ let count = current;
 
-    const timer = setInterval(() => {
-        count += increment;
-        if ((increment > 0 && count >= targetValue) || (increment < 0 && count <= targetValue)) {
-            element.textContent = targetValue;
-            clearInterval(timer);
-        } else {
-            element.textContent = Math.floor(count);
-        }
-    }, 50);
+ const timer = setInterval(() => {
+ count += increment;
+ if ((increment > 0 && count >= targetValue) || (increment < 0 && count <= targetValue)) {
+ element.textContent = targetValue;
+ clearInterval(timer);
+ } else {
+ element.textContent = Math.floor(count);
+ }
+ }, 50);
 }
 
 // Initialize charts when page loads
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('Dashboard loaded successfully');
-    initializeCharts();
-    
-    // Update real-time stats every 10 seconds
-    setInterval(updateRealTimeStats, 10000);
+ console.log('Dashboard loaded successfully');
+ initializeCharts();
+
+ // Update real-time stats every 10 seconds
+ setInterval(updateRealTimeStats, 10000);
 });
 
 function togglePasswordVisibility() {
-    const passwordInput = document.getElementById('passwordInput');
-    const toggleIcon = document.getElementById('toggleIcon');
-    
-    if (passwordInput.type === 'password') {
-        passwordInput.type = 'text';
-        toggleIcon.className = 'fas fa-eye-slash';
-    } else {
-        passwordInput.type = 'password';
-        toggleIcon.className = 'fas fa-eye';
-    }
+ const passwordInput = document.getElementById('passwordInput');
+ const toggleIcon = document.getElementById('toggleIcon');
+
+ if (passwordInput.type === 'password') {
+ passwordInput.type = 'text';
+ toggleIcon.className = 'fas fa-eye-slash';
+ } else {
+ passwordInput.type = 'password';
+ toggleIcon.className = 'fas fa-eye';
+ }
 }
 
 function analyzePassword(event) {
-    event.preventDefault();
-    
-    const form = document.getElementById('passwordAnalyzerForm');
-    const formData = new FormData(form);
-    const resultsDiv = document.getElementById('analysisResults');
-    
-    // Show loading state
-    const submitBtn = form.querySelector('button[type="submit"]');
-    const originalText = submitBtn.innerHTML;
-    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Analyzing...';
-    submitBtn.disabled = true;
-    
-    fetch('{{ url_for('analyze_password') }}', {
-        method: 'POST',
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.error) {
-            alert('Error: ' + data.error);
-        } else {
-            displayAnalysisResults(data.analysis, data.suggestions);
-            resultsDiv.style.display = 'block';
-        }
-    })
-    .catch(error => {
-        alert('Error: ' + error);
-    })
-    .finally(() => {
-        submitBtn.innerHTML = originalText;
-        submitBtn.disabled = false;
-    });
-    
-    return false;
+ event.preventDefault();
+
+ const form = document.getElementById('passwordAnalyzerForm');
+ const formData = new FormData(form);
+ const resultsDiv = document.getElementById('analysisResults');
+
+ // Show loading state
+ const submitBtn = form.querySelector('button[type="submit"]');
+ const originalText = submitBtn.innerHTML;
+ submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Analyzing...';
+ submitBtn.disabled = true;
+
+ fetch('{{ url_for('analyze_password') }}', {
+ method: 'POST',
+ body: formData
+ })
+ .then(response => response.json())
+ .then(data => {
+ if (data.error) {
+ alert('Error: ' + data.error);
+ } else {
+ displayAnalysisResults(data.analysis, data.suggestions);
+ resultsDiv.style.display = 'block';
+ }
+ })
+ .catch(error => {
+ alert('Error: ' + error);
+ })
+ .finally(() => {
+ submitBtn.innerHTML = originalText;
+ submitBtn.disabled = false;
+ });
+
+ return false;
 }
 
 function displayAnalysisResults(analysis, suggestions) {
-    // Update score and level
-    document.getElementById('strengthScore').textContent = analysis.score;
-    document.getElementById('strengthLevel').textContent = analysis.strength;
-    
-    // Update progress bar
-    const strengthBar = document.getElementById('strengthBar');
-    strengthBar.style.width = analysis.score + '%';
-    
-    // Set colors based on strength
-    const colorClass = analysis.strength_color === 'success' ? 'bg-success' : 
-                      analysis.strength_color === 'info' ? 'bg-info' :
-                      analysis.strength_color === 'warning' ? 'bg-warning' : 'bg-danger';
-    strengthBar.className = 'progress-bar ' + colorClass;
-    
-    // Update text colors
-    const scoreElement = document.getElementById('strengthScore');
-    const levelElement = document.getElementById('strengthLevel');
-    scoreElement.className = 'text-' + analysis.strength_color;
-    levelElement.className = 'text-' + analysis.strength_color;
-    
-    // Display details
-    const detailsList = document.getElementById('detailsList');
-    detailsList.innerHTML = '';
-    
-    const details = [
-        { label: 'Length', value: analysis.details.length + ' characters', score: analysis.details.length_score },
-        { label: 'Character Variety', value: analysis.details.character_variety.variety_count + '/4 types', score: analysis.details.variety_score },
-        { label: 'Entropy', value: analysis.entropy + ' bits' },
-        { label: 'Common Password', value: analysis.details.is_common_password ? 'Yes ⚠️' : 'No ✓' }
-    ];
-    
-    details.forEach(detail => {
-        const li = document.createElement('li');
-        li.innerHTML = '<strong>' + detail.label + ':</strong> ' + detail.value;
-        if (detail.score) {
-            li.innerHTML += ' <small class="text-muted">(' + detail.score + ')</small>';
-        }
-        detailsList.appendChild(li);
-    });
-    
-    // Display feedback
-    const feedbackList = document.getElementById('feedbackList');
-    feedbackList.innerHTML = '';
-    analysis.feedback.forEach(feedback => {
-        const li = document.createElement('li');
-        li.innerHTML = '<i class="fas fa-arrow-right text-warning"></i> ' + feedback;
-        feedbackList.appendChild(li);
-    });
-    
-    // Display crack time
-    document.getElementById('crackTime').textContent = analysis.estimated_crack_time;
-    
-    // Display suggestions
-    const suggestionsList = document.getElementById('suggestionsList');
-    suggestionsList.innerHTML = '';
-    suggestions.forEach(suggestion => {
-        const li = document.createElement('li');
-        li.innerHTML = '<i class="fas fa-lightbulb text-success"></i> ' + suggestion;
-        suggestionsList.appendChild(li);
-    });
+ // Update score and level
+ document.getElementById('strengthScore').textContent = analysis.score;
+ document.getElementById('strengthLevel').textContent = analysis.strength;
+
+ // Update progress bar
+ const strengthBar = document.getElementById('strengthBar');
+ strengthBar.style.width = analysis.score + '%';
+
+ // Set colors based on strength
+ const colorClass = analysis.strength_color === 'success' ? 'bg-success' :
+ analysis.strength_color === 'info' ? 'bg-info' :
+ analysis.strength_color === 'warning' ? 'bg-warning' : 'bg-danger';
+ strengthBar.className = 'progress-bar ' + colorClass;
+
+ // Update text colors
+ const scoreElement = document.getElementById('strengthScore');
+ const levelElement = document.getElementById('strengthLevel');
+ scoreElement.className = 'text-' + analysis.strength_color;
+ levelElement.className = 'text-' + analysis.strength_color;
+
+ // Display details
+ const detailsList = document.getElementById('detailsList');
+ detailsList.innerHTML = '';
+
+ const details = [
+ { label: 'Length', value: analysis.details.length + ' characters', score: analysis.details.length_score },
+ { label: 'Character Variety', value: analysis.details.character_variety.variety_count + '/4 types', score: analysis.details.variety_score },
+ { label: 'Entropy', value: analysis.entropy + ' bits' },
+ { label: 'Common Password', value: analysis.details.is_common_password ? 'Yes ⚠️' : 'No ✓' }
+ ];
+
+ details.forEach(detail => {
+ const li = document.createElement('li');
+ li.innerHTML = '<strong>' + detail.label + ':</strong> ' + detail.value;
+ if (detail.score) {
+ li.innerHTML += ' <small class="text-muted">(' + detail.score + ')</small>';
+ }
+ detailsList.appendChild(li);
+ });
+
+ // Display feedback
+ const feedbackList = document.getElementById('feedbackList');
+ feedbackList.innerHTML = '';
+ analysis.feedback.forEach(feedback => {
+ const li = document.createElement('li');
+ li.innerHTML = '<i class="fas fa-arrow-right text-warning"></i> ' + feedback;
+ feedbackList.appendChild(li);
+ });
+
+ // Display crack time
+ document.getElementById('crackTime').textContent = analysis.estimated_crack_time;
+
+ // Display suggestions
+ const suggestionsList = document.getElementById('suggestionsList');
+ suggestionsList.innerHTML = '';
+ suggestions.forEach(suggestion => {
+ const li = document.createElement('li');
+ li.innerHTML = '<i class="fas fa-lightbulb text-success"></i> ' + suggestion;
+ suggestionsList.appendChild(li);
+ });
 }
 </script>
 {% endblock %}

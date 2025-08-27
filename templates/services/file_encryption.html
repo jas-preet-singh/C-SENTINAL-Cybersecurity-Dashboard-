@@ -4,93 +4,93 @@
 
 {% block content %}
 <div class="container-fluid">
-    <div class="row">
-        <div class="col-12">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h2><i class="fas fa-lock"></i> File Encrypt/Decrypt</h2>
-                <a href="{{ url_for('index') }}" class="btn btn-outline-primary">
-                    <i class="fas fa-home"></i> Back to Home
-                </a>
-            </div>
-            
-            <div class="row">
-                <!-- Encryption Card -->
-                <div class="col-md-6">
-                    <div class="card module-card mb-4">
-                        <div class="card-header">
-                            <h5><i class="fas fa-lock"></i> Encrypt File</h5>
-                        </div>
-                        <div class="card-body">
-                            <form action="{{ url_for('encrypt') }}" method="post" enctype="multipart/form-data">
-                                <div class="mb-3">
-                                    <label class="form-label">Select File to Encrypt</label>
-                                    <input type="file" name="file" class="form-control" required>
-                                </div>
-                                
-                                <div class="mb-3">
-                                    <label class="form-label">Password</label>
-                                    <input type="password" name="password" class="form-control" placeholder="Enter encryption password" required>
-                                </div>
-                                
-                                <button type="submit" class="btn btn-success btn-glow">
-                                    <i class="fas fa-lock"></i> Encrypt File
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Decryption Card -->
-                <div class="col-md-6">
-                    <div class="card module-card mb-4">
-                        <div class="card-header">
-                            <h5><i class="fas fa-unlock"></i> Decrypt File</h5>
-                        </div>
-                        <div class="card-body">
-                            <form action="{{ url_for('decrypt') }}" method="post" enctype="multipart/form-data">
-                                <div class="mb-3">
-                                    <label class="form-label">Select File to Decrypt</label>
-                                    <input type="file" name="file" class="form-control" required>
-                                </div>
-                                
-                                <div class="mb-3">
-                                    <label class="form-label">Password</label>
-                                    <input type="password" name="password" class="form-control" placeholder="Enter decryption password" required>
-                                </div>
-                                
-                                <button type="submit" class="btn btn-warning btn-glow">
-                                    <i class="fas fa-unlock"></i> Decrypt File
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Info Card -->
-            <div class="card module-card">
-                <div class="card-body">
-                    <h5><i class="fas fa-info-circle"></i> About File Encryption</h5>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <ul>
-                                <li>Uses AES-256 encryption for maximum security</li>
-                                <li>Password-based key derivation with PBKDF2</li>
-                                <li>Files are encrypted in-place with .enc extension</li>
-                                <li>Remember your password - it cannot be recovered!</li>
-                            </ul>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="alert alert-warning">
-                                <i class="fas fa-exclamation-triangle"></i>
-                                <strong>Security Notice:</strong> Always use strong passwords and keep them secure. 
-                                Lost passwords cannot be recovered and will result in permanent data loss.
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+ <div class="row">
+ <div class="col-12">
+ <div class="d-flex justify-content-between align-items-center mb-4">
+ <h2><i class="fas fa-lock"></i> File Encrypt/Decrypt</h2>
+ <a href="{{ url_for('index') }}" class="btn btn-outline-primary">
+ <i class="fas fa-home"></i> Back to Home
+ </a>
+ </div>
+
+ <div class="row">
+ <!-- Encryption Card -->
+ <div class="col-md-6">
+ <div class="card module-card mb-4">
+ <div class="card-header">
+ <h5><i class="fas fa-lock"></i> Encrypt File</h5>
+ </div>
+ <div class="card-body">
+ <form action="{{ url_for('encrypt') }}" method="post" enctype="multipart/form-data">
+ <div class="mb-3">
+ <label class="form-label">Select File to Encrypt</label>
+ <input type="file" name="file" class="form-control" required>
+ </div>
+
+ <div class="mb-3">
+ <label class="form-label">Password</label>
+ <input type="password" name="password" class="form-control" placeholder="Enter encryption password" required>
+ </div>
+
+ <button type="submit" class="btn btn-success btn-glow">
+ <i class="fas fa-lock"></i> Encrypt File
+ </button>
+ </form>
+ </div>
+ </div>
+ </div>
+
+ <!-- Decryption Card -->
+ <div class="col-md-6">
+ <div class="card module-card mb-4">
+ <div class="card-header">
+ <h5><i class="fas fa-unlock"></i> Decrypt File</h5>
+ </div>
+ <div class="card-body">
+ <form action="{{ url_for('decrypt') }}" method="post" enctype="multipart/form-data">
+ <div class="mb-3">
+ <label class="form-label">Select File to Decrypt</label>
+ <input type="file" name="file" class="form-control" required>
+ </div>
+
+ <div class="mb-3">
+ <label class="form-label">Password</label>
+ <input type="password" name="password" class="form-control" placeholder="Enter decryption password" required>
+ </div>
+
+ <button type="submit" class="btn btn-warning btn-glow">
+ <i class="fas fa-unlock"></i> Decrypt File
+ </button>
+ </form>
+ </div>
+ </div>
+ </div>
+ </div>
+
+ <!-- Info Card -->
+ <div class="card module-card">
+ <div class="card-body">
+ <h5><i class="fas fa-info-circle"></i> About File Encryption</h5>
+ <div class="row">
+ <div class="col-md-6">
+ <ul>
+ <li>Uses AES-256 encryption for maximum security</li>
+ <li>Password-based key derivation with PBKDF2</li>
+ <li>Files are encrypted in-place with .enc extension</li>
+ <li>Remember your password - it cannot be recovered!</li>
+ </ul>
+ </div>
+ <div class="col-md-6">
+ <div class="alert alert-warning">
+ <i class="fas fa-exclamation-triangle"></i>
+ <strong>Security Notice:</strong> Always use strong passwords and keep them secure.
+ Lost passwords cannot be recovered and will result in permanent data loss.
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
 </div>
 {% endblock %}
