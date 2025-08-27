@@ -466,6 +466,92 @@ input[type="checkbox"] + label,
     color: inherit;
 }
 
+/* File input styling and text visibility */
+input[type="file"] {
+    color: var(--text-primary) !important;
+    background: rgba(42, 42, 42, 0.8) !important;
+    border: 1px solid var(--bg-tertiary) !important;
+    border-radius: 8px !important;
+    padding: 8px 12px !important;
+}
+
+input[type="file"]::file-selector-button {
+    background: var(--accent-green) !important;
+    color: var(--bg-primary) !important;
+    border: none !important;
+    border-radius: 5px !important;
+    padding: 6px 12px !important;
+    margin-right: 10px !important;
+}
+
+input[type="file"]::-webkit-file-upload-button {
+    background: var(--accent-green) !important;
+    color: var(--bg-primary) !important;
+    border: none !important;
+    border-radius: 5px !important;
+    padding: 6px 12px !important;
+    margin-right: 10px !important;
+}
+
+/* Password strength text visibility */
+.password-strength,
+.strength-indicator,
+.strength-text {
+    color: var(--text-secondary) !important;
+}
+
+/* Alert text visibility */
+.alert strong,
+.alert p,
+.alert span,
+.alert div {
+    color: inherit !important;
+}
+
+/* Card header text */
+.card-header,
+.card-header h5,
+.card-header h6 {
+    color: var(--text-primary) !important;
+}
+
+/* Security notice and warning text */
+.alert-warning {
+    color: var(--warning) !important;
+}
+
+.alert-warning strong {
+    color: var(--warning) !important;
+}
+
+/* List items in info cards */
+.module-card ul li,
+.module-card ol li {
+    color: var(--text-secondary) !important;
+}
+
+/* Form group labels and help text */
+.form-group label,
+.mb-3 label,
+.form-label {
+    color: var(--text-primary) !important;
+    font-weight: 500;
+}
+
+/* File input "No file chosen" text fix */
+input[type="file"]:not(:valid) {
+    color: var(--text-muted) !important;
+}
+
+/* Ensure all interactive elements have proper contrast */
+.btn-success {
+    color: var(--bg-primary) !important;
+}
+
+.btn-warning {
+    color: var(--bg-primary) !important;
+}
+
 /* Alerts */
 .alert {
     border-radius: 10px;
