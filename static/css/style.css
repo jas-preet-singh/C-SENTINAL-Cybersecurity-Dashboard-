@@ -26,6 +26,9 @@ body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     line-height: 1.6;
     overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
 
 /* Matrix Canvas Background */
@@ -106,8 +109,8 @@ body {
 /* Main Content */
 .main-content {
     margin-top: 80px;
-    min-height: calc(100vh - 160px);
-    padding-bottom: 6rem;
+    flex: 1;
+    padding-bottom: 2rem;
 }
 
 /* Cards */
@@ -1113,7 +1116,7 @@ small {
     border-top: 1px solid var(--accent-green);
     padding: 2rem 0 1.5rem;
     backdrop-filter: blur(10px);
-    margin-top: 3rem;
+    margin-top: auto;
 }
 
 /* About Page Professional Styling */
