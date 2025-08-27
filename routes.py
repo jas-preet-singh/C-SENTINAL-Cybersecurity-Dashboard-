@@ -146,8 +146,77 @@ def dashboard():
 @require_login
 def activity():
     """Activity history page"""
-    # Get recent jobs for current user
+    # Get recent jobs for current user (background tasks like brute force)
     recent_jobs = Job.query.filter_by(user_id=current_user.id).order_by(Job.created_at.desc()).limit(10).all()
+    
+    # Get recent activities for current user (all other operations)
+    recent_activities = ActivityLog.query.filter_by(user_id=current_user.id).order_by(ActivityLog.created_at.desc()).limit(15).all()
+    
+    # Combine jobs and activities into a unified list
+    all_recent_tasks = []
+    
+    # Add jobs to the list
+    for job in recent_jobs:
+        all_recent_tasks.append({
+            'type': 'job',
+            'title': job.job_type.replace('_', ' ').title(),
+            'details': f"Status: {job.status.title()}",
+            'timestamp': job.created_at,
+            'status': job.status,
+            'icon': 'fa-hammer' if 'brute' in job.job_type.lower() else 'fa-cog'
+        })
+    
+    # Add activities to the list
+    activity_icons = {
+        'hash_calculation': 'fa-calculator',
+        'file_encryption': 'fa-lock',
+        'file_decryption': 'fa-unlock',
+        'hash_comparison': 'fa-balance-scale',
+        'url_scan': 'fa-link',
+        'file_scan': 'fa-shield-virus',
+        'vulnerability_scan': 'fa-bug',
+        'password_analysis': 'fa-key',
+        'network_ping': 'fa-satellite-dish',
+        'network_dns': 'fa-search',
+        'network_portscan': 'fa-door-open',
+        'network_traceroute': 'fa-route',
+        'network_whois': 'fa-info-circle',
+        'network_info': 'fa-network-wired'
+    }
+    
+    for activity in recent_activities:
+        # Get friendly name for the activity
+        activity_names = {
+            'hash_calculation': 'Hash Calculation',
+            'file_encryption': 'File Encryption',
+            'file_decryption': 'File Decryption',
+            'hash_comparison': 'Hash Comparison',
+            'url_scan': 'URL Scan',
+            'file_scan': 'Malware Scan',
+            'vulnerability_scan': 'Vulnerability Scan',
+            'password_analysis': 'Password Analysis',
+            'network_ping': 'Network Ping',
+            'network_dns': 'DNS Lookup',
+            'network_portscan': 'Port Scan',
+            'network_traceroute': 'Traceroute',
+            'network_whois': 'WHOIS Lookup',
+            'network_info': 'Network Info'
+        }
+        
+        all_recent_tasks.append({
+            'type': 'activity',
+            'title': activity_names.get(activity.action, activity.action.replace('_', ' ').title()),
+            'details': activity.details or 'Task completed',
+            'timestamp': activity.created_at,
+            'status': 'completed',
+            'icon': activity_icons.get(activity.action, 'fa-cog')
+        })
+    
+    # Sort all tasks by timestamp (most recent first)
+    all_recent_tasks.sort(key=lambda x: x['timestamp'], reverse=True)
+    
+    # Limit to 20 most recent tasks
+    all_recent_tasks = all_recent_tasks[:20]
     
     # Get recent scans for current user
     recent_scans = ScanResult.query.filter_by(user_id=current_user.id).order_by(ScanResult.created_at.desc()).limit(10).all()
@@ -157,14 +226,16 @@ def activity():
     completed_jobs = Job.query.filter_by(user_id=current_user.id, status='completed').count()
     running_jobs = Job.query.filter_by(user_id=current_user.id, status='running').count()
     total_scans = ScanResult.query.filter_by(user_id=current_user.id).count()
+    total_activities = ActivityLog.query.filter_by(user_id=current_user.id).count()
     
     return render_template('activity.html', 
-                         recent_jobs=recent_jobs, 
+                         recent_jobs=all_recent_tasks,  # Now contains unified task list
                          recent_scans=recent_scans,
                          total_jobs=total_jobs,
                          completed_jobs=completed_jobs,
                          running_jobs=running_jobs,
-                         total_scans=total_scans)
+                         total_scans=total_scans,
+                         total_activities=total_activities)
 
 @app.route('/hash', methods=['POST'])
 @require_login
