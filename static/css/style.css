@@ -383,6 +383,76 @@ p, span, div, small, li, td, th, label, h1, h2, h3, h4, h5, h6 {
     color: var(--text-secondary) !important;
 }
 
+/* Form element text visibility fixes */
+.form-label {
+    color: var(--text-primary) !important;
+}
+
+.form-check-label {
+    color: var(--text-primary) !important;
+}
+
+.form-check-input + .form-check-label {
+    color: var(--text-primary) !important;
+}
+
+/* Info card comprehensive text fixes */
+.info-card {
+    color: var(--text-primary) !important;
+}
+
+.info-card h5, .info-card h6 {
+    color: var(--accent-green) !important;
+}
+
+.info-card p, .info-card li, .info-card ul, .info-card ol {
+    color: var(--text-secondary) !important;
+}
+
+.info-card strong {
+    color: var(--text-primary) !important;
+}
+
+/* Radio button and checkbox labels */
+input[type="radio"] + label,
+input[type="checkbox"] + label,
+.form-check label {
+    color: var(--text-primary) !important;
+}
+
+/* Ensure all form elements have proper text color */
+.form-control, .form-select, .form-control:focus, .form-select:focus {
+    color: var(--text-primary) !important;
+}
+
+/* Placeholder text */
+.form-control::placeholder, .form-control::-webkit-input-placeholder {
+    color: var(--text-muted) !important;
+}
+
+/* Additional button text fixes */
+.btn {
+    color: inherit;
+}
+
+.btn-primary {
+    color: var(--bg-primary) !important;
+}
+
+.btn-outline-primary {
+    color: var(--accent-green) !important;
+}
+
+/* Comprehensive text inheritance fixes */
+* {
+    color: inherit;
+}
+
+/* Override any problematic Bootstrap defaults */
+.card *, .card-body *, .module-card * {
+    color: inherit;
+}
+
 /* Alerts */
 .alert {
     border-radius: 10px;
