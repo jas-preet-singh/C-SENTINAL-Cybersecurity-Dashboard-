@@ -166,7 +166,7 @@ body {
 
 .module-icon i {
     font-size: 20px;
-    color: var(--bg-primary);
+    color: #1a1a1a;
 }
 
 /* Large Module Icons for Overview */
@@ -222,7 +222,7 @@ body {
 
 .module-icon-large i {
     font-size: 30px;
-    color: var(--bg-primary);
+    color: #1a1a1a;
 }
 
 /* Overview Cards */
