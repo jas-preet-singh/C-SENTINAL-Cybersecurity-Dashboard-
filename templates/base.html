@@ -49,7 +49,7 @@
     width: 50px;
     height: 50px;
     background: linear-gradient(135deg, #00ff66 0%, #00cc52 100%);
-    border-radius: 50%;
+    border-radius: 8px;
     margin-bottom: 15px;
     position: relative;
     box-shadow: 0 4px 15px rgba(0, 255, 102, 0.4), 
@@ -65,15 +65,40 @@
                 inset 0 2px 4px rgba(255, 255, 255, 0.4);
   }
   
-  .service-logo-hash::after {
-    content: "#";
+  .service-logo-hash::before {
+    content: "";
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: #1a1a1a;
-    font-size: 20px;
-    font-weight: bold;
+    top: 6px;
+    left: 8px;
+    width: 34px;
+    height: 12px;
+    background: linear-gradient(180deg, #0d0d0d 0%, #1a1a1a 100%);
+    border-radius: 2px;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.5),
+                0 1px 0 rgba(255, 255, 255, 0.1);
+  }
+  
+  .service-logo-hash::after {
+    content: "";
+    position: absolute;
+    bottom: 6px;
+    left: 8px;
+    width: 34px;
+    height: 26px;
+    background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+    border-radius: 2px;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1),
+                inset 0 -1px 2px rgba(0, 0, 0, 0.3);
+    background-image: 
+      radial-gradient(circle at 25% 30%, #333 0%, #333 8%, transparent 8%),
+      radial-gradient(circle at 50% 30%, #333 0%, #333 8%, transparent 8%),
+      radial-gradient(circle at 75% 30%, #333 0%, #333 8%, transparent 8%),
+      radial-gradient(circle at 25% 50%, #333 0%, #333 8%, transparent 8%),
+      radial-gradient(circle at 50% 50%, #333 0%, #333 8%, transparent 8%),
+      radial-gradient(circle at 75% 50%, #333 0%, #333 8%, transparent 8%),
+      radial-gradient(circle at 25% 70%, #333 0%, #333 8%, transparent 8%),
+      radial-gradient(circle at 50% 70%, #333 0%, #333 8%, transparent 8%),
+      radial-gradient(circle at 75% 70%, #333 0%, #333 8%, transparent 8%);
   }
   
   .service-logo-lock {
