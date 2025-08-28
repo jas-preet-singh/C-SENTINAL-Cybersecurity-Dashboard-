@@ -170,6 +170,126 @@
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3),
                 0 0 1px rgba(255, 255, 255, 0.2);
   }
+  
+  .service-logo-hammer {
+    display: inline-block;
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #00ff66 0%, #00cc52 100%);
+    border-radius: 12px;
+    margin-bottom: 15px;
+    position: relative;
+    box-shadow: 0 4px 15px rgba(0, 255, 102, 0.4), 
+                0 0 0 2px rgba(0, 255, 102, 0.2),
+                inset 0 2px 4px rgba(255, 255, 255, 0.3);
+    transition: all 0.3s ease;
+  }
+  
+  .service-logo-hammer:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 25px rgba(0, 255, 102, 0.6), 
+                0 0 0 3px rgba(0, 255, 102, 0.3),
+                inset 0 2px 4px rgba(255, 255, 255, 0.4);
+  }
+  
+  .service-logo-hammer::before {
+    content: "";
+    position: absolute;
+    top: 8px;
+    left: 18px;
+    width: 4px;
+    height: 25px;
+    background: linear-gradient(180deg, #2a2a2a 0%, #1a1a1a 100%);
+    border-radius: 2px;
+  }
+  
+  .service-logo-hammer::after {
+    content: "";
+    position: absolute;
+    top: 8px;
+    left: 10px;
+    width: 20px;
+    height: 12px;
+    background: linear-gradient(180deg, #2a2a2a 0%, #1a1a1a 100%);
+    border-radius: 2px;
+    box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.3);
+  }
+  
+  .service-logo-scale {
+    display: inline-block;
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #00ff66 0%, #00cc52 100%);
+    border-radius: 50%;
+    margin-bottom: 15px;
+    position: relative;
+    box-shadow: 0 4px 15px rgba(0, 255, 102, 0.4), 
+                0 0 0 2px rgba(0, 255, 102, 0.2),
+                inset 0 2px 4px rgba(255, 255, 255, 0.3);
+    transition: all 0.3s ease;
+  }
+  
+  .service-logo-scale:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 25px rgba(0, 255, 102, 0.6), 
+                0 0 0 3px rgba(0, 255, 102, 0.3),
+                inset 0 2px 4px rgba(255, 255, 255, 0.4);
+  }
+  
+  .service-logo-scale::after {
+    content: "⚖";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #1a1a1a;
+    font-size: 20px;
+    font-weight: bold;
+  }
+  
+  .service-logo-globe {
+    display: inline-block;
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #00ff66 0%, #00cc52 100%);
+    border-radius: 50%;
+    margin-bottom: 15px;
+    position: relative;
+    box-shadow: 0 4px 15px rgba(0, 255, 102, 0.4), 
+                0 0 0 2px rgba(0, 255, 102, 0.2),
+                inset 0 2px 4px rgba(255, 255, 255, 0.3);
+    transition: all 0.3s ease;
+  }
+  
+  .service-logo-globe:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 25px rgba(0, 255, 102, 0.6), 
+                0 0 0 3px rgba(0, 255, 102, 0.3),
+                inset 0 2px 4px rgba(255, 255, 255, 0.4);
+  }
+  
+  .service-logo-globe::before {
+    content: "";
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 30px;
+    height: 30px;
+    border: 3px solid #1a1a1a;
+    border-radius: 50%;
+    background: transparent;
+  }
+  
+  .service-logo-globe::after {
+    content: "";
+    position: absolute;
+    top: 10px;
+    left: 25px;
+    width: 3px;
+    height: 30px;
+    background: #1a1a1a;
+    border-radius: 1px;
+  }
  </style>
 </head>
 <body>
