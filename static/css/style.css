@@ -157,6 +157,12 @@ body {
     box-shadow: 0 0 15px rgba(0, 255, 102, 0.4);
 }
 
+.module-icon.custom-logo {
+    background: none !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+}
+
 .module-icon i {
     font-size: 20px;
     color: var(--bg-primary);
@@ -173,6 +179,22 @@ body {
     justify-content: center;
     margin: 0 auto 20px;
     box-shadow: 0 0 20px rgba(0, 255, 102, 0.4);
+}
+
+/* Custom logo container - no default background */
+.module-icon-large.custom-logo {
+    background: none !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+}
+
+.module-icon-large.custom-logo .service-logo-hash,
+.module-icon-large.custom-logo .service-logo-lock,
+.module-icon-large.custom-logo .service-logo-search,
+.module-icon-large.custom-logo .service-logo-hammer,
+.module-icon-large.custom-logo .service-logo-scale,
+.module-icon-large.custom-logo .service-logo-globe {
+    margin: 0;
 }
 
 .module-icon-large i {
