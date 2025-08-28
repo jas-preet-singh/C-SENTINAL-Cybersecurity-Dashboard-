@@ -161,6 +161,7 @@ body {
     background: none !important;
     box-shadow: none !important;
     border-radius: 0 !important;
+    position: relative;
 }
 
 .module-icon i {
@@ -186,6 +187,7 @@ body {
     background: none !important;
     box-shadow: none !important;
     border-radius: 0 !important;
+    position: relative;
 }
 
 .module-icon-large.custom-logo .service-logo-hash,
@@ -197,6 +199,10 @@ body {
 .module-icon-large.custom-logo .service-logo-key,
 .module-icon-large.custom-logo .service-logo-network {
     margin: 0 auto;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .module-icon.custom-logo .service-logo-hash,
@@ -208,6 +214,10 @@ body {
 .module-icon.custom-logo .service-logo-key,
 .module-icon.custom-logo .service-logo-network {
     margin: 0 auto;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .module-icon-large i {
