@@ -194,7 +194,16 @@ body {
 .module-icon-large.custom-logo .service-logo-hammer,
 .module-icon-large.custom-logo .service-logo-scale,
 .module-icon-large.custom-logo .service-logo-globe {
-    margin: 0;
+    margin: 0 auto;
+}
+
+.module-icon.custom-logo .service-logo-hash,
+.module-icon.custom-logo .service-logo-lock,
+.module-icon.custom-logo .service-logo-search,
+.module-icon.custom-logo .service-logo-hammer,
+.module-icon.custom-logo .service-logo-scale,
+.module-icon.custom-logo .service-logo-globe {
+    margin: 0 auto;
 }
 
 .module-icon-large i {
