@@ -44,6 +44,17 @@
     vertical-align: middle;
   }
   
+  /* Remove default circular background when custom logos are present */
+  .module-icon-large:has(.service-logo-hash),
+  .module-icon-large:has(.service-logo-lock),
+  .module-icon-large:has(.service-logo-search),
+  .module-icon-large:has(.service-logo-hammer),
+  .module-icon-large:has(.service-logo-scale),
+  .module-icon-large:has(.service-logo-globe) {
+    background: none !important;
+    box-shadow: none !important;
+  }
+  
   .service-logo-hash {
     display: inline-block;
     width: 50px;
