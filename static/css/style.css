@@ -193,7 +193,9 @@ body {
 .module-icon-large.custom-logo .service-logo-search,
 .module-icon-large.custom-logo .service-logo-hammer,
 .module-icon-large.custom-logo .service-logo-scale,
-.module-icon-large.custom-logo .service-logo-globe {
+.module-icon-large.custom-logo .service-logo-globe,
+.module-icon-large.custom-logo .service-logo-key,
+.module-icon-large.custom-logo .service-logo-network {
     margin: 0 auto;
 }
 
@@ -202,7 +204,9 @@ body {
 .module-icon.custom-logo .service-logo-search,
 .module-icon.custom-logo .service-logo-hammer,
 .module-icon.custom-logo .service-logo-scale,
-.module-icon.custom-logo .service-logo-globe {
+.module-icon.custom-logo .service-logo-globe,
+.module-icon.custom-logo .service-logo-key,
+.module-icon.custom-logo .service-logo-network {
     margin: 0 auto;
 }
 
