@@ -3,10 +3,37 @@
 {% block title %}Network Tools - CyberSec Dashboard{% endblock %}
 
 {% block content %}
-<div class="container-fluid">
+<style>
+/* Compact spacing for Network Tools */
+.network-tools .tab-content {
+    min-height: auto !important;
+}
+.network-tools .results-container {
+    max-height: 400px;
+    overflow-y: auto;
+}
+.network-tools .tab-pane {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+.network-tools .row {
+    margin-bottom: 0.5rem;
+}
+.network-tools .card {
+    margin-bottom: 0.5rem;
+}
+.network-tools .mb-2 {
+    margin-bottom: 0.5rem !important;
+}
+.network-tools form {
+    margin-bottom: 0.5rem;
+}
+</style>
+
+<div class="container-fluid network-tools">
  <div class="row">
  <div class="col-12">
- <div class="d-flex justify-content-between align-items-center mb-3">
+ <div class="d-flex justify-content-between align-items-center mb-2">
  <h2><i class="fas fa-network-wired"></i> Network Diagnostic Tools</h2>
  <a href="{{ url_for('index') }}" class="btn btn-outline-primary">
  <i class="fas fa-home"></i> Back to Home
@@ -15,7 +42,7 @@
 
  <!-- Network Tools Tabs -->
  <div class="card module-card">
- <div class="card-body">
+ <div class="card-body py-3">
  <!-- Nav tabs -->
  <ul class="nav nav-tabs" id="networkToolsTab" role="tablist">
  <li class="nav-item" role="presentation">
@@ -51,19 +78,19 @@
  </ul>
 
  <!-- Tab content -->
- <div class="tab-content mt-3" id="networkToolsTabContent">
+ <div class="tab-content mt-2" id="networkToolsTabContent">
  <!-- Ping Tab -->
  <div class="tab-pane fade show active" id="ping" role="tabpanel">
  <div class="row">
  <div class="col-md-6">
  <h5><i class="fas fa-satellite-dish"></i> Ping Host</h5>
  <form id="pingForm">
- <div class="mb-3">
+ <div class="mb-2">
  <label class="form-label">Hostname or IP Address</label>
  <input type="text" name="hostname" class="form-control" placeholder="google.com or 8.8.8.8" required>
  <small class="form-text text-muted">Enter a hostname or IP address to test connectivity</small>
  </div>
- <div class="mb-3">
+ <div class="mb-2">
  <label class="form-label">Packet Count</label>
  <select name="count" class="form-control">
  <option value="4" selected>4 packets</option>
@@ -92,12 +119,12 @@
  <div class="col-md-6">
  <h5><i class="fas fa-search"></i> DNS Lookup</h5>
  <form id="dnsForm">
- <div class="mb-3">
+ <div class="mb-2">
  <label class="form-label">Hostname</label>
  <input type="text" name="hostname" class="form-control" placeholder="example.com" required>
  <small class="form-text text-muted">Enter a domain name to resolve</small>
  </div>
- <div class="mb-3">
+ <div class="mb-2">
  <label class="form-label">Record Type</label>
  <select name="record_type" class="form-control">
  <option value="A" selected>A (IPv4 Address)</option>
@@ -128,12 +155,12 @@
  <div class="col-md-6">
  <h5><i class="fas fa-door-open"></i> Port Scanner</h5>
  <form id="portscanForm">
- <div class="mb-3">
+ <div class="mb-2">
  <label class="form-label">Hostname or IP Address</label>
  <input type="text" name="hostname" class="form-control" placeholder="example.com" required>
  <small class="form-text text-muted">Target host for port scanning</small>
  </div>
- <div class="mb-3">
+ <div class="mb-2">
  <label class="form-label">Ports to Scan</label>
  <input type="text" name="ports" class="form-control" value="80,443,22,21,25,53,110,143,993,995" placeholder="80,443,22">
  <small class="form-text text-muted">Comma-separated port numbers (max 50 ports)</small>
@@ -158,12 +185,12 @@
  <div class="col-md-6">
  <h5><i class="fas fa-route"></i> Traceroute</h5>
  <form id="tracerouteForm">
- <div class="mb-3">
+ <div class="mb-2">
  <label class="form-label">Hostname or IP Address</label>
  <input type="text" name="hostname" class="form-control" placeholder="google.com" required>
  <small class="form-text text-muted">Trace the route to destination</small>
  </div>
- <div class="mb-3">
+ <div class="mb-2">
  <label class="form-label">Max Hops</label>
  <select name="max_hops" class="form-control">
  <option value="15" selected>15 hops</option>
@@ -191,7 +218,7 @@
  <div class="col-md-6">
  <h5><i class="fas fa-info-circle"></i> WHOIS Lookup</h5>
  <form id="whoisForm">
- <div class="mb-3">
+ <div class="mb-2">
  <label class="form-label">Domain Name</label>
  <input type="text" name="domain" class="form-control" placeholder="example.com" required>
  <small class="form-text text-muted">Enter a domain name (without www)</small>
@@ -409,7 +436,7 @@ function displayPingResults(data, outputId) {
 function displayDNSResults(data, outputId) {
  const outputDiv = document.getElementById(outputId);
  let html = `
- <div class="mb-3">
+ <div class="mb-2">
  <strong>Hostname:</strong> ${data.hostname}<br>
  <strong>Record Type:</strong> ${data.record_type}<br>
  <strong>Records Found:</strong> ${data.count}
@@ -429,7 +456,7 @@ function displayDNSResults(data, outputId) {
 function displayPortScanResults(data, outputId) {
  const outputDiv = document.getElementById(outputId);
  let html = `
- <div class="mb-3">
+ <div class="mb-2">
  <strong>Target:</strong> ${data.hostname}<br>
  <strong>Total Scanned:</strong> ${data.total_scanned}<br>
  <strong>Open Ports:</strong> ${data.open_count}
@@ -471,7 +498,7 @@ function displayNetworkInfoResults(data, outputId) {
  let html = '<h6>Network Information:</h6>';
 
  if (data.interfaces) {
- html += '<div class="mb-3"><strong>Network Interfaces:</strong>';
+ html += '<div class="mb-2"><strong>Network Interfaces:</strong>';
  data.interfaces.forEach(iface => {
  html += `<div class="mt-2"><strong>${iface.name}:</strong> ${iface.address || 'N/A'}</div>`;
  });
@@ -479,7 +506,7 @@ function displayNetworkInfoResults(data, outputId) {
  }
 
  if (data.connectivity) {
- html += '<div class="mb-3"><strong>Connectivity Status:</strong>';
+ html += '<div class="mb-2"><strong>Connectivity Status:</strong>';
  for (const [service, status] of Object.entries(data.connectivity)) {
  const statusIcon = status.reachable ? 'fa-check-circle text-success' : 'fa-times-circle text-danger';
  html += `<div><i class="fas ${statusIcon}"></i> ${service}: ${status.reachable ? 'Reachable' : 'Unreachable'}</div>`;
