@@ -13,6 +13,7 @@ from utils.password_cracker import start_brute_force, check_job_status
 from utils.scanner_utils import scan_url, scan_file_for_malware, vulnerability_scan
 from utils.password_analyzer import analyze_password_strength, generate_password_suggestions
 from utils.network_utils import ping_host, dns_lookup, port_scan, traceroute, whois_lookup, network_info
+from utils.osint_utils import check_email_breaches, search_username, analyze_ip, analyze_domain
 
 app.register_blueprint(make_replit_blueprint(), url_prefix="/auth")
 
@@ -96,6 +97,66 @@ def password_analyzer_page():
 def network_tools_page():
     """Network Diagnostic Tools service page"""
     return render_template('services/network_tools.html')
+
+@app.route('/osint')
+@require_login
+def osint_page():
+    """OSINT Intelligence Gathering service page"""
+    return render_template('services/osint.html')
+
+@app.route('/osint/analyze', methods=['POST'])
+@require_login
+def osint_analyze():
+    """Analyze OSINT data based on type"""
+    try:
+        data = request.get_json()
+        osint_type = data.get('type')
+        osint_data = data.get('data')
+        
+        if not osint_type or not osint_data:
+            return jsonify({'error': 'Missing type or data'}), 400
+        
+        result = {}
+        
+        if osint_type == 'email':
+            email = osint_data.get('email')
+            if not email:
+                return jsonify({'error': 'Email address required'}), 400
+            
+            result = check_email_breaches(email)
+            log_activity('osint_email', f'Email: {email}')
+            
+        elif osint_type == 'username':
+            username = osint_data.get('username')
+            if not username:
+                return jsonify({'error': 'Username required'}), 400
+                
+            result = search_username(username)
+            log_activity('osint_username', f'Username: {username}')
+            
+        elif osint_type == 'ip':
+            ip_address = osint_data.get('ip_address')
+            if not ip_address:
+                return jsonify({'error': 'IP address required'}), 400
+                
+            result = analyze_ip(ip_address)
+            log_activity('osint_ip', f'IP: {ip_address}')
+            
+        elif osint_type == 'domain':
+            domain = osint_data.get('domain')
+            if not domain:
+                return jsonify({'error': 'Domain required'}), 400
+                
+            result = analyze_domain(domain)
+            log_activity('osint_domain', f'Domain: {domain}')
+            
+        else:
+            return jsonify({'error': 'Invalid OSINT type'}), 400
+        
+        return jsonify(result)
+        
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 @app.route('/dashboard')
 @require_login
