@@ -165,7 +165,7 @@ def dashboard():
     # Get service usage statistics from ActivityLog
     service_usage = {}
     
-    # Define all 9 services with their action names and display info
+    # Define all 10 services with their action names and display info
     services = {
         'hash_calculation': {'name': 'Hash Calculator', 'icon': 'fas fa-calculator'},
         'file_encryption': {'name': 'File Encryption', 'icon': 'fas fa-lock'},
@@ -176,7 +176,11 @@ def dashboard():
         'file_scan': {'name': 'Malware Scanner', 'icon': 'fas fa-shield-virus'},
         'vulnerability_scan': {'name': 'Vulnerability Scanner', 'icon': 'fas fa-bug'},
         'password_analysis': {'name': 'Password Analyzer', 'icon': 'fas fa-key'},
-        'network_tools': {'name': 'Network Tools', 'icon': 'fas fa-network-wired'}
+        'network_tools': {'name': 'Network Tools', 'icon': 'fas fa-network-wired'},
+        'osint_email': {'name': 'OSINT Email', 'icon': 'fas fa-envelope'},
+        'osint_username': {'name': 'OSINT Username', 'icon': 'fas fa-user'},
+        'osint_ip': {'name': 'OSINT IP', 'icon': 'fas fa-globe'},
+        'osint_domain': {'name': 'OSINT Domain', 'icon': 'fas fa-server'}
     }
     
     # Count usage for each service from ActivityLog

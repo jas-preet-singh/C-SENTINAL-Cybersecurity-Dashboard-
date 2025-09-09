@@ -228,6 +228,22 @@
  </div>
  </div>
  </div>
+
+ <!-- OSINT Tools -->
+ <div class="col-lg-4 col-md-6 mb-4">
+ <div class="card module-card overview-card">
+ <div class="card-body text-center">
+ <div class="module-icon-large">
+ <i class="fas fa-search"></i>
+ </div>
+ <h5 class="card-title">OSINT Intelligence</h5>
+ <p class="card-text">Open Source Intelligence gathering and analysis</p>
+ <button class="btn btn-primary btn-glow" onclick="openOSINT()">
+ <i class="fas fa-external-link-alt"></i> Click to use
+ </button>
+ </div>
+ </div>
+ </div>
  </div>
 </div>
 {% endif %}
@@ -965,6 +981,20 @@ function getNetworkInfo() {
  resultDiv.innerHTML = `<div class="alert alert-danger">Error: ${error}</div>`;
  });
 }
+
+function openOSINT() {
+ window.location.href = '{{ url_for("osint_page") }}';
+}
+
+// Redirect to specific pages if module parameter is present
+window.addEventListener('DOMContentLoaded', function() {
+ const urlParams = new URLSearchParams(window.location.search);
+ const module = urlParams.get('module');
+ if (module === 'network') {
+ window.location.href = '{{ url_for("network_tools_page") }}';
+ } else if (module === 'osint') {
+ window.location.href = '{{ url_for("osint_page") }}';
+ }
+});
 </script>
-{% endblock %}
 {% endblock %}
