@@ -1,0 +1,424 @@
+{% extends "base.html" %}
+
+{% block title %}OSINT Tools - CyberSec Dashboard{% endblock %}
+
+{% block content %}
+<style>
+/* OSINT-specific styling */
+.osint-tools .tab-content {
+    min-height: auto !important;
+}
+.osint-tools .results-container {
+    max-height: 500px;
+    overflow-y: auto;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid #00ff66;
+    border-radius: 8px;
+    padding: 15px;
+    margin-top: 15px;
+}
+.osint-tools .threat-safe {
+    color: #00ff66 !important;
+    border-left: 3px solid #00ff66;
+    padding-left: 10px;
+}
+.osint-tools .threat-malicious {
+    color: #ff4444 !important;
+    border-left: 3px solid #ff4444;
+    padding-left: 10px;
+}
+.osint-tools .threat-warning {
+    color: #ffa500 !important;
+    border-left: 3px solid #ffa500;
+    padding-left: 10px;
+}
+.osint-tools .result-item {
+    background: rgba(0, 255, 102, 0.1);
+    border: 1px solid rgba(0, 255, 102, 0.3);
+    border-radius: 5px;
+    padding: 10px;
+    margin: 8px 0;
+}
+.osint-tools .tab-pane {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+.osint-tools .input-group {
+    margin-bottom: 1rem;
+}
+</style>
+
+<div class="container-fluid osint-tools">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h2><i class="fas fa-search"></i> OSINT Intelligence Gathering</h2>
+                <a href="{{ url_for('index') }}" class="btn btn-outline-primary">
+                    <i class="fas fa-home"></i> Back to Home
+                </a>
+            </div>
+
+            <!-- OSINT Tools Tabs -->
+            <div class="card module-card">
+                <div class="card-body py-3">
+                    <!-- Nav tabs -->
+                    <ul class="nav nav-tabs" id="osintToolsTab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="email-tab" data-bs-toggle="tab" data-bs-target="#email" type="button" role="tab">
+                                <i class="fas fa-envelope"></i> Email OSINT
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="username-tab" data-bs-toggle="tab" data-bs-target="#username" type="button" role="tab">
+                                <i class="fas fa-user"></i> Username OSINT
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="ip-tab" data-bs-toggle="tab" data-bs-target="#ip" type="button" role="tab">
+                                <i class="fas fa-globe"></i> IP OSINT
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="domain-tab" data-bs-toggle="tab" data-bs-target="#domain" type="button" role="tab">
+                                <i class="fas fa-server"></i> Domain OSINT
+                            </button>
+                        </li>
+                    </ul>
+
+                    <!-- Tab content -->
+                    <div class="tab-content" id="osintToolsTabContent">
+                        <!-- Email OSINT Tab -->
+                        <div class="tab-pane fade show active" id="email" role="tabpanel">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h5><i class="fas fa-envelope"></i> Email Breach Analysis</h5>
+                                    <form id="emailForm">
+                                        <div class="input-group mb-3">
+                                            <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                                            <input type="email" name="email" class="form-control" placeholder="Enter email address" required>
+                                            <button type="submit" class="btn btn-warning btn-glow">
+                                                <i class="fas fa-search"></i> Check Breaches
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="info-card">
+                                        <h6><i class="fas fa-info-circle"></i> Email OSINT Features</h6>
+                                        <ul class="mb-0">
+                                            <li>Data breach history lookup</li>
+                                            <li>Compromised account detection</li>
+                                            <li>Password exposure alerts</li>
+                                            <li>Timeline of security incidents</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="emailResults" class="results-container" style="display: none;">
+                                <h6><i class="fas fa-shield-alt"></i> Breach Analysis Results</h6>
+                                <div id="emailResultContent"></div>
+                            </div>
+                        </div>
+
+                        <!-- Username OSINT Tab -->
+                        <div class="tab-pane fade" id="username" role="tabpanel">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h5><i class="fas fa-user"></i> Username Social Media Search</h5>
+                                    <form id="usernameForm">
+                                        <div class="input-group mb-3">
+                                            <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                            <input type="text" name="username" class="form-control" placeholder="Enter username" required>
+                                            <button type="submit" class="btn btn-warning btn-glow">
+                                                <i class="fas fa-search"></i> Search Profiles
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="info-card">
+                                        <h6><i class="fas fa-info-circle"></i> Username OSINT Features</h6>
+                                        <ul class="mb-0">
+                                            <li>Social media profile discovery</li>
+                                            <li>Platform availability check</li>
+                                            <li>Account existence verification</li>
+                                            <li>Cross-platform correlation</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="usernameResults" class="results-container" style="display: none;">
+                                <h6><i class="fas fa-users"></i> Social Media Profiles Found</h6>
+                                <div id="usernameResultContent"></div>
+                            </div>
+                        </div>
+
+                        <!-- IP OSINT Tab -->
+                        <div class="tab-pane fade" id="ip" role="tabpanel">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h5><i class="fas fa-globe"></i> IP Address Analysis</h5>
+                                    <form id="ipForm">
+                                        <div class="input-group mb-3">
+                                            <span class="input-group-text"><i class="fas fa-globe"></i></span>
+                                            <input type="text" name="ip_address" class="form-control" placeholder="Enter IP address" required>
+                                            <button type="submit" class="btn btn-warning btn-glow">
+                                                <i class="fas fa-search"></i> Analyze IP
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="info-card">
+                                        <h6><i class="fas fa-info-circle"></i> IP OSINT Features</h6>
+                                        <ul class="mb-0">
+                                            <li>Geolocation and ISP information</li>
+                                            <li>Threat reputation analysis</li>
+                                            <li>Reverse DNS lookup</li>
+                                            <li>Malicious activity detection</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="ipResults" class="results-container" style="display: none;">
+                                <h6><i class="fas fa-map-marker-alt"></i> IP Analysis Results</h6>
+                                <div id="ipResultContent"></div>
+                            </div>
+                        </div>
+
+                        <!-- Domain OSINT Tab -->
+                        <div class="tab-pane fade" id="domain" role="tabpanel">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h5><i class="fas fa-server"></i> Domain Intelligence</h5>
+                                    <form id="domainForm">
+                                        <div class="input-group mb-3">
+                                            <span class="input-group-text"><i class="fas fa-server"></i></span>
+                                            <input type="text" name="domain" class="form-control" placeholder="Enter domain name" required>
+                                            <button type="submit" class="btn btn-warning btn-glow">
+                                                <i class="fas fa-search"></i> Analyze Domain
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="info-card">
+                                        <h6><i class="fas fa-info-circle"></i> Domain OSINT Features</h6>
+                                        <ul class="mb-0">
+                                            <li>WHOIS registration data</li>
+                                            <li>DNS record analysis</li>
+                                            <li>Domain reputation check</li>
+                                            <li>Subdomain enumeration</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="domainResults" class="results-container" style="display: none;">
+                                <h6><i class="fas fa-database"></i> Domain Analysis Results</h6>
+                                <div id="domainResultContent"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Email OSINT Form Handler
+    document.getElementById('emailForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const email = this.querySelector('input[name="email"]').value;
+        performOSINT('email', { email: email }, 'emailResults', 'emailResultContent');
+    });
+
+    // Username OSINT Form Handler
+    document.getElementById('usernameForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const username = this.querySelector('input[name="username"]').value;
+        performOSINT('username', { username: username }, 'usernameResults', 'usernameResultContent');
+    });
+
+    // IP OSINT Form Handler
+    document.getElementById('ipForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const ip_address = this.querySelector('input[name="ip_address"]').value;
+        performOSINT('ip', { ip_address: ip_address }, 'ipResults', 'ipResultContent');
+    });
+
+    // Domain OSINT Form Handler
+    document.getElementById('domainForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const domain = this.querySelector('input[name="domain"]').value;
+        performOSINT('domain', { domain: domain }, 'domainResults', 'domainResultContent');
+    });
+
+    function performOSINT(type, data, resultsId, contentId) {
+        const resultsDiv = document.getElementById(resultsId);
+        const contentDiv = document.getElementById(contentId);
+        const submitBtn = event.target.querySelector('button[type="submit"]');
+        
+        // Show loading state
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Analyzing...';
+        
+        // Show results container
+        resultsDiv.style.display = 'block';
+        contentDiv.innerHTML = '<div class="text-center"><i class="fas fa-spinner fa-spin"></i> Gathering intelligence...</div>';
+        
+        // Send OSINT request
+        fetch('/osint/analyze', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                type: type,
+                data: data
+            })
+        })
+        .then(response => response.json())
+        .then(result => {
+            displayOSINTResults(result, contentDiv, type);
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = getOriginalButtonText(type);
+        })
+        .catch(error => {
+            contentDiv.innerHTML = `<div class="threat-malicious">Error: ${error.message}</div>`;
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = getOriginalButtonText(type);
+        });
+    }
+
+    function getOriginalButtonText(type) {
+        const buttons = {
+            email: '<i class="fas fa-search"></i> Check Breaches',
+            username: '<i class="fas fa-search"></i> Search Profiles',
+            ip: '<i class="fas fa-search"></i> Analyze IP',
+            domain: '<i class="fas fa-search"></i> Analyze Domain'
+        };
+        return buttons[type] || '<i class="fas fa-search"></i> Analyze';
+    }
+
+    function displayOSINTResults(result, contentDiv, type) {
+        if (result.error) {
+            contentDiv.innerHTML = `<div class="threat-malicious">Error: ${result.error}</div>`;
+            return;
+        }
+
+        let html = '';
+        
+        if (type === 'email') {
+            html = formatEmailResults(result);
+        } else if (type === 'username') {
+            html = formatUsernameResults(result);
+        } else if (type === 'ip') {
+            html = formatIPResults(result);
+        } else if (type === 'domain') {
+            html = formatDomainResults(result);
+        }
+        
+        contentDiv.innerHTML = html;
+    }
+
+    function formatEmailResults(result) {
+        let html = '';
+        
+        if (result.breaches && result.breaches.length > 0) {
+            html += '<div class="result-item threat-malicious">';
+            html += '<h6><i class="fas fa-exclamation-triangle"></i> Data Breaches Found</h6>';
+            result.breaches.forEach(breach => {
+                html += `<div class="mb-2">
+                    <strong>${breach.name}</strong> - ${breach.date}<br>
+                    <small>${breach.description}</small>
+                </div>`;
+            });
+            html += '</div>';
+        } else {
+            html += '<div class="result-item threat-safe">';
+            html += '<h6><i class="fas fa-check-circle"></i> No Known Breaches</h6>';
+            html += '<p>This email address does not appear in any known data breaches.</p>';
+            html += '</div>';
+        }
+        
+        return html;
+    }
+
+    function formatUsernameResults(result) {
+        let html = '';
+        
+        if (result.profiles && result.profiles.length > 0) {
+            result.profiles.forEach(profile => {
+                const threatClass = profile.exists ? 'threat-warning' : 'threat-safe';
+                html += `<div class="result-item ${threatClass}">
+                    <strong>${profile.platform}</strong>: 
+                    ${profile.exists ? 'Profile Found' : 'No Profile'} 
+                    ${profile.url ? `<a href="${profile.url}" target="_blank" class="ms-2"><i class="fas fa-external-link-alt"></i></a>` : ''}
+                </div>`;
+            });
+        } else {
+            html += '<div class="result-item threat-safe">';
+            html += '<p>No social media profiles found for this username.</p>';
+            html += '</div>';
+        }
+        
+        return html;
+    }
+
+    function formatIPResults(result) {
+        let html = '';
+        
+        // Geolocation info
+        if (result.location) {
+            html += '<div class="result-item threat-safe">';
+            html += '<h6><i class="fas fa-map-marker-alt"></i> Geolocation</h6>';
+            html += `<p><strong>Country:</strong> ${result.location.country || 'Unknown'}<br>`;
+            html += `<strong>City:</strong> ${result.location.city || 'Unknown'}<br>`;
+            html += `<strong>ISP:</strong> ${result.location.isp || 'Unknown'}</p>`;
+            html += '</div>';
+        }
+        
+        // Threat reputation
+        if (result.reputation) {
+            const threatClass = result.reputation.malicious ? 'threat-malicious' : 'threat-safe';
+            html += `<div class="result-item ${threatClass}">`;
+            html += '<h6><i class="fas fa-shield-alt"></i> Threat Reputation</h6>';
+            html += `<p><strong>Status:</strong> ${result.reputation.malicious ? 'Malicious' : 'Clean'}<br>`;
+            if (result.reputation.score) {
+                html += `<strong>Risk Score:</strong> ${result.reputation.score}/100</p>`;
+            }
+            html += '</div>';
+        }
+        
+        return html;
+    }
+
+    function formatDomainResults(result) {
+        let html = '';
+        
+        // WHOIS info
+        if (result.whois) {
+            html += '<div class="result-item threat-safe">';
+            html += '<h6><i class="fas fa-info-circle"></i> WHOIS Information</h6>';
+            html += `<p><strong>Registrar:</strong> ${result.whois.registrar || 'Unknown'}<br>`;
+            html += `<strong>Created:</strong> ${result.whois.created || 'Unknown'}<br>`;
+            html += `<strong>Expires:</strong> ${result.whois.expires || 'Unknown'}</p>`;
+            html += '</div>';
+        }
+        
+        // Domain reputation
+        if (result.reputation) {
+            const threatClass = result.reputation.malicious ? 'threat-malicious' : 'threat-safe';
+            html += `<div class="result-item ${threatClass}">`;
+            html += '<h6><i class="fas fa-shield-alt"></i> Domain Reputation</h6>';
+            html += `<p><strong>Status:</strong> ${result.reputation.malicious ? 'Suspicious' : 'Clean'}</p>`;
+            html += '</div>';
+        }
+        
+        return html;
+    }
+});
+</script>
+{% endblock %}
