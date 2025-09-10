@@ -14,6 +14,7 @@ from utils.scanner_utils import scan_url, scan_file_for_malware, vulnerability_s
 from utils.password_analyzer import analyze_password_strength, generate_password_suggestions
 from utils.network_utils import ping_host, dns_lookup, port_scan, traceroute, whois_lookup, network_info
 from utils.osint_utils import check_email_breaches, search_username, analyze_ip, analyze_domain
+from utils.steganography import encode_text_in_image, decode_text_from_image, get_image_capacity, validate_image_format, create_stego_filename
 
 app.register_blueprint(make_replit_blueprint(), url_prefix="/auth")
 
@@ -155,6 +156,153 @@ def osint_analyze():
         
         return jsonify(result)
         
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/steganography')
+@require_login
+def steganography_page():
+    """Steganography Tool service page"""
+    return render_template('services/steganography.html')
+
+@app.route('/steganography/capacity', methods=['POST'])
+@require_login
+def steganography_capacity():
+    """Check image capacity for steganography"""
+    try:
+        if 'image' not in request.files:
+            return jsonify({'error': 'No image file provided'}), 400
+        
+        file = request.files['image']
+        if file.filename == '':
+            return jsonify({'error': 'No file selected'}), 400
+        
+        # Save temporary file to check capacity
+        filename = secure_filename(file.filename)
+        temp_path = os.path.join(app.config.get('UPLOAD_FOLDER', 'uploads'), f"temp_{filename}")
+        os.makedirs(os.path.dirname(temp_path), exist_ok=True)
+        file.save(temp_path)
+        
+        try:
+            capacity = get_image_capacity(temp_path)
+            return jsonify({
+                'success': True,
+                'capacity': capacity
+            })
+        finally:
+            # Clean up temp file
+            if os.path.exists(temp_path):
+                os.remove(temp_path)
+                
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/steganography/encode', methods=['POST'])
+@require_login
+def steganography_encode():
+    """Encode text in image using steganography"""
+    try:
+        if 'cover_image' not in request.files or 'secret_text' not in request.form:
+            return jsonify({'error': 'Missing image file or secret text'}), 400
+        
+        file = request.files['cover_image']
+        secret_text = request.form['secret_text']
+        
+        if file.filename == '':
+            return jsonify({'error': 'No file selected'}), 400
+        
+        if not secret_text.strip():
+            return jsonify({'error': 'Secret text cannot be empty'}), 400
+        
+        # Validate file format
+        filename = secure_filename(file.filename)
+        temp_input_path = os.path.join(app.config.get('UPLOAD_FOLDER', 'uploads'), f"input_{filename}")
+        os.makedirs(os.path.dirname(temp_input_path), exist_ok=True)
+        file.save(temp_input_path)
+        
+        try:
+            # Validate image format
+            if not validate_image_format(temp_input_path):
+                return jsonify({'error': 'Unsupported image format. Use PNG, BMP, or TIFF'}), 400
+            
+            # Create output filename
+            stego_filename = create_stego_filename(filename)
+            output_path = os.path.join(app.config.get('UPLOAD_FOLDER', 'uploads'), stego_filename)
+            
+            # Encode text in image
+            success, message = encode_text_in_image(temp_input_path, secret_text, output_path)
+            
+            if success:
+                # Get file statistics
+                original_size = os.path.getsize(temp_input_path)
+                stego_size = os.path.getsize(output_path)
+                capacity = get_image_capacity(temp_input_path)
+                capacity_used = (len(secret_text) / capacity * 100) if capacity > 0 else 0
+                
+                log_activity('steganography_encode', f'Text length: {len(secret_text)} chars')
+                
+                return jsonify({
+                    'success': True,
+                    'message': message,
+                    'download_url': url_for('download_file', filename=stego_filename),
+                    'original_size': f"{original_size:,} bytes",
+                    'stego_size': f"{stego_size:,} bytes",
+                    'text_length': len(secret_text),
+                    'capacity_used': f"{capacity_used:.1f}"
+                })
+            else:
+                return jsonify({'error': message}), 400
+                
+        finally:
+            # Clean up temp input file
+            if os.path.exists(temp_input_path):
+                os.remove(temp_input_path)
+                
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/steganography/decode', methods=['POST'])
+@require_login
+def steganography_decode():
+    """Decode text from stego image"""
+    try:
+        if 'stego_image' not in request.files:
+            return jsonify({'error': 'No image file provided'}), 400
+        
+        file = request.files['stego_image']
+        
+        if file.filename == '':
+            return jsonify({'error': 'No file selected'}), 400
+        
+        # Save temporary file
+        filename = secure_filename(file.filename)
+        temp_path = os.path.join(app.config.get('UPLOAD_FOLDER', 'uploads'), f"decode_{filename}")
+        os.makedirs(os.path.dirname(temp_path), exist_ok=True)
+        file.save(temp_path)
+        
+        try:
+            # Decode text from image
+            success, result = decode_text_from_image(temp_path)
+            
+            if success:
+                log_activity('steganography_decode', f'Extracted {len(result)} chars')
+                
+                return jsonify({
+                    'success': True,
+                    'hidden_text': result,
+                    'text_length': len(result)
+                })
+            else:
+                return jsonify({
+                    'success': False,
+                    'error': result
+                })
+                
+        finally:
+            # Clean up temp file
+            if os.path.exists(temp_path):
+                os.remove(temp_path)
+                
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 

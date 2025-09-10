@@ -1,0 +1,322 @@
+{% extends "base.html" %}
+
+{% block title %}Steganography Tool - CyberSec Dashboard{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card bg-dark border-success">
+                <div class="card-header">
+                    <h3 class="text-success mb-0">
+                        <i class="fas fa-eye-slash me-2"></i>Steganography Tool
+                    </h3>
+                    <p class="text-light mb-0">Hide and extract secret messages in images using LSB techniques</p>
+                </div>
+                <div class="card-body">
+                    <!-- Navigation Tabs -->
+                    <ul class="nav nav-tabs mb-3" id="steganographyTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active bg-dark text-success border-success" id="encode-tab" data-bs-toggle="tab" data-bs-target="#encode" type="button" role="tab">
+                                <i class="fas fa-lock me-2"></i>Hide Text in Image
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link bg-dark text-light border-success" id="decode-tab" data-bs-toggle="tab" data-bs-target="#decode" type="button" role="tab">
+                                <i class="fas fa-unlock me-2"></i>Extract Hidden Text
+                            </button>
+                        </li>
+                    </ul>
+
+                    <!-- Tab Content -->
+                    <div class="tab-content" id="steganographyTabContent">
+                        <!-- Encode Tab -->
+                        <div class="tab-pane fade show active" id="encode" role="tabpanel">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="card bg-secondary border-success">
+                                        <div class="card-header">
+                                            <h5 class="text-success mb-0">Hide Secret Text</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <form id="encodeForm" enctype="multipart/form-data">
+                                                <div class="mb-3">
+                                                    <label for="coverImage" class="form-label text-light">
+                                                        <i class="fas fa-image me-2"></i>Cover Image
+                                                    </label>
+                                                    <input type="file" class="form-control bg-dark text-light border-success" id="coverImage" name="cover_image" accept="image/*" required>
+                                                    <div class="form-text text-muted">Supported: PNG, BMP, TIFF (recommended)</div>
+                                                </div>
+                                                
+                                                <div class="mb-3">
+                                                    <label for="secretText" class="form-label text-light">
+                                                        <i class="fas fa-key me-2"></i>Secret Message
+                                                    </label>
+                                                    <textarea class="form-control bg-dark text-light border-success" id="secretText" name="secret_text" rows="4" placeholder="Enter your secret message here..." required></textarea>
+                                                    <div class="form-text text-muted">
+                                                        <span id="textCounter">0</span> characters
+                                                        <span id="capacityInfo" class="ms-2"></span>
+                                                    </div>
+                                                </div>
+                                                
+                                                <button type="submit" class="btn btn-success">
+                                                    <i class="fas fa-eye-slash me-2"></i>Hide Text in Image
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <div class="card bg-secondary border-success">
+                                        <div class="card-header">
+                                            <h5 class="text-success mb-0">Result</h5>
+                                        </div>
+                                        <div class="card-body" id="encodeResult">
+                                            <div class="text-center text-muted">
+                                                <i class="fas fa-arrow-left me-2"></i>
+                                                Upload an image and enter text to begin
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Decode Tab -->
+                        <div class="tab-pane fade" id="decode" role="tabpanel">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="card bg-secondary border-success">
+                                        <div class="card-header">
+                                            <h5 class="text-success mb-0">Extract Hidden Text</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <form id="decodeForm" enctype="multipart/form-data">
+                                                <div class="mb-3">
+                                                    <label for="stegoImage" class="form-label text-light">
+                                                        <i class="fas fa-search me-2"></i>Stego Image
+                                                    </label>
+                                                    <input type="file" class="form-control bg-dark text-light border-success" id="stegoImage" name="stego_image" accept="image/*" required>
+                                                    <div class="form-text text-muted">Upload an image that may contain hidden text</div>
+                                                </div>
+                                                
+                                                <button type="submit" class="btn btn-success">
+                                                    <i class="fas fa-unlock me-2"></i>Extract Hidden Text
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <div class="card bg-secondary border-success">
+                                        <div class="card-header">
+                                            <h5 class="text-success mb-0">Extracted Message</h5>
+                                        </div>
+                                        <div class="card-body" id="decodeResult">
+                                            <div class="text-center text-muted">
+                                                <i class="fas fa-arrow-left me-2"></i>
+                                                Upload a stego image to extract hidden text
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Educational Information -->
+                    <div class="mt-4">
+                        <div class="card bg-secondary border-warning">
+                            <div class="card-header">
+                                <h5 class="text-warning mb-0">
+                                    <i class="fas fa-graduation-cap me-2"></i>Educational Information
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <h6 class="text-warning">How It Works</h6>
+                                        <p class="text-light small">
+                                            Uses LSB (Least Significant Bit) technique to modify the least important bits of image pixels to hide text data.
+                                        </p>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <h6 class="text-warning">Security Implications</h6>
+                                        <p class="text-light small">
+                                            Demonstrates how attackers can hide malicious payloads or exfiltrate data using innocent-looking images.
+                                        </p>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <h6 class="text-warning">Detection Methods</h6>
+                                        <p class="text-light small">
+                                            Digital forensics tools can detect steganography through statistical analysis and file size anomalies.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Character counter for secret text
+document.getElementById('secretText').addEventListener('input', function() {
+    const text = this.value;
+    const counter = document.getElementById('textCounter');
+    counter.textContent = text.length;
+});
+
+// Image capacity checker
+document.getElementById('coverImage').addEventListener('change', function() {
+    const file = this.files[0];
+    if (file) {
+        checkImageCapacity(file);
+    }
+});
+
+function checkImageCapacity(file) {
+    const formData = new FormData();
+    formData.append('image', file);
+    
+    fetch('/steganography/capacity', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            const capacityInfo = document.getElementById('capacityInfo');
+            capacityInfo.innerHTML = `<span class="text-success">(Max capacity: ~${data.capacity} characters)</span>`;
+        }
+    })
+    .catch(error => {
+        console.error('Error checking capacity:', error);
+    });
+}
+
+// Handle encoding form submission
+document.getElementById('encodeForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    const resultDiv = document.getElementById('encodeResult');
+    
+    // Show loading
+    resultDiv.innerHTML = `
+        <div class="text-center">
+            <div class="spinner-border text-success" role="status">
+                <span class="visually-hidden">Processing...</span>
+            </div>
+            <p class="text-light mt-2">Hiding text in image...</p>
+        </div>
+    `;
+    
+    fetch('/steganography/encode', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            resultDiv.innerHTML = `
+                <div class="alert alert-success">
+                    <h6><i class="fas fa-check-circle me-2"></i>Text Successfully Hidden!</h6>
+                    <p class="mb-2">${data.message}</p>
+                    <a href="${data.download_url}" class="btn btn-success btn-sm" download>
+                        <i class="fas fa-download me-2"></i>Download Stego Image
+                    </a>
+                </div>
+                <div class="mt-3">
+                    <h6 class="text-success">Statistics:</h6>
+                    <ul class="list-unstyled text-light small">
+                        <li><i class="fas fa-info-circle me-2"></i>Original size: ${data.original_size}</li>
+                        <li><i class="fas fa-info-circle me-2"></i>Text length: ${data.text_length} characters</li>
+                        <li><i class="fas fa-info-circle me-2"></i>Capacity used: ${data.capacity_used}%</li>
+                    </ul>
+                </div>
+            `;
+        } else {
+            resultDiv.innerHTML = `
+                <div class="alert alert-danger">
+                    <i class="fas fa-exclamation-triangle me-2"></i>${data.error}
+                </div>
+            `;
+        }
+    })
+    .catch(error => {
+        resultDiv.innerHTML = `
+            <div class="alert alert-danger">
+                <i class="fas fa-times-circle me-2"></i>Error: ${error.message}
+            </div>
+        `;
+    });
+});
+
+// Handle decoding form submission
+document.getElementById('decodeForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    const resultDiv = document.getElementById('decodeResult');
+    
+    // Show loading
+    resultDiv.innerHTML = `
+        <div class="text-center">
+            <div class="spinner-border text-success" role="status">
+                <span class="visually-hidden">Processing...</span>
+            </div>
+            <p class="text-light mt-2">Extracting hidden text...</p>
+        </div>
+    `;
+    
+    fetch('/steganography/decode', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            resultDiv.innerHTML = `
+                <div class="alert alert-success">
+                    <h6><i class="fas fa-unlock me-2"></i>Hidden Text Found!</h6>
+                </div>
+                <div class="card bg-dark border-success">
+                    <div class="card-header">
+                        <h6 class="text-success mb-0">Extracted Message:</h6>
+                    </div>
+                    <div class="card-body">
+                        <pre class="text-light bg-black p-3 rounded border" style="white-space: pre-wrap; word-wrap: break-word;">${data.hidden_text}</pre>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <p class="text-light small">
+                        <i class="fas fa-info-circle me-2"></i>Message length: ${data.text_length} characters
+                    </p>
+                </div>
+            `;
+        } else {
+            resultDiv.innerHTML = `
+                <div class="alert alert-warning">
+                    <i class="fas fa-search me-2"></i>${data.error}
+                </div>
+            `;
+        }
+    })
+    .catch(error => {
+        resultDiv.innerHTML = `
+            <div class="alert alert-danger">
+                <i class="fas fa-times-circle me-2"></i>Error: ${error.message}
+            </div>
+        `;
+    });
+});
+</script>
+{% endblock %}
