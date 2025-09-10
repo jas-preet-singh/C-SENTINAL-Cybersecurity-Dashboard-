@@ -244,7 +244,7 @@ def steganography_encode():
                 return jsonify({
                     'success': True,
                     'message': message,
-                    'download_url': url_for('download_file', filename=stego_filename),
+                    'download_url': url_for('uploaded_file', filename=stego_filename),
                     'original_size': f"{original_size:,} bytes",
                     'stego_size': f"{stego_size:,} bytes",
                     'text_length': len(secret_text),
