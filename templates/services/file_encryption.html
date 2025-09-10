@@ -1,96 +1,220 @@
 {% extends "base.html" %}
 
-{% block title %}File Encryption - CyberSec Dashboard{% endblock %}
+{% block title %}File Encrypt/Decrypt - CyberSec Dashboard{% endblock %}
 
 {% block content %}
-<div class="container-fluid">
- <div class="row">
- <div class="col-12">
- <div class="d-flex justify-content-between align-items-center mb-3">
- <h2><i class="fas fa-lock"></i> File Encrypt/Decrypt</h2>
- <a href="{{ url_for('index') }}" class="btn btn-outline-primary">
- <i class="fas fa-home"></i> Back to Home
- </a>
- </div>
+<style>
+/* File encryption-specific styling */
+.file-encryption-tools .tab-content {
+    min-height: auto !important;
+}
+.file-encryption-tools .results-container {
+    max-height: 500px;
+    overflow-y: auto;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid #00ff66;
+    border-radius: 8px;
+    padding: 15px;
+    margin-top: 15px;
+}
+.file-encryption-tools .success-result {
+    color: #00ff66 !important;
+    border-left: 3px solid #00ff66;
+    padding-left: 10px;
+}
+.file-encryption-tools .error-result {
+    color: #ff4444 !important;
+    border-left: 3px solid #ff4444;
+    padding-left: 10px;
+}
+.file-encryption-tools .warning-result {
+    color: #ffa500 !important;
+    border-left: 3px solid #ffa500;
+    padding-left: 10px;
+}
+.file-encryption-tools .result-item {
+    background: rgba(0, 255, 102, 0.1);
+    border: 1px solid rgba(0, 255, 102, 0.3);
+    border-radius: 5px;
+    padding: 10px;
+    margin: 8px 0;
+}
+.file-encryption-tools .tab-pane {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+.file-encryption-tools .input-group {
+    margin-bottom: 1rem;
+}
+.encryption-form-section {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(0, 255, 102, 0.3);
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+.encryption-features {
+    background: rgba(0, 0, 0, 0.2);
+    border-left: 3px solid #00ff66;
+    padding: 15px;
+    margin-top: 20px;
+}
+</style>
 
- <div class="row">
- <!-- Encryption Card -->
- <div class="col-md-6">
- <div class="card module-card mb-3">
- <div class="card-header">
- <h5><i class="fas fa-lock"></i> Encrypt File</h5>
- </div>
- <div class="card-body">
- <form action="{{ url_for('encrypt') }}" method="post" enctype="multipart/form-data">
- <div class="mb-3">
- <label class="form-label">Select File to Encrypt</label>
- <input type="file" name="file" class="form-control" required>
- </div>
+<div class="container-fluid file-encryption-tools">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h2><i class="fas fa-lock"></i> FILE ENCRYPT/DECRYPT</h2>
+                <a href="{{ url_for('index') }}" class="btn btn-outline-primary">
+                    <i class="fas fa-home"></i> Back to Home
+                </a>
+            </div>
+            <p class="text-muted mb-4">Advanced AES encryption with PBKDF2 key derivation for secure file protection</p>
 
- <div class="mb-3">
- <label class="form-label">Password</label>
- <input type="password" name="password" class="form-control" placeholder="Enter encryption password" required>
- </div>
+            <!-- File Encryption Tools Tabs -->
+            <div class="card module-card">
+                <div class="card-body py-3">
+                    <!-- Nav tabs -->
+                    <ul class="nav nav-tabs" id="encryptionToolsTab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="encrypt-tab" data-bs-toggle="tab" data-bs-target="#encrypt" type="button" role="tab">
+                                <i class="fas fa-lock"></i> ENCRYPT FILE
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="decrypt-tab" data-bs-toggle="tab" data-bs-target="#decrypt" type="button" role="tab">
+                                <i class="fas fa-unlock"></i> DECRYPT FILE
+                            </button>
+                        </li>
+                    </ul>
 
- <button type="submit" class="btn btn-success btn-glow">
- <i class="fas fa-lock"></i> Encrypt File
- </button>
- </form>
- </div>
- </div>
- </div>
+                    <!-- Tab content -->
+                    <div class="tab-content" id="encryptionToolsTabContent">
+                        <!-- Encrypt Tab -->
+                        <div class="tab-pane fade show active" id="encrypt" role="tabpanel">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="encryption-form-section">
+                                        <h5><i class="fas fa-lock"></i> ENCRYPT FILE</h5>
+                                        <form action="{{ url_for('encrypt') }}" method="post" enctype="multipart/form-data">
+                                            <div class="mb-3">
+                                                <label class="form-label text-light">Select File to Encrypt</label>
+                                                <input type="file" name="file" class="form-control bg-dark text-light border-success" required>
+                                                <div class="form-text text-muted">All file types supported</div>
+                                            </div>
+                                            
+                                            <div class="mb-3">
+                                                <label class="form-label text-light">
+                                                    <i class="fas fa-key me-2"></i>Password
+                                                </label>
+                                                <input type="password" name="password" class="form-control bg-dark text-light border-success" placeholder="Enter encryption password" required>
+                                                <div class="form-text text-muted">Choose a strong password for better security</div>
+                                            </div>
+                                            
+                                            <button type="submit" class="btn btn-warning w-100">
+                                                <i class="fas fa-lock me-2"></i>Encrypt File
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <div class="encryption-features">
+                                        <h6><i class="fas fa-info-circle"></i> ENCRYPTION FEATURES</h6>
+                                        <ul class="text-success list-unstyled mt-3">
+                                            <li><i class="fas fa-check-circle me-2"></i> AES encryption standard</li>
+                                            <li><i class="fas fa-check-circle me-2"></i> PBKDF2 key derivation</li>
+                                            <li><i class="fas fa-check-circle me-2"></i> Secure file handling</li>
+                                            <li><i class="fas fa-check-circle me-2"></i> Multiple file format support</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
- <!-- Decryption Card -->
- <div class="col-md-6">
- <div class="card module-card mb-3">
- <div class="card-header">
- <h5><i class="fas fa-unlock"></i> Decrypt File</h5>
- </div>
- <div class="card-body">
- <form action="{{ url_for('decrypt') }}" method="post" enctype="multipart/form-data">
- <div class="mb-3">
- <label class="form-label">Select File to Decrypt</label>
- <input type="file" name="file" class="form-control" required>
- </div>
+                        <!-- Decrypt Tab -->
+                        <div class="tab-pane fade" id="decrypt" role="tabpanel">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="encryption-form-section">
+                                        <h5><i class="fas fa-unlock"></i> DECRYPT FILE</h5>
+                                        <form action="{{ url_for('decrypt') }}" method="post" enctype="multipart/form-data">
+                                            <div class="mb-3">
+                                                <label class="form-label text-light">Select File to Decrypt</label>
+                                                <input type="file" name="file" class="form-control bg-dark text-light border-success" required>
+                                                <div class="form-text text-muted">Upload encrypted .enc file</div>
+                                            </div>
+                                            
+                                            <div class="mb-3">
+                                                <label class="form-label text-light">
+                                                    <i class="fas fa-key me-2"></i>Password
+                                                </label>
+                                                <input type="password" name="password" class="form-control bg-dark text-light border-success" placeholder="Enter decryption password" required>
+                                                <div class="form-text text-muted">Enter the same password used for encryption</div>
+                                            </div>
+                                            
+                                            <button type="submit" class="btn btn-warning w-100">
+                                                <i class="fas fa-unlock me-2"></i>Decrypt File
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <div class="encryption-features">
+                                        <h6><i class="fas fa-info-circle"></i> DECRYPTION FEATURES</h6>
+                                        <ul class="text-success list-unstyled mt-3">
+                                            <li><i class="fas fa-check-circle me-2"></i> AES decryption algorithm</li>
+                                            <li><i class="fas fa-check-circle me-2"></i> Password verification</li>
+                                            <li><i class="fas fa-check-circle me-2"></i> File integrity checking</li>
+                                            <li><i class="fas fa-check-circle me-2"></i> Original format restoration</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
- <div class="mb-3">
- <label class="form-label">Password</label>
- <input type="password" name="password" class="form-control" placeholder="Enter decryption password" required>
- </div>
-
- <button type="submit" class="btn btn-warning btn-glow">
- <i class="fas fa-unlock"></i> Decrypt File
- </button>
- </form>
- </div>
- </div>
- </div>
- </div>
-
- <!-- Info Card -->
- <div class="card module-card">
- <div class="card-body">
- <h5><i class="fas fa-info-circle"></i> About File Encryption</h5>
- <div class="row">
- <div class="col-md-6">
- <ul>
- <li>Uses AES-256 encryption for maximum security</li>
- <li>Password-based key derivation with PBKDF2</li>
- <li>Files are encrypted in-place with .enc extension</li>
- <li>Remember your password - it cannot be recovered!</li>
- </ul>
- </div>
- <div class="col-md-6">
- <div class="alert alert-warning">
- <i class="fas fa-exclamation-triangle"></i>
- <strong>Security Notice:</strong> Always use strong passwords and keep them secure.
- Lost passwords cannot be recovered and will result in permanent data loss.
- </div>
- </div>
- </div>
- </div>
- </div>
- </div>
- </div>
+            <!-- Educational Information Section -->
+            <div class="row mt-2">
+                <div class="col-12">
+                    <div class="card module-card">
+                        <div class="card-body">
+                            <h5><i class="fas fa-graduation-cap"></i> EDUCATIONAL INFORMATION</h5>
+                            <div class="row mt-3">
+                                <div class="col-md-4">
+                                    <div class="encryption-features">
+                                        <h6 class="text-warning">AES ENCRYPTION</h6>
+                                        <p class="text-light small">
+                                            Advanced Encryption Standard (AES) is a symmetric encryption algorithm widely used for securing sensitive data.
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="encryption-features">
+                                        <h6 class="text-warning">KEY DERIVATION</h6>
+                                        <p class="text-light small">
+                                            PBKDF2 (Password-Based Key Derivation Function) converts passwords into cryptographic keys with salt for enhanced security.
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="encryption-features">
+                                        <h6 class="text-warning">SECURITY BEST PRACTICES</h6>
+                                        <p class="text-light small">
+                                            Use strong passwords, keep encryption keys secure, and never share passwords over insecure channels.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}
