@@ -187,7 +187,7 @@ def validate_image_format(image_path):
     """
     try:
         img = Image.open(image_path)
-        supported_formats = ['PNG', 'BMP', 'TIFF']
+        supported_formats = ['PNG', 'BMP', 'TIFF', 'JPEG', 'WEBP']
         return img.format in supported_formats
     except:
         return False

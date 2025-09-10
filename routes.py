@@ -223,7 +223,7 @@ def steganography_encode():
         try:
             # Validate image format
             if not validate_image_format(temp_input_path):
-                return jsonify({'error': 'Unsupported image format. Use PNG, BMP, or TIFF'}), 400
+                return jsonify({'error': 'Unsupported image format. Use PNG, BMP, TIFF, JPG, or WebP'}), 400
             
             # Create output filename
             stego_filename = create_stego_filename(filename)
