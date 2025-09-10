@@ -479,41 +479,54 @@ def encrypt():
     """Encrypt a file with AES"""
     try:
         if 'file' not in request.files:
-            flash('No file selected', 'error')
-            return redirect(url_for('dashboard'))
+            return jsonify({'success': False, 'error': 'No file selected'})
         
         file = request.files['file']
         password = request.form.get('password')
         
         if not password:
-            flash('Password is required for encryption', 'error')
-            return redirect(url_for('dashboard'))
+            return jsonify({'success': False, 'error': 'Password is required for encryption'})
+        
+        if not file.filename:
+            return jsonify({'success': False, 'error': 'No file selected'})
         
         # Save uploaded file
-        filename = secure_filename(file.filename or 'unknown')
+        filename = secure_filename(file.filename)
         file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(file_path)
         
+        # Get original file size
+        original_size = os.path.getsize(file_path)
+        
         # Encrypt file
         encrypted_path = encrypt_file(file_path, password)
+        encrypted_filename = os.path.basename(encrypted_path)
+        encrypted_size = os.path.getsize(encrypted_path)
         
         # Log upload
         upload = Upload(
             user_id=current_user.id,
-            filename=os.path.basename(encrypted_path),
+            filename=encrypted_filename,
             original_filename=file.filename,
-            file_size=os.path.getsize(encrypted_path)
+            file_size=encrypted_size
         )
         db.session.add(upload)
         db.session.commit()
         
         log_activity('file_encryption', f'File: {file.filename}')
-        flash(f'File encrypted successfully: {os.path.basename(encrypted_path)}', 'success')
+        
+        return jsonify({
+            'success': True,
+            'message': f'File encrypted successfully!',
+            'download_url': url_for('uploaded_file', filename=encrypted_filename),
+            'original_filename': file.filename,
+            'encrypted_filename': encrypted_filename,
+            'original_size': f"{original_size:,} bytes",
+            'encrypted_size': f"{encrypted_size:,} bytes"
+        })
         
     except Exception as e:
-        flash(f'Encryption failed: {str(e)}', 'error')
-    
-    return redirect(url_for('dashboard'))
+        return jsonify({'success': False, 'error': f'Encryption failed: {str(e)}'})
 
 @app.route('/decrypt', methods=['POST'])
 @require_login
@@ -521,31 +534,44 @@ def decrypt():
     """Decrypt a file with AES"""
     try:
         if 'file' not in request.files:
-            flash('No file selected', 'error')
-            return redirect(url_for('dashboard'))
+            return jsonify({'success': False, 'error': 'No file selected'})
         
         file = request.files['file']
         password = request.form.get('password')
         
         if not password:
-            flash('Password is required for decryption', 'error')
-            return redirect(url_for('dashboard'))
+            return jsonify({'success': False, 'error': 'Password is required for decryption'})
+        
+        if not file.filename:
+            return jsonify({'success': False, 'error': 'No file selected'})
         
         # Save uploaded file
-        filename = secure_filename(file.filename or 'unknown')
+        filename = secure_filename(file.filename)
         file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(file_path)
         
+        # Get encrypted file size
+        encrypted_size = os.path.getsize(file_path)
+        
         # Decrypt file
         decrypted_path = decrypt_file(file_path, password)
+        decrypted_filename = os.path.basename(decrypted_path)
+        decrypted_size = os.path.getsize(decrypted_path)
         
         log_activity('file_decryption', f'File: {file.filename}')
-        flash(f'File decrypted successfully: {os.path.basename(decrypted_path)}', 'success')
+        
+        return jsonify({
+            'success': True,
+            'message': f'File decrypted successfully!',
+            'download_url': url_for('uploaded_file', filename=decrypted_filename),
+            'original_filename': file.filename,
+            'decrypted_filename': decrypted_filename,
+            'encrypted_size': f"{encrypted_size:,} bytes",
+            'decrypted_size': f"{decrypted_size:,} bytes"
+        })
         
     except Exception as e:
-        flash(f'Decryption failed: {str(e)}', 'error')
-    
-    return redirect(url_for('dashboard'))
+        return jsonify({'success': False, 'error': f'Decryption failed: {str(e)}'})
 
 @app.route('/brute/start', methods=['POST'])
 @require_login
