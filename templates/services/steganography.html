@@ -70,7 +70,7 @@
                     <i class="fas fa-home"></i> Back to Home
                 </a>
             </div>
-            <p class="text-muted mb-4">Hide and extract secret messages in images using LSB techniques</p>
+            <p class="text-muted mb-4">Hide and extract secret messages in ANY file type using advanced steganography techniques</p>
 
             <!-- Steganography Tools Tabs -->
             <div class="card module-card">
@@ -79,7 +79,7 @@
                     <ul class="nav nav-tabs" id="steganographyToolsTab" role="tablist">
                         <li class="nav-item" role="presentation">
                             <button class="nav-link active" id="encode-tab" data-bs-toggle="tab" data-bs-target="#encode" type="button" role="tab">
-                                <i class="fas fa-lock"></i> HIDE TEXT IN IMAGE
+                                <i class="fas fa-lock"></i> HIDE TEXT IN FILE
                             </button>
                         </li>
                         <li class="nav-item" role="presentation">
@@ -96,15 +96,15 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="steganography-form-section">
-                                        <h5><i class="fas fa-image"></i> HIDE SECRET TEXT</h5>
+                                        <h5><i class="fas fa-file"></i> HIDE SECRET TEXT</h5>
                                         <form id="encodeForm" enctype="multipart/form-data">
                                             <div class="input-group mb-3">
                                                 <span class="input-group-text bg-dark text-success border-success">
-                                                    <i class="fas fa-image"></i>
+                                                    <i class="fas fa-file"></i>
                                                 </span>
-                                                <input type="file" class="form-control bg-dark text-light border-success" id="coverImage" name="cover_image" accept="image/*" required>
+                                                <input type="file" class="form-control bg-dark text-light border-success" id="coverImage" name="cover_image" accept="*/*" required>
                                             </div>
-                                            <div class="form-text text-muted mb-3">Supported: PNG, BMP, TIFF, JPG, WebP</div>
+                                            <div class="form-text text-muted mb-3">Supported: All file types (PDF, DOCX, PNG, MP4, WAVE, etc.)</div>
                                             
                                             <div class="mb-3">
                                                 <label class="form-label text-light">
@@ -118,7 +118,7 @@
                                             </div>
                                             
                                             <button type="submit" class="btn btn-warning w-100">
-                                                <i class="fas fa-eye-slash me-2"></i>Hide Text in Image
+                                                <i class="fas fa-eye-slash me-2"></i>Hide Text in File
                                             </button>
                                         </form>
                                     </div>
@@ -128,8 +128,8 @@
                                     <div class="steganography-features">
                                         <h6><i class="fas fa-info-circle"></i> STEGANOGRAPHY FEATURES</h6>
                                         <ul class="text-success list-unstyled mt-3">
-                                            <li><i class="fas fa-check-circle me-2"></i> LSB steganography algorithm</li>
-                                            <li><i class="fas fa-check-circle me-2"></i> Multiple image format support</li>
+                                            <li><i class="fas fa-check-circle me-2"></i> Universal file steganography</li>
+                                            <li><i class="fas fa-check-circle me-2"></i> All file format support</li>
                                             <li><i class="fas fa-check-circle me-2"></i> Invisible text embedding</li>
                                             <li><i class="fas fa-check-circle me-2"></i> Capacity calculation tools</li>
                                         </ul>
@@ -137,7 +137,7 @@
                                     
                                     <div class="results-container" id="encodeResult">
                                         <i class="fas fa-arrow-left me-2"></i>
-                                        Upload an image and enter text to begin
+                                        Upload any file and enter text to begin
                                     </div>
                                 </div>
                             </div>
@@ -152,11 +152,11 @@
                                         <form id="decodeForm" enctype="multipart/form-data">
                                             <div class="input-group mb-3">
                                                 <span class="input-group-text bg-dark text-success border-success">
-                                                    <i class="fas fa-image"></i>
+                                                    <i class="fas fa-file"></i>
                                                 </span>
-                                                <input type="file" class="form-control bg-dark text-light border-success" id="stegoImage" name="stego_image" accept="image/*" required>
+                                                <input type="file" class="form-control bg-dark text-light border-success" id="stegoImage" name="stego_image" accept="*/*" required>
                                             </div>
-                                            <div class="form-text text-muted mb-3">Upload an image that may contain hidden text</div>
+                                            <div class="form-text text-muted mb-3">Upload any file that may contain hidden text</div>
                                             
                                             <button type="submit" class="btn btn-warning w-100">
                                                 <i class="fas fa-unlock me-2"></i>Extract Hidden Text
@@ -178,7 +178,7 @@
                                     
                                     <div class="results-container" id="decodeResult">
                                         <i class="fas fa-arrow-left me-2"></i>
-                                        Upload a stego image to extract hidden text
+                                        Upload a file with hidden text to extract it
                                     </div>
                                 </div>
                             </div>

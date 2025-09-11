@@ -14,7 +14,7 @@ from utils.scanner_utils import scan_url, scan_file_for_malware, vulnerability_s
 from utils.password_analyzer import analyze_password_strength, generate_password_suggestions
 from utils.network_utils import ping_host, dns_lookup, port_scan, traceroute, whois_lookup, network_info
 from utils.osint_utils import check_email_breaches, search_username, analyze_ip, analyze_domain
-from utils.steganography import encode_text_in_image, decode_text_from_image, get_image_capacity, validate_image_format, create_stego_filename
+from utils.steganography import encode_text_in_any_file, decode_text_from_any_file, get_file_capacity, validate_file_format, create_stego_filename
 
 app.register_blueprint(make_replit_blueprint(), url_prefix="/auth")
 
@@ -184,7 +184,7 @@ def steganography_capacity():
         file.save(temp_path)
         
         try:
-            capacity = get_image_capacity(temp_path)
+            capacity = get_file_capacity(temp_path)
             return jsonify({
                 'success': True,
                 'capacity': capacity
@@ -222,21 +222,21 @@ def steganography_encode():
         
         try:
             # Validate image format
-            if not validate_image_format(temp_input_path):
-                return jsonify({'error': 'Unsupported image format. Use PNG, BMP, TIFF, JPG, or WebP'}), 400
+            if not validate_file_format(temp_input_path):
+                return jsonify({'error': 'Unsupported file format or corrupted file'}), 400
             
             # Create output filename
             stego_filename = create_stego_filename(filename)
             output_path = os.path.join(app.config.get('UPLOAD_FOLDER', 'uploads'), stego_filename)
             
             # Encode text in image
-            success, message = encode_text_in_image(temp_input_path, secret_text, output_path)
+            success, message = encode_text_in_any_file(temp_input_path, secret_text, output_path)
             
             if success:
                 # Get file statistics
                 original_size = os.path.getsize(temp_input_path)
                 stego_size = os.path.getsize(output_path)
-                capacity = get_image_capacity(temp_input_path)
+                capacity = get_file_capacity(temp_input_path)
                 capacity_used = (len(secret_text) / capacity * 100) if capacity > 0 else 0
                 
                 log_activity('steganography_encode', f'Text length: {len(secret_text)} chars')
@@ -282,7 +282,7 @@ def steganography_decode():
         
         try:
             # Decode text from image
-            success, result = decode_text_from_image(temp_path)
+            success, result = decode_text_from_any_file(temp_path)
             
             if success:
                 log_activity('steganography_decode', f'Extracted {len(result)} chars')
