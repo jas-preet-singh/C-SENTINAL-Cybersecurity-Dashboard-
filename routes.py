@@ -747,7 +747,8 @@ def scan_url_route():
             'url': url,
             'safe': result['safe'],
             'message': result['message'],
-            'risk_level': result['risk_level']
+            'risk_level': result['risk_level'],
+            'reasons': result.get('reasons', [])
         })
         
     except Exception as e:
@@ -787,7 +788,8 @@ def scan_file_route():
             'filename': file.filename,
             'clean': result['clean'],
             'message': result['message'],
-            'risk_level': result['risk_level']
+            'risk_level': result['risk_level'],
+            'reasons': result.get('reasons', [])
         })
         
     except Exception as e:

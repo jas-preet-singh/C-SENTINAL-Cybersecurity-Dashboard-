@@ -211,20 +211,46 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                const resultClass = data.safe ? 'success-result' : 'warning-result';
-                const icon = data.safe ? 'fas fa-check-circle' : 'fas fa-exclamation-triangle';
-                const statusText = data.safe ? 'URL APPEARS SAFE' : 'URL MAY BE UNSAFE';
+                // Determine status based on risk level for more precise messaging
+                let resultClass, icon, statusText;
                 
+                if (data.risk_level === 'high') {
+                    resultClass = 'warning-result';
+                    icon = 'fas fa-times-circle';
+                    statusText = 'URL APPEARS UNSAFE - HIGH RISK';
+                } else if (data.risk_level === 'medium') {
+                    resultClass = 'warning-result';
+                    icon = 'fas fa-exclamation-triangle';
+                    statusText = 'CAUTION REQUIRED - MEDIUM RISK';
+                } else if (data.risk_level === 'low') {
+                    resultClass = 'success-result';
+                    icon = 'fas fa-check-circle';
+                    statusText = 'URL APPEARS SAFE - LOW RISK';
+                } else {
+                    resultClass = 'error-result';
+                    icon = 'fas fa-question-circle';
+                    statusText = 'UNKNOWN RISK LEVEL';
+                }
+                
+                const reasonsList = data.reasons && data.reasons.length > 0 ? 
+                    `<div class="mt-3">
+                        <h6><i class="fas fa-info-circle me-2"></i>Risk Assessment Details:</h6>
+                        <ul class="small">
+                            ${data.reasons.map(reason => `<li>${reason}</li>`).join('')}
+                        </ul>
+                    </div>` : '';
+                    
                 resultsDiv.innerHTML = `
                     <div class="${resultClass}">
                         <h6><i class="${icon} me-2"></i>${statusText}</h6>
                         <div class="result-item">
                             <p class="mb-2"><strong>URL:</strong> ${data.url}</p>
-                            <p class="mb-2"><strong>Message:</strong> ${data.message}</p>
+                            <p class="mb-2"><strong>Assessment:</strong> ${data.message}</p>
                             <p class="mb-2">
                                 <strong>Risk Level:</strong> 
                                 <span class="risk-level risk-${data.risk_level}">${data.risk_level.toUpperCase()}</span>
                             </p>
+                            ${reasonsList}
                         </div>
                     </div>
                 `;
@@ -273,20 +299,46 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                const resultClass = data.clean ? 'success-result' : 'warning-result';
-                const icon = data.clean ? 'fas fa-check-circle' : 'fas fa-exclamation-triangle';
-                const statusText = data.clean ? 'FILE APPEARS CLEAN' : 'POTENTIAL THREATS DETECTED';
+                // Determine status based on risk level for more precise messaging
+                let resultClass, icon, statusText;
                 
+                if (data.risk_level === 'high') {
+                    resultClass = 'warning-result';
+                    icon = 'fas fa-times-circle';
+                    statusText = 'FILE APPEARS UNSAFE - HIGH RISK';
+                } else if (data.risk_level === 'medium') {
+                    resultClass = 'warning-result';
+                    icon = 'fas fa-exclamation-triangle';
+                    statusText = 'CAUTION REQUIRED - MEDIUM RISK';
+                } else if (data.risk_level === 'low') {
+                    resultClass = 'success-result';
+                    icon = 'fas fa-check-circle';
+                    statusText = 'FILE APPEARS CLEAN - LOW RISK';
+                } else {
+                    resultClass = 'error-result';
+                    icon = 'fas fa-question-circle';
+                    statusText = 'UNKNOWN RISK LEVEL';
+                }
+                
+                const reasonsList = data.reasons && data.reasons.length > 0 ? 
+                    `<div class="mt-3">
+                        <h6><i class="fas fa-info-circle me-2"></i>Risk Assessment Details:</h6>
+                        <ul class="small">
+                            ${data.reasons.map(reason => `<li>${reason}</li>`).join('')}
+                        </ul>
+                    </div>` : '';
+                    
                 resultsDiv.innerHTML = `
                     <div class="${resultClass}">
                         <h6><i class="${icon} me-2"></i>${statusText}</h6>
                         <div class="result-item">
                             <p class="mb-2"><strong>File:</strong> ${data.filename}</p>
-                            <p class="mb-2"><strong>Message:</strong> ${data.message}</p>
+                            <p class="mb-2"><strong>Assessment:</strong> ${data.message}</p>
                             <p class="mb-2">
                                 <strong>Risk Level:</strong> 
                                 <span class="risk-level risk-${data.risk_level}">${data.risk_level.toUpperCase()}</span>
                             </p>
+                            ${reasonsList}
                         </div>
                     </div>
                 `;
