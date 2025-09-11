@@ -456,22 +456,35 @@ def hash_calculator():
     """Calculate file or text hashes"""
     try:
         hash_type = request.form.get('hash_type', 'sha256')
+        input_method = request.form.get('input_method', 'file')
         
-        if 'file' in request.files and request.files['file'].filename:
+        if input_method == 'file' and 'file' in request.files and request.files['file'].filename:
             file = request.files['file']
             file_content = file.read()
             result = calculate_hash(file_content, hash_type)
+            input_source = f"File: {file.filename}"
+            input_size = f"{len(file_content):,} bytes"
             log_activity('hash_calculation', f'File: {file.filename}, Type: {hash_type}')
         else:
             text = request.form.get('text', '')
+            if not text.strip():
+                return jsonify({'success': False, 'error': 'Please provide text to hash'})
             result = calculate_hash(text.encode(), hash_type)
+            input_source = "Text input"
+            input_size = f"{len(text):,} characters"
             log_activity('hash_calculation', f'Text hash, Type: {hash_type}')
         
-        flash(f'{hash_type.upper()} Hash: {result}', 'success')
+        return jsonify({
+            'success': True,
+            'hash_type': hash_type.upper(),
+            'hash_result': result,
+            'input_source': input_source,
+            'input_size': input_size,
+            'hash_length': len(result)
+        })
+        
     except Exception as e:
-        flash(f'Error calculating hash: {str(e)}', 'error')
-    
-    return redirect(url_for('dashboard'))
+        return jsonify({'success': False, 'error': f'Error calculating hash: {str(e)}'})
 
 @app.route('/encrypt', methods=['POST'])
 @require_login
