@@ -726,8 +726,7 @@ def scan_url_route():
     try:
         url = request.form.get('url')
         if not url:
-            flash('Please enter a URL to scan', 'error')
-            return redirect(url_for('dashboard'))
+            return jsonify({'success': False, 'error': 'Please enter a URL to scan'})
         
         result = scan_url(url)
         
@@ -743,15 +742,16 @@ def scan_url_route():
         
         log_activity('url_scan', f'URL: {url}')
         
-        if result['safe']:
-            flash(f'URL appears safe: {result["message"]}', 'success')
-        else:
-            flash(f'URL may be unsafe: {result["message"]}', 'warning')
+        return jsonify({
+            'success': True,
+            'url': url,
+            'safe': result['safe'],
+            'message': result['message'],
+            'risk_level': result['risk_level']
+        })
         
     except Exception as e:
-        flash(f'URL scan failed: {str(e)}', 'error')
-    
-    return redirect(url_for('dashboard'))
+        return jsonify({'success': False, 'error': f'URL scan failed: {str(e)}'})
 
 @app.route('/scan/file', methods=['POST'])
 @require_login
@@ -759,8 +759,7 @@ def scan_file_route():
     """Scan file for malware"""
     try:
         if 'file' not in request.files:
-            flash('No file selected', 'error')
-            return redirect(url_for('dashboard'))
+            return jsonify({'success': False, 'error': 'No file selected'})
         
         file = request.files['file']
         
@@ -783,15 +782,16 @@ def scan_file_route():
         
         log_activity('file_scan', f'File: {file.filename}')
         
-        if result['clean']:
-            flash(f'File appears clean: {result["message"]}', 'success')
-        else:
-            flash(f'Potential threats detected: {result["message"]}', 'warning')
+        return jsonify({
+            'success': True,
+            'filename': file.filename,
+            'clean': result['clean'],
+            'message': result['message'],
+            'risk_level': result['risk_level']
+        })
         
     except Exception as e:
-        flash(f'File scan failed: {str(e)}', 'error')
-    
-    return redirect(url_for('dashboard'))
+        return jsonify({'success': False, 'error': f'File scan failed: {str(e)}'})
 
 @app.route('/scan/vulnerability', methods=['POST'])
 @require_login

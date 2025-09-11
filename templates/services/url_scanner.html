@@ -21,7 +21,7 @@
  <h5><i class="fas fa-link"></i> URL Safety Scanner</h5>
  </div>
  <div class="card-body">
- <form action="{{ url_for('scan_url_route') }}" method="post">
+ <form id="urlScanForm">
  <div class="mb-3">
  <label class="form-label">Enter URL to Scan</label>
  <input type="url" name="url" class="form-control" placeholder="https://example.com" required>
@@ -32,6 +32,9 @@
  <i class="fas fa-search"></i> Scan URL
  </button>
  </form>
+
+ <!-- URL Scan Results Container -->
+ <div id="urlResults" class="results-container mt-3" style="display: none;"></div>
 
  <div class="mt-3">
  <h6>URL Scanner checks for:</h6>
@@ -53,7 +56,7 @@
  <h5><i class="fas fa-shield-virus"></i> File Malware Scanner</h5>
  </div>
  <div class="card-body">
- <form action="{{ url_for('scan_file_route') }}" method="post" enctype="multipart/form-data">
+ <form id="fileScanForm" enctype="multipart/form-data">
  <div class="mb-3">
  <label class="form-label">Select File to Scan</label>
  <input type="file" name="file" class="form-control" required>
@@ -64,6 +67,9 @@
  <i class="fas fa-shield-alt"></i> Scan File
  </button>
  </form>
+
+ <!-- File Scan Results Container -->
+ <div id="fileResults" class="results-container mt-3" style="display: none;"></div>
 
  <div class="mt-3">
  <h6>File Scanner analyzes:</h6>
@@ -134,4 +140,181 @@
  </div>
  </div>
 </div>
+
+<style>
+.results-container {
+    padding: 15px;
+    border: 1px solid #00ff66;
+    border-radius: 5px;
+    background: rgba(0, 255, 102, 0.05);
+}
+
+.success-result {
+    color: #00ff66;
+    border: 1px solid #00ff66;
+    background: rgba(0, 255, 102, 0.1);
+    padding: 15px;
+    border-radius: 5px;
+}
+
+.error-result {
+    color: #ffc107;
+    border: 1px solid #ffc107;
+    background: rgba(255, 193, 7, 0.1);
+    padding: 15px;
+    border-radius: 5px;
+}
+
+.warning-result {
+    color: #ff6b6b;
+    border: 1px solid #ff6b6b;
+    background: rgba(255, 107, 107, 0.1);
+    padding: 15px;
+    border-radius: 5px;
+}
+
+.result-item {
+    margin-top: 10px;
+}
+
+.risk-level {
+    padding: 3px 8px;
+    border-radius: 3px;
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+
+.risk-low { background-color: #28a745; color: white; }
+.risk-medium { background-color: #ffc107; color: #212529; }
+.risk-high { background-color: #dc3545; color: white; }
+.risk-unknown { background-color: #6c757d; color: white; }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Handle URL Scan Form Submission
+    document.getElementById('urlScanForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const formData = new FormData(this);
+        const button = this.querySelector('button[type="submit"]');
+        const resultsDiv = document.getElementById('urlResults');
+        
+        // Disable button and show loading
+        button.disabled = true;
+        button.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Scanning...';
+        
+        fetch('/scan/url', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const resultClass = data.safe ? 'success-result' : 'warning-result';
+                const icon = data.safe ? 'fas fa-check-circle' : 'fas fa-exclamation-triangle';
+                const statusText = data.safe ? 'URL APPEARS SAFE' : 'URL MAY BE UNSAFE';
+                
+                resultsDiv.innerHTML = `
+                    <div class="${resultClass}">
+                        <h6><i class="${icon} me-2"></i>${statusText}</h6>
+                        <div class="result-item">
+                            <p class="mb-2"><strong>URL:</strong> ${data.url}</p>
+                            <p class="mb-2"><strong>Message:</strong> ${data.message}</p>
+                            <p class="mb-2">
+                                <strong>Risk Level:</strong> 
+                                <span class="risk-level risk-${data.risk_level}">${data.risk_level.toUpperCase()}</span>
+                            </p>
+                        </div>
+                    </div>
+                `;
+            } else {
+                resultsDiv.innerHTML = `
+                    <div class="error-result">
+                        <h6><i class="fas fa-exclamation-triangle me-2"></i>Scan Failed</h6>
+                        <p>${data.error}</p>
+                    </div>
+                `;
+            }
+            resultsDiv.style.display = 'block';
+        })
+        .catch(error => {
+            resultsDiv.innerHTML = `
+                <div class="error-result">
+                    <h6><i class="fas fa-exclamation-triangle me-2"></i>Error</h6>
+                    <p>An unexpected error occurred: ${error.message}</p>
+                </div>
+            `;
+            resultsDiv.style.display = 'block';
+        })
+        .finally(() => {
+            // Re-enable button
+            button.disabled = false;
+            button.innerHTML = '<i class="fas fa-search me-2"></i>Scan URL';
+        });
+    });
+
+    // Handle File Scan Form Submission
+    document.getElementById('fileScanForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const formData = new FormData(this);
+        const button = this.querySelector('button[type="submit"]');
+        const resultsDiv = document.getElementById('fileResults');
+        
+        // Disable button and show loading
+        button.disabled = true;
+        button.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Scanning...';
+        
+        fetch('/scan/file', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const resultClass = data.clean ? 'success-result' : 'warning-result';
+                const icon = data.clean ? 'fas fa-check-circle' : 'fas fa-exclamation-triangle';
+                const statusText = data.clean ? 'FILE APPEARS CLEAN' : 'POTENTIAL THREATS DETECTED';
+                
+                resultsDiv.innerHTML = `
+                    <div class="${resultClass}">
+                        <h6><i class="${icon} me-2"></i>${statusText}</h6>
+                        <div class="result-item">
+                            <p class="mb-2"><strong>File:</strong> ${data.filename}</p>
+                            <p class="mb-2"><strong>Message:</strong> ${data.message}</p>
+                            <p class="mb-2">
+                                <strong>Risk Level:</strong> 
+                                <span class="risk-level risk-${data.risk_level}">${data.risk_level.toUpperCase()}</span>
+                            </p>
+                        </div>
+                    </div>
+                `;
+            } else {
+                resultsDiv.innerHTML = `
+                    <div class="error-result">
+                        <h6><i class="fas fa-exclamation-triangle me-2"></i>Scan Failed</h6>
+                        <p>${data.error}</p>
+                    </div>
+                `;
+            }
+            resultsDiv.style.display = 'block';
+        })
+        .catch(error => {
+            resultsDiv.innerHTML = `
+                <div class="error-result">
+                    <h6><i class="fas fa-exclamation-triangle me-2"></i>Error</h6>
+                    <p>An unexpected error occurred: ${error.message}</p>
+                </div>
+            `;
+            resultsDiv.style.display = 'block';
+        })
+        .finally(() => {
+            // Re-enable button
+            button.disabled = false;
+            button.innerHTML = '<i class="fas fa-shield-alt me-2"></i>Scan File';
+        });
+    });
+});
+</script>
 {% endblock %}
