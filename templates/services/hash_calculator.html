@@ -250,7 +250,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                         <i class="fas fa-info-circle me-1"></i>
                                         Hash length: ${data.hash_length} characters
                                     </p>
-                                    <button class="btn btn-outline-success btn-sm" onclick="copyHashToClipboard('${data.hash_result}')">
+                                    <button class="btn btn-outline-success btn-sm" onclick="copyHashToClipboard(this, '${data.hash_result}')">
                                         <i class="fas fa-copy me-1"></i>Copy Hash
                                     </button>
                                 </div>
@@ -286,10 +286,9 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // Function to copy hash to clipboard
-function copyHashToClipboard(hashValue) {
+function copyHashToClipboard(button, hashValue) {
     navigator.clipboard.writeText(hashValue).then(function() {
         // Show success feedback
-        const button = event.target.closest('button');
         const originalText = button.innerHTML;
         button.innerHTML = '<i class="fas fa-check me-1"></i>Copied!';
         button.classList.remove('btn-outline-success');
@@ -311,7 +310,6 @@ function copyHashToClipboard(hashValue) {
         document.body.removeChild(textArea);
         
         // Show success feedback
-        const button = event.target.closest('button');
         const originalText = button.innerHTML;
         button.innerHTML = '<i class="fas fa-check me-1"></i>Copied!';
         button.classList.remove('btn-outline-success');

@@ -450,10 +450,13 @@ def activity():
                          total_scans=total_scans,
                          total_activities=total_activities)
 
-@app.route('/hash', methods=['POST'])
+@app.route('/hash', methods=['GET', 'POST'])
 @require_login
 def hash_calculator():
     """Calculate file or text hashes"""
+    if request.method == 'GET':
+        return render_template('services/hash_calculator.html')
+    
     try:
         hash_type = request.form.get('hash_type', 'sha256')
         input_method = request.form.get('input_method', 'file')
