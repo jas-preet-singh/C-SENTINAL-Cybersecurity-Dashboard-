@@ -242,13 +242,18 @@ document.addEventListener('DOMContentLoaded', function() {
                             
                             <div class="mt-3">
                                 <h6 class="text-success mb-2">CALCULATED HASH:</h6>
-                                <div class="hash-result-box text-success">
+                                <div class="hash-result-box text-success" id="hashValue">
                                     ${data.hash_result}
                                 </div>
-                                <p class="text-muted small mt-2">
-                                    <i class="fas fa-info-circle me-1"></i>
-                                    Hash length: ${data.hash_length} characters
-                                </p>
+                                <div class="d-flex justify-content-between align-items-center mt-2">
+                                    <p class="text-muted small mb-0">
+                                        <i class="fas fa-info-circle me-1"></i>
+                                        Hash length: ${data.hash_length} characters
+                                    </p>
+                                    <button class="btn btn-outline-success btn-sm" onclick="copyHashToClipboard('${data.hash_result}')">
+                                        <i class="fas fa-copy me-1"></i>Copy Hash
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -279,5 +284,45 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+
+// Function to copy hash to clipboard
+function copyHashToClipboard(hashValue) {
+    navigator.clipboard.writeText(hashValue).then(function() {
+        // Show success feedback
+        const button = event.target.closest('button');
+        const originalText = button.innerHTML;
+        button.innerHTML = '<i class="fas fa-check me-1"></i>Copied!';
+        button.classList.remove('btn-outline-success');
+        button.classList.add('btn-success');
+        
+        // Reset button after 2 seconds
+        setTimeout(function() {
+            button.innerHTML = originalText;
+            button.classList.remove('btn-success');
+            button.classList.add('btn-outline-success');
+        }, 2000);
+    }).catch(function(err) {
+        // Fallback for older browsers
+        const textArea = document.createElement('textarea');
+        textArea.value = hashValue;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        
+        // Show success feedback
+        const button = event.target.closest('button');
+        const originalText = button.innerHTML;
+        button.innerHTML = '<i class="fas fa-check me-1"></i>Copied!';
+        button.classList.remove('btn-outline-success');
+        button.classList.add('btn-success');
+        
+        setTimeout(function() {
+            button.innerHTML = originalText;
+            button.classList.remove('btn-success');
+            button.classList.add('btn-outline-success');
+        }, 2000);
+    });
+}
 </script>
 {% endblock %}
