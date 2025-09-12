@@ -174,7 +174,7 @@ def steganography_capacity():
             return jsonify({'error': 'No image file provided'}), 400
         
         file = request.files['image']
-        if file.filename == '':
+        if not file.filename or file.filename == '':
             return jsonify({'error': 'No file selected'}), 400
         
         # Save temporary file to check capacity
@@ -208,7 +208,7 @@ def steganography_encode():
         file = request.files['cover_image']
         secret_text = request.form['secret_text']
         
-        if file.filename == '':
+        if not file.filename or file.filename == '':
             return jsonify({'error': 'No file selected'}), 400
         
         if not secret_text.strip():
@@ -271,7 +271,7 @@ def steganography_decode():
         
         file = request.files['stego_image']
         
-        if file.filename == '':
+        if not file.filename or file.filename == '':
             return jsonify({'error': 'No file selected'}), 400
         
         # Save temporary file

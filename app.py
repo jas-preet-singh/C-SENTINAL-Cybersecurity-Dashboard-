@@ -38,3 +38,6 @@ with app.app_context():
     import models  # noqa: F401
     db.create_all()
     logging.info("Database tables created")
+
+# Import routes to register them with the app
+import app_routes  # noqa: F401
