@@ -802,8 +802,7 @@ def vulnerability_scan_route():
     try:
         url = request.form.get('url')
         if not url:
-            flash('Please enter a URL to scan', 'error')
-            return redirect(url_for('dashboard'))
+            return jsonify({'success': False, 'error': 'Please enter a URL to scan'})
         
         result = vulnerability_scan(url)
         
@@ -820,15 +819,22 @@ def vulnerability_scan_route():
         log_activity('vulnerability_scan', f'URL: {url}')
         
         vulnerabilities = result.get('vulnerabilities', [])
-        if vulnerabilities:
-            flash(f'Vulnerabilities found: {", ".join(vulnerabilities)}', 'warning')
-        else:
-            flash('No obvious vulnerabilities detected', 'success')
+        return jsonify({
+            'success': True,
+            'url': url,
+            'vulnerabilities': vulnerabilities,
+            'risk_level': result.get('risk_level', 'unknown'),
+            'message': result.get('message', 'Scan completed'),
+            'vulnerability_count': len(vulnerabilities),
+            'reasons': result.get('reasons', []),
+            'security_issues': result.get('security_issues', []),
+            'security_strengths': result.get('security_strengths', []),
+            'missing_headers': result.get('missing_headers', []),
+            'present_headers': result.get('present_headers', [])
+        })
         
     except Exception as e:
-        flash(f'Vulnerability scan failed: {str(e)}', 'error')
-    
-    return redirect(url_for('dashboard'))
+        return jsonify({'success': False, 'error': f'Vulnerability scan failed: {str(e)}'})
 
 @app.route('/network/ping', methods=['POST'])
 @require_login

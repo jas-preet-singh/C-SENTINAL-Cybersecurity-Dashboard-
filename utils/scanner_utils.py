@@ -360,6 +360,9 @@ def vulnerability_scan(url):
     """Basic vulnerability scan for common web vulnerabilities with SSRF protection"""
     try:
         vulnerabilities = []
+        reasons = []
+        security_issues = []
+        security_strengths = []
         
         # SSRF Protection: Validate URL before vulnerability testing
         ssrf_valid, ssrf_message = validate_url_for_ssrf(url)
@@ -367,11 +370,17 @@ def vulnerability_scan(url):
             return {
                 'vulnerabilities': [f'Security restriction: {ssrf_message}'],
                 'risk_level': 'high',
-                'message': 'URL blocked for security reasons'
+                'message': 'URL blocked for security reasons',
+                'reasons': [
+                    'URL points to private or internal network',
+                    'Scanning internal services is prohibited',
+                    'Only public URLs can be vulnerability scanned'
+                ]
             }
         
         # Test for SQL Injection (basic) with SSRF protection
         sqli_payloads = ["'", "' OR '1'='1", "'; DROP TABLE users; --"]
+        sql_injection_found = False
         
         for payload in sqli_payloads:
             test_url = f"{url}?id={payload}"
@@ -382,11 +391,18 @@ def vulnerability_scan(url):
                     continue
                     
                 response = requests.get(test_url, timeout=5, allow_redirects=False)
-                if any(error in response.text.lower() for error in ['sql', 'mysql', 'syntax error', 'database']):
-                    vulnerabilities.append('Potential SQL Injection')
+                if any(error in response.text.lower() for error in ['sql', 'mysql', 'syntax error', 'database', 'oracle', 'postgresql']):
+                    if not sql_injection_found:  # Only add once
+                        vulnerabilities.append('Potential SQL Injection')
+                        security_issues.append('SQL error messages exposed - indicates possible SQL injection vulnerability')
+                        security_issues.append('Database errors should never be visible to users')
+                        sql_injection_found = True
                     break
             except:
                 pass
+        
+        if not sql_injection_found:
+            security_strengths.append('No obvious SQL injection vulnerabilities detected')
         
         # Test for XSS (basic) with SSRF protection
         xss_payload = "<script>alert('XSS')</script>"
@@ -396,39 +412,101 @@ def vulnerability_scan(url):
             if test_valid:
                 response = requests.get(test_url, timeout=5, allow_redirects=False)
                 if xss_payload in response.text:
-                    vulnerabilities.append('Potential XSS')
+                    vulnerabilities.append('Potential Cross-Site Scripting (XSS)')
+                    security_issues.append('Script tags are reflected without sanitization')
+                    security_issues.append('User input is not properly encoded before output')
+                    security_issues.append('XSS can allow attackers to execute malicious scripts')
+                else:
+                    security_strengths.append('Basic XSS payload was properly handled/filtered')
         except:
             pass
         
         # Check for common security headers with SSRF protection
+        missing_headers = []
+        present_headers = []
         try:
             response = requests.head(url, timeout=5, allow_redirects=False)
             headers = response.headers
             
-            security_headers = [
-                'X-Frame-Options',
-                'X-XSS-Protection',
-                'X-Content-Type-Options',
-                'Strict-Transport-Security'
-            ]
+            security_headers_info = {
+                'X-Frame-Options': 'Prevents clickjacking attacks by controlling iframe embedding',
+                'X-XSS-Protection': 'Enables browser XSS filtering (legacy but still useful)',
+                'X-Content-Type-Options': 'Prevents MIME type sniffing attacks',
+                'Strict-Transport-Security': 'Enforces HTTPS connections (HSTS)',
+                'Content-Security-Policy': 'Controls resource loading to prevent XSS',
+                'Referrer-Policy': 'Controls information sent in Referer header'
+            }
             
-            missing_headers = [h for h in security_headers if h not in headers]
+            for header, description in security_headers_info.items():
+                if header in headers:
+                    present_headers.append(f'{header}: {description}')
+                else:
+                    missing_headers.append(f'{header}: {description}')
+            
             if missing_headers:
-                vulnerabilities.append(f'Missing security headers: {", ".join(missing_headers)}')
+                vulnerabilities.append(f'Missing security headers ({len(missing_headers)} headers)')
+                security_issues.extend([f'Missing {header.split(":")[0]}' for header in missing_headers])
+            
+            if present_headers:
+                security_strengths.extend([f'Has {header.split(":")[0]}' for header in present_headers])
+                
         except:
-            pass
+            security_issues.append('Unable to check security headers - server may be unreachable')
         
-        risk_level = 'high' if len(vulnerabilities) > 2 else 'medium' if vulnerabilities else 'low'
+        # Check HTTPS usage
+        if url.startswith('https://'):
+            security_strengths.append('Uses HTTPS encryption for secure communication')
+        else:
+            security_issues.append('Uses HTTP instead of HTTPS - data transmitted in plain text')
+            vulnerabilities.append('Insecure HTTP connection')
+        
+        # Compile reasons
+        if security_issues:
+            reasons.extend(security_issues)
+        if security_strengths:
+            reasons.extend(security_strengths)
+        
+        # Additional analysis
+        if not vulnerabilities:
+            reasons.append('Basic vulnerability scan completed with no major issues found')
+        else:
+            reasons.append(f'Found {len(vulnerabilities)} potential security vulnerabilities')
+            reasons.append('Consider professional security audit for comprehensive assessment')
+        
+        # Determine risk level based on vulnerabilities and severity
+        if 'SQL Injection' in str(vulnerabilities) or 'XSS' in str(vulnerabilities):
+            risk_level = 'high'
+            reasons.append('Critical vulnerabilities detected - immediate attention required')
+        elif len(vulnerabilities) > 2:
+            risk_level = 'high'
+            reasons.append('Multiple vulnerabilities indicate poor security posture')
+        elif vulnerabilities:
+            risk_level = 'medium'
+            reasons.append('Some vulnerabilities found - should be addressed')
+        else:
+            risk_level = 'low'
+            reasons.append('No obvious vulnerabilities detected in basic scan')
         
         return {
             'vulnerabilities': vulnerabilities,
             'risk_level': risk_level,
-            'message': f'Found {len(vulnerabilities)} potential issues'
+            'message': f'Found {len(vulnerabilities)} potential security issues' if vulnerabilities else 'No obvious vulnerabilities detected',
+            'reasons': reasons,
+            'security_issues': security_issues,
+            'security_strengths': security_strengths,
+            'missing_headers': missing_headers,
+            'present_headers': present_headers
         }
         
     except Exception as e:
         return {
             'vulnerabilities': [],
             'risk_level': 'unknown',
-            'message': f'Scan error: {str(e)}'
+            'message': f'Scan error: {str(e)}',
+            'reasons': [
+                'Vulnerability scanning process encountered an error',
+                'Unable to complete security assessment',
+                'Network issues or server problems prevented scan',
+                'Try scanning again or use professional security tools'
+            ]
         }
