@@ -25,11 +25,15 @@ def make_session_permanent():
 
 def log_activity(action, details=None):
     """Log user activity"""
+    # Get the user's real public IP address
+    public_ip = get_user_public_ip(request)
+    
     log = ActivityLog(
         user_id=current_user.id if current_user.is_authenticated else None,
         action=action,
         details=details,
-        ip_address=request.remote_addr,
+        ip_address=request.remote_addr,  # Keep internal IP for debugging
+        user_public_ip=public_ip,  # Store real public IP
         user_agent=request.headers.get('User-Agent')
     )
     db.session.add(log)

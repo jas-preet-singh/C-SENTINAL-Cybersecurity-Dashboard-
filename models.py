@@ -69,7 +69,8 @@ class ActivityLog(db.Model):
     user_id = db.Column(db.String, db.ForeignKey(User.id), nullable=True)
     action = db.Column(db.String, nullable=False)
     details = db.Column(db.Text, nullable=True)
-    ip_address = db.Column(db.String, nullable=True)
+    ip_address = db.Column(db.String, nullable=True)  # Internal/container IP
+    user_public_ip = db.Column(db.String, nullable=True)  # Real public IP
     user_agent = db.Column(db.String, nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.now)
     

@@ -139,6 +139,7 @@
  <th>User</th>
  <th>Action</th>
  <th>Details</th>
+ <th>User's IP</th>
  <th>IP Address</th>
  </tr>
  </thead>
@@ -161,6 +162,9 @@
  </td>
  <td>
  <small>{{ log.details or 'N/A' }}</small>
+ </td>
+ <td>
+ <code>{{ log.user_public_ip or 'Unknown' }}</code>
  </td>
  <td>
  <code>{{ log.ip_address or 'N/A' }}</code>
