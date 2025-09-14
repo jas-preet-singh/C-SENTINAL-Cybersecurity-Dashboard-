@@ -1565,15 +1565,12 @@ function animateCounter(elementId, targetValue) {
 document.addEventListener('DOMContentLoaded', function() {
  console.log('Dashboard loaded with dynamic analytics');
  
- // Check if Chart.js is loaded
+ // Initialize charts since Chart.js v4 is now loaded from base.html
  if (typeof Chart !== 'undefined') {
+ console.log('Chart.js v4 loaded, initializing charts...');
  initializeCharts();
  } else {
- console.error('Chart.js not loaded. Adding CDN...');
- const script = document.createElement('script');
- script.src = 'https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.min.js';
- script.onload = () => initializeCharts();
- document.head.appendChild(script);
+ console.error('Chart.js not found!');
  }
 });
 
