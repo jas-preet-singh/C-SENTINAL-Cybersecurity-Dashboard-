@@ -1375,48 +1375,27 @@ function getNetworkInfo() {
 
 // Initialize Analytics Charts
 function initializeCharts() {
- console.log('Starting chart initialization...');
+ // Get dynamic data from template
+ const chartLabels = {{ chart_labels | tojson | safe }};
+ const chartData = {{ chart_data | tojson | safe }};
+ const timelineData = {{ timeline_data | tojson | safe }};
  
- try {
- // Test if Chart.js is actually available
- if (typeof Chart === 'undefined') {
- console.error('Chart.js is not loaded');
- return;
- }
+ // Service Usage Chart (Doughnut)
+ const serviceUsageCtx = document.getElementById('serviceUsageChart').getContext('2d');
  
- console.log('Chart.js version:', Chart.version);
- 
- // Check if canvas elements exist
- const serviceUsageCanvas = document.getElementById('serviceUsageChart');
- const timelineCanvas = document.getElementById('activityTimelineChart');
- 
- if (!serviceUsageCanvas) {
- console.error('Service usage canvas not found');
- return;
- }
- if (!timelineCanvas) {
- console.error('Timeline canvas not found');
- return;
- }
- 
- console.log('Canvas elements found');
- 
- // Start with simple test data first
- const testLabels = ['Test A', 'Test B', 'Test C'];
- const testData = [10, 20, 15];
- 
- console.log('Creating service usage chart...');
- 
- // Service Usage Chart (Doughnut) - Simple test version
- const serviceUsageCtx = serviceUsageCanvas.getContext('2d');
+ // Create dynamic color palette
+ const colors = [
+ '#00ff66', '#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', 
+ '#f0932b', '#eb4d4b', '#6c5ce7', '#fd79a8', '#fdcb6e'
+ ];
  
  new Chart(serviceUsageCtx, {
  type: 'doughnut',
  data: {
- labels: testLabels,
+ labels: chartLabels,
  datasets: [{
- data: testData,
- backgroundColor: ['#00ff66', '#ff6b6b', '#4ecdc4'],
+ data: chartData,
+ backgroundColor: colors.slice(0, chartData.length),
  borderColor: '#00ff66',
  borderWidth: 2
  }]
@@ -1429,81 +1408,137 @@ function initializeCharts() {
  position: 'bottom',
  labels: {
  color: '#ffffff',
- usePointStyle: true
+ usePointStyle: true,
+ padding: 15
+ }
+ },
+ tooltip: {
+ callbacks: {
+ label: function(context) {
+ const total = context.dataset.data.reduce((a, b) => a + b, 0);
+ const percentage = Math.round((context.parsed / total) * 100);
+ return context.label + ': ' + context.parsed + ' uses (' + percentage + '%)';
+ }
  }
  }
  }
  }
  });
- 
- console.log('Service chart created successfully');
 
- console.log('Creating timeline chart...');
+ // Activity Timeline Chart (Line)
+ const timelineCtx = document.getElementById('activityTimelineChart').getContext('2d');
  
- // Activity Timeline Chart (Line) - Simple test version
- const timelineCtx = timelineCanvas.getContext('2d');
+ // Process timeline data for last 7 days
+ const labels = [];
+ const today = new Date();
  
- const dayLabels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
- const testTimelineData = [5, 10, 8, 12, 15, 7, 11];
+ // Create labels for last 7 days
+ for (let i = 6; i >= 0; i--) {
+ const date = new Date(today);
+ date.setDate(date.getDate() - i);
+ const dayName = date.toLocaleDateString('en-US', { weekday: 'short' });
+ labels.push(dayName);
+ }
+ 
+ // Create datasets for each activity type
+ const datasets = [];
+ const colors = [
+ '#00ff66', '#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', 
+ '#f0932b', '#eb4d4b', '#6c5ce7', '#fd79a8', '#fdcb6e'
+ ];
+ 
+ if (timelineData.activities && timelineData.activities.length > 0) {
+ timelineData.activities.forEach((activity, index) => {
+ const activityData = [];
+ 
+ // Fill data for each day
+ for (let i = 6; i >= 0; i--) {
+ const date = new Date(today);
+ date.setDate(date.getDate() - i);
+ const dateStr = date.toISOString().split('T')[0];
+ 
+ const count = timelineData.data[activity] && timelineData.data[activity][dateStr] 
+ ? timelineData.data[activity][dateStr] : 0;
+ activityData.push(count);
+ }
+ 
+ datasets.push({
+ label: activity,
+ data: activityData,
+ borderColor: colors[index % colors.length],
+ backgroundColor: colors[index % colors.length] + '20', // Add transparency
+ fill: false,
+ tension: 0.4,
+ pointBackgroundColor: colors[index % colors.length],
+ pointBorderColor: '#ffffff',
+ pointBorderWidth: 2,
+ pointRadius: 4
+ });
+ });
+ } else {
+ // Fallback for empty data
+ datasets.push({
+ label: 'No Activity Data',
+ data: [0, 0, 0, 0, 0, 0, 0],
+ borderColor: '#666666',
+ backgroundColor: 'rgba(102, 102, 102, 0.1)',
+ fill: false,
+ tension: 0.4
+ });
+ }
  
  new Chart(timelineCtx, {
  type: 'line',
  data: {
- labels: dayLabels,
- datasets: [{
- label: 'Test Activity',
- data: testTimelineData,
- borderColor: '#00ff66',
- backgroundColor: 'rgba(0, 255, 102, 0.1)',
- fill: true,
- tension: 0.4
- }]
+ labels: labels,
+ datasets: datasets
  },
  options: {
  responsive: true,
  maintainAspectRatio: false,
  scales: {
  x: {
- ticks: { color: '#ffffff' }
+ ticks: { color: '#ffffff' },
+ grid: { color: 'rgba(255, 255, 255, 0.1)' }
  },
  y: {
  beginAtZero: true,
- ticks: { color: '#ffffff' }
+ ticks: { 
+ color: '#ffffff',
+ stepSize: 1
+ },
+ grid: { color: 'rgba(255, 255, 255, 0.1)' }
  }
  },
  plugins: {
  legend: {
- labels: { color: '#ffffff' }
+ labels: { 
+ color: '#ffffff',
+ usePointStyle: true,
+ padding: 10
+ }
+ },
+ tooltip: {
+ backgroundColor: 'rgba(0, 0, 0, 0.8)',
+ titleColor: '#ffffff',
+ bodyColor: '#ffffff',
+ borderColor: '#00ff66',
+ borderWidth: 1,
+ callbacks: {
+ title: function(context) {
+ return context[0].label;
+ },
+ label: function(context) {
+ return context.dataset.label + ': ' + context.parsed.y + ' activities';
+ }
+ }
  }
  }
  }
  });
- 
- console.log('Timeline chart created successfully');
 
 
  // Charts initialized with real data
- console.log('Charts initialized successfully');
- } catch (error) {
- console.error('Error initializing charts:', error);
- 
- // Handle both Error objects and other thrown values
- const errorMsg = (error && error.message) ? error.message : String(error);
- console.error('Error details:', errorMsg);
- 
- // Show error message in chart containers
- const serviceChart = document.getElementById('serviceUsageChart');
- const timelineChart = document.getElementById('activityTimelineChart');
- 
- if (serviceChart && serviceChart.parentElement) {
- serviceChart.parentElement.innerHTML = 
- '<div class="alert alert-danger">Chart Error: ' + errorMsg + '</div>';
- }
- if (timelineChart && timelineChart.parentElement) {
- timelineChart.parentElement.innerHTML = 
- '<div class="alert alert-danger">Chart Error: ' + errorMsg + '</div>';
- }
- }
 }
 
 // Real-time stats are now dynamic from server data
@@ -1530,16 +1565,15 @@ function animateCounter(elementId, targetValue) {
 document.addEventListener('DOMContentLoaded', function() {
  console.log('Dashboard loaded with dynamic analytics');
  
- // Initialize charts since Chart.js v4 is now loaded from base.html
+ // Check if Chart.js is loaded
  if (typeof Chart !== 'undefined') {
- console.log('Chart.js v4 loaded, initializing charts...');
- try {
  initializeCharts();
- } catch (e) {
- console.error('Chart initialization failed:', e);
- }
  } else {
- console.error('Chart.js not found!');
+ console.error('Chart.js not loaded. Adding CDN...');
+ const script = document.createElement('script');
+ script.src = 'https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.min.js';
+ script.onload = () => initializeCharts();
+ document.head.appendChild(script);
  }
 });
 
