@@ -400,18 +400,64 @@ def dashboard():
     
     success_rate = round((successful_activities / max(total_activities, 1)) * 100, 1)
     
-    # Get activity timeline data (last 7 days)
+    # Get activity timeline data broken down by activity type (last 7 days)
     activity_timeline = db.session.query(
         db.func.date(ActivityLog.created_at).label('date'),
+        ActivityLog.action.label('action'),
         db.func.count(ActivityLog.id).label('count')
     ).filter(
         ActivityLog.created_at >= db.func.current_date() - db.text('INTERVAL \'6 days\'')
     ).group_by(
-        db.func.date(ActivityLog.created_at)
-    ).order_by('date').all()
+        db.func.date(ActivityLog.created_at),
+        ActivityLog.action
+    ).order_by('date', 'action').all()
     
-    # Convert to list of dictionaries for easier JSON serialization
-    timeline_data = [{'date': str(day.date), 'count': day.count} for day in activity_timeline]
+    # Activity type mapping for user-friendly names
+    activity_mapping = {
+        'hash_calculation': 'Hash Calculator',
+        'vulnerability_scan': 'Vulnerability Scanner', 
+        'network_ping': 'Network Ping',
+        'password_analysis': 'Password Analysis',
+        'brute_force_start': 'Brute Force Attack',
+        'url_scan': 'URL Scanner',
+        'network_whois': 'WHOIS Lookup',
+        'osint_username': 'OSINT Username',
+        'osint_domain': 'OSINT Domain',
+        'osint_email': 'OSINT Email',
+        'osint_ip': 'OSINT IP',
+        'osint_system_ip': 'System IP Detection',
+        'file_encryption': 'File Encryption',
+        'file_decryption': 'File Decryption',
+        'network_info': 'Network Info',
+        'steganography_encode': 'Steganography Encode',
+        'steganography_decode': 'Steganography Decode',
+        'file_scan': 'File Scanner',
+        'network_traceroute': 'Traceroute',
+        'hash_comparison': 'Hash Comparison',
+        'network_dns': 'DNS Lookup',
+        'network_portscan': 'Port Scanner'
+    }
+    
+    # Organize timeline data by activity type
+    timeline_by_type = {}
+    for day in activity_timeline:
+        activity_name = activity_mapping.get(day.action, day.action)
+        if activity_name not in timeline_by_type:
+            timeline_by_type[activity_name] = {}
+        timeline_by_type[activity_name][str(day.date)] = day.count
+    
+    # Convert to format needed for charts (get top 5 most active types)
+    top_activities = db.session.query(
+        ActivityLog.action,
+        db.func.count(ActivityLog.id).label('total')
+    ).filter(
+        ActivityLog.created_at >= db.func.current_date() - db.text('INTERVAL \'6 days\'')
+    ).group_by(ActivityLog.action).order_by(db.text('total DESC')).limit(5).all()
+    
+    timeline_data = {
+        'activities': [activity_mapping.get(act.action, act.action) for act in top_activities],
+        'data': timeline_by_type
+    }
     
     # Get service usage data for charts
     chart_data = []
