@@ -1375,13 +1375,27 @@ function getNetworkInfo() {
 
 // Initialize Analytics Charts
 function initializeCharts() {
+ try {
  // Get dynamic data from template
  const chartLabels = {{ chart_labels | tojson | safe }};
  const chartData = {{ chart_data | tojson | safe }};
  const timelineData = {{ timeline_data | tojson | safe }};
  
+ console.log('Chart Labels:', chartLabels);
+ console.log('Chart Data:', chartData);
+ console.log('Timeline Data:', timelineData);
+ 
+ // Check if canvas elements exist
+ const serviceUsageCanvas = document.getElementById('serviceUsageChart');
+ const timelineCanvas = document.getElementById('activityTimelineChart');
+ 
+ if (!serviceUsageCanvas || !timelineCanvas) {
+ console.error('Chart canvas elements not found');
+ return;
+ }
+ 
  // Service Usage Chart (Doughnut)
- const serviceUsageCtx = document.getElementById('serviceUsageChart').getContext('2d');
+ const serviceUsageCtx = serviceUsageCanvas.getContext('2d');
  
  // Create dynamic color palette
  const colors = [
@@ -1428,11 +1442,10 @@ function initializeCharts() {
  // Activity Timeline Chart (Line)
  const timelineCtx = document.getElementById('activityTimelineChart').getContext('2d');
  
- // Process timeline data for last 7 days
+ // Create labels for last 7 days
  const labels = [];
  const today = new Date();
  
- // Create labels for last 7 days
  for (let i = 6; i >= 0; i--) {
  const date = new Date(today);
  date.setDate(date.getDate() - i);
@@ -1440,33 +1453,19 @@ function initializeCharts() {
  labels.push(dayName);
  }
  
- // Create datasets for each activity type
+ // Create datasets from simplified timeline data
  const datasets = [];
  const colors = [
  '#00ff66', '#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', 
  '#f0932b', '#eb4d4b', '#6c5ce7', '#fd79a8', '#fdcb6e'
  ];
  
- if (timelineData.activities && timelineData.activities.length > 0) {
- timelineData.activities.forEach((activity, index) => {
- const activityData = [];
- 
- // Fill data for each day
- for (let i = 6; i >= 0; i--) {
- const date = new Date(today);
- date.setDate(date.getDate() - i);
- const dateStr = date.toISOString().split('T')[0];
- 
- const count = timelineData.data[activity] && timelineData.data[activity][dateStr] 
- ? timelineData.data[activity][dateStr] : 0;
- activityData.push(count);
- }
- 
+ timelineData.forEach((activity, index) => {
  datasets.push({
- label: activity,
- data: activityData,
+ label: activity.label,
+ data: activity.data,
  borderColor: colors[index % colors.length],
- backgroundColor: colors[index % colors.length] + '20', // Add transparency
+ backgroundColor: colors[index % colors.length] + '20',
  fill: false,
  tension: 0.4,
  pointBackgroundColor: colors[index % colors.length],
@@ -1475,17 +1474,6 @@ function initializeCharts() {
  pointRadius: 4
  });
  });
- } else {
- // Fallback for empty data
- datasets.push({
- label: 'No Activity Data',
- data: [0, 0, 0, 0, 0, 0, 0],
- borderColor: '#666666',
- backgroundColor: 'rgba(102, 102, 102, 0.1)',
- fill: false,
- tension: 0.4
- });
- }
  
  new Chart(timelineCtx, {
  type: 'line',
@@ -1539,6 +1527,27 @@ function initializeCharts() {
 
 
  // Charts initialized with real data
+ console.log('Charts initialized successfully');
+ } catch (error) {
+ console.error('Error initializing charts:', error);
+ 
+ // Handle both Error objects and other thrown values
+ const errorMsg = (error && error.message) ? error.message : String(error);
+ console.error('Error details:', errorMsg);
+ 
+ // Show error message in chart containers
+ const serviceChart = document.getElementById('serviceUsageChart');
+ const timelineChart = document.getElementById('activityTimelineChart');
+ 
+ if (serviceChart && serviceChart.parentElement) {
+ serviceChart.parentElement.innerHTML = 
+ '<div class="alert alert-danger">Chart Error: ' + errorMsg + '</div>';
+ }
+ if (timelineChart && timelineChart.parentElement) {
+ timelineChart.parentElement.innerHTML = 
+ '<div class="alert alert-danger">Chart Error: ' + errorMsg + '</div>';
+ }
+ }
 }
 
 // Real-time stats are now dynamic from server data
@@ -1568,7 +1577,11 @@ document.addEventListener('DOMContentLoaded', function() {
  // Initialize charts since Chart.js v4 is now loaded from base.html
  if (typeof Chart !== 'undefined') {
  console.log('Chart.js v4 loaded, initializing charts...');
+ try {
  initializeCharts();
+ } catch (e) {
+ console.error('Chart initialization failed:', e);
+ }
  } else {
  console.error('Chart.js not found!');
  }

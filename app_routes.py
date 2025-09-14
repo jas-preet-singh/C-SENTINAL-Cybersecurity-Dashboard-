@@ -467,13 +467,43 @@ def dashboard():
             chart_data.append(service_data['count'])
             chart_labels.append(service_data['name'])
     
+    # Ensure we have at least some data for charts
+    if not chart_data:
+        chart_data = [0]
+        chart_labels = ['No Data Available']
+    
+    # Simplify timeline data for easier JavaScript handling
+    simplified_timeline = []
+    if timeline_data.get('activities') and timeline_data.get('data'):
+        # Convert complex timeline data to simple arrays
+        for activity in timeline_data['activities']:
+            activity_data = []
+            # Get data for last 7 days
+            for i in range(6, -1, -1):
+                from datetime import date, timedelta
+                target_date = (date.today() - timedelta(days=i)).strftime('%Y-%m-%d')
+                count = timeline_data['data'].get(activity, {}).get(target_date, 0)
+                activity_data.append(count)
+            
+            simplified_timeline.append({
+                'label': activity,
+                'data': activity_data
+            })
+    
+    # If no timeline data, provide empty structure
+    if not simplified_timeline:
+        simplified_timeline = [{
+            'label': 'No Activity Data',
+            'data': [0, 0, 0, 0, 0, 0, 0]
+        }]
+    
     return render_template('dashboard.html', 
                          service_usage=sorted_services,
                          total_scans_today=total_scans_today,
                          active_jobs_count=active_jobs_count,
                          success_rate=success_rate,
                          total_activities=total_activities,
-                         timeline_data=timeline_data,
+                         timeline_data=simplified_timeline,
                          chart_data=chart_data,
                          chart_labels=chart_labels)
 
