@@ -1380,14 +1380,18 @@ function initializeCharts() {
  const chartData = {{ chart_data | tojson | safe }};
  const timelineData = {{ timeline_data | tojson | safe }};
  
- // Service Usage Chart (Doughnut)
- const serviceUsageCtx = document.getElementById('serviceUsageChart').getContext('2d');
- 
- // Create dynamic color palette
+ // Create dynamic color palette (shared by all charts)
  const colors = [
  '#00ff66', '#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', 
  '#f0932b', '#eb4d4b', '#6c5ce7', '#fd79a8', '#fdcb6e'
  ];
+ 
+ console.log('Chart data loaded:', { chartLabels, chartData, timelineData });
+ 
+ // Service Usage Chart (Doughnut)
+ try {
+ const serviceUsageCtx = document.getElementById('serviceUsageChart').getContext('2d');
+ console.log('Creating service usage chart with data:', { chartLabels, chartData });
  
  new Chart(serviceUsageCtx, {
  type: 'doughnut',
@@ -1424,9 +1428,15 @@ function initializeCharts() {
  }
  }
  });
+ console.log('Service usage chart created successfully');
+ } catch (error) {
+ console.error('Error creating service usage chart:', error);
+ }
 
  // Activity Timeline Chart (Line)
+ try {
  const timelineCtx = document.getElementById('activityTimelineChart').getContext('2d');
+ console.log('Creating timeline chart with data:', timelineData);
  
  // Process timeline data for last 7 days
  const labels = [];
@@ -1442,10 +1452,6 @@ function initializeCharts() {
  
  // Create datasets for each activity type
  const datasets = [];
- const colors = [
- '#00ff66', '#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', 
- '#f0932b', '#eb4d4b', '#6c5ce7', '#fd79a8', '#fdcb6e'
- ];
  
  if (timelineData.activities && timelineData.activities.length > 0) {
  timelineData.activities.forEach((activity, index) => {
@@ -1536,7 +1542,10 @@ function initializeCharts() {
  }
  }
  });
-
+ console.log('Timeline chart created successfully');
+ } catch (error) {
+ console.error('Error creating timeline chart:', error);
+ }
 
  // Charts initialized with real data
 }
@@ -1565,14 +1574,43 @@ function animateCounter(elementId, targetValue) {
 document.addEventListener('DOMContentLoaded', function() {
  console.log('Dashboard loaded with dynamic analytics');
  
+ // Check if canvas elements exist
+ const serviceCanvas = document.getElementById('serviceUsageChart');
+ const timelineCanvas = document.getElementById('activityTimelineChart');
+ 
+ console.log('Canvas elements found:', {
+ serviceCanvas: !!serviceCanvas,
+ timelineCanvas: !!timelineCanvas
+ });
+ 
+ if (!serviceCanvas || !timelineCanvas) {
+ console.error('Canvas elements not found!');
+ return;
+ }
+ 
  // Check if Chart.js is loaded
  if (typeof Chart !== 'undefined') {
+ console.log('Chart.js is loaded, initializing charts...');
+ try {
  initializeCharts();
+ } catch (error) {
+ console.error('Error initializing charts:', error);
+ }
  } else {
  console.error('Chart.js not loaded. Adding CDN...');
  const script = document.createElement('script');
  script.src = 'https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.min.js';
- script.onload = () => initializeCharts();
+ script.onload = () => {
+ console.log('Chart.js loaded from CDN, initializing charts...');
+ try {
+ initializeCharts();
+ } catch (error) {
+ console.error('Error initializing charts after CDN load:', error);
+ }
+ };
+ script.onerror = () => {
+ console.error('Failed to load Chart.js from CDN');
+ };
  document.head.appendChild(script);
  }
 });
