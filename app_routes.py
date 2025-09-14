@@ -471,6 +471,15 @@ def activity():
     total_scans = ScanResult.query.filter_by(user_id=current_user.id).count()
     total_activities = ActivityLog.query.filter_by(user_id=current_user.id).count()
     
+    # Calculate successful activities (activities without error keywords)
+    successful_activities = ActivityLog.query.filter(
+        ActivityLog.user_id == current_user.id,
+        ~ActivityLog.details.ilike('%error%'),
+        ~ActivityLog.details.ilike('%fail%'),
+        ~ActivityLog.details.ilike('%unable%'),
+        ~ActivityLog.details.ilike('%denied%')
+    ).count()
+    
     return render_template('activity.html', 
                          recent_jobs=all_recent_tasks,  # Now contains unified task list
                          recent_scans=recent_scans,
@@ -478,7 +487,8 @@ def activity():
                          completed_jobs=completed_jobs,
                          running_jobs=running_jobs,
                          total_scans=total_scans,
-                         total_activities=total_activities)
+                         total_activities=total_activities,
+                         successful_activities=successful_activities)
 
 @app.route('/hash', methods=['GET', 'POST'])
 @require_login
