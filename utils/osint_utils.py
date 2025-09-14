@@ -290,3 +290,144 @@ def check_domain_reputation(domain):
         
     except Exception as e:
         return {'error': f'Error checking domain reputation: {str(e)}'}
+
+def get_user_public_ip(request):
+    """Get the user's real public IP address"""
+    try:
+        # Check if we have trusted proxy setup with ProxyFix
+        # For Replit, we need to trust the proxy headers
+        forwarded_ips = request.headers.get('X-Forwarded-For')
+        if forwarded_ips:
+            # X-Forwarded-For can contain multiple IPs, get the first one (original client)
+            ip = forwarded_ips.split(',')[0].strip()
+            if ip and is_public_ip(ip):
+                return ip
+        
+        # Try other common headers from trusted sources
+        real_ip = request.headers.get('X-Real-IP')
+        if real_ip and is_public_ip(real_ip):
+            return real_ip
+        
+        # Try CF-Connecting-IP (Cloudflare)
+        cf_ip = request.headers.get('CF-Connecting-IP')
+        if cf_ip and is_public_ip(cf_ip):
+            return cf_ip
+        
+        # Use request remote_addr if it's public
+        if request.remote_addr and is_public_ip(request.remote_addr):
+            return request.remote_addr
+        
+        # If we can't get a reliable public IP from headers, return None
+        # This will trigger client-side detection or show appropriate message
+        return None
+        
+    except Exception:
+        return None
+
+def is_public_ip(ip):
+    """Check if an IP address is a public (non-private) IP"""
+    try:
+        if not ip or ip == '::1':  # localhost IPv6
+            return False
+        
+        # Check private IP ranges
+        if (ip.startswith(('10.', '127.')) or  # 10.0.0.0/8, 127.0.0.0/8
+            ip.startswith(('192.168.')) or     # 192.168.0.0/16
+            ip.startswith(('169.254.'))):      # 169.254.0.0/16 (link-local)
+            return False
+        
+        # Check 172.16.0.0/12 private range (172.16.0.0 to 172.31.255.255)
+        if ip.startswith('172.'):
+            parts = ip.split('.')
+            if len(parts) >= 2:
+                try:
+                    second_octet = int(parts[1])
+                    if 16 <= second_octet <= 31:
+                        return False
+                except ValueError:
+                    pass
+        
+        return True
+        
+    except Exception:
+        return False
+
+def get_ip_geolocation(ip_address):
+    """Get geolocation information for an IP address using ipapi.co"""
+    try:
+        # Check if it's a private IP
+        if ip_address.startswith(('10.', '172.', '192.168.', '127.')):
+            return {
+                'ip': ip_address,
+                'country': 'Private Network',
+                'region': 'Internal',
+                'city': 'Local Network',
+                'isp': 'Private IP Range',
+                'org': 'Internal Network',
+                'timezone': 'Local',
+                'postal': 'N/A'
+            }
+        
+        # Use ipapi.co free service (no API key required)
+        try:
+            response = requests.get(f'https://ipapi.co/{ip_address}/json/', timeout=10)
+            if response.status_code == 200:
+                data = response.json()
+                
+                # Check for error in response
+                if 'error' in data:
+                    raise Exception(data.get('reason', 'Unknown error'))
+                
+                return {
+                    'ip': ip_address,
+                    'country': data.get('country_name', 'Unknown'),
+                    'region': data.get('region', 'Unknown'),
+                    'city': data.get('city', 'Unknown'),
+                    'isp': data.get('org', 'Unknown'),
+                    'org': data.get('org', 'Unknown'),
+                    'timezone': data.get('timezone', 'Unknown'),
+                    'postal': data.get('postal', 'Unknown'),
+                    'loc': f"{data.get('latitude', 'Unknown')},{data.get('longitude', 'Unknown')}" if data.get('latitude') and data.get('longitude') else None
+                }
+        except:
+            pass
+        
+        # Fallback to ipinfo.io (also free, no API key required)
+        try:
+            response = requests.get(f'https://ipinfo.io/{ip_address}/json', timeout=10)
+            if response.status_code == 200:
+                data = response.json()
+                
+                return {
+                    'ip': ip_address,
+                    'country': data.get('country', 'Unknown'),
+                    'region': data.get('region', 'Unknown'),
+                    'city': data.get('city', 'Unknown'),
+                    'isp': data.get('org', 'Unknown'),
+                    'org': data.get('org', 'Unknown'),
+                    'timezone': data.get('timezone', 'Unknown'),
+                    'postal': data.get('postal', 'Unknown'),
+                    'loc': data.get('loc'),
+                    'hostname': data.get('hostname')
+                }
+        except:
+            pass
+        
+        # If all services fail, return basic info
+        return {
+            'ip': ip_address,
+            'country': 'Unknown',
+            'region': 'Unknown',
+            'city': 'Unknown',
+            'isp': 'Unknown',
+            'org': 'Unknown',
+            'timezone': 'Unknown',
+            'postal': 'Unknown',
+            'error': 'Geolocation services temporarily unavailable'
+        }
+        
+    except Exception as e:
+        return {
+            'ip': ip_address,
+            'error': f'Error getting geolocation: {str(e)}'
+        }

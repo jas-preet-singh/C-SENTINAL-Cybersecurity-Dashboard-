@@ -337,6 +337,46 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    function performSystemIPDetection() {
+        const resultsDiv = document.getElementById('systemIPResults');
+        const contentDiv = document.getElementById('systemIPResultContent');
+        const submitBtn = document.getElementById('detectSystemIPBtn');
+        const spinner = document.getElementById('systemIPSpinner');
+        
+        // Show loading state
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Detecting...';
+        spinner.style.display = 'block';
+        resultsDiv.style.display = 'block';
+        contentDiv.innerHTML = '<div class="text-center"><i class="fas fa-spinner fa-spin"></i> Detecting your system IP...</div>';
+        
+        // Send system IP detection request
+        fetch('/osint/system-ip', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+        .then(response => response.json())
+        .then(result => {
+            // Check if server requests client-side detection
+            if (result.use_client_detection) {
+                performClientSideIPDetection(contentDiv, submitBtn, spinner);
+            } else {
+                displaySystemIPResults(result, contentDiv);
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-search"></i> Detect My System IP';
+                spinner.style.display = 'none';
+            }
+        })
+        .catch(error => {
+            contentDiv.innerHTML = `<div class="threat-malicious">Error: ${error.message}</div>`;
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i class="fas fa-search"></i> Detect My System IP';
+            spinner.style.display = 'none';
+        });
+    }
+
     function getOriginalButtonText(type) {
         const buttons = {
             email: '<i class="fas fa-search"></i> Check Breaches',
@@ -463,6 +503,110 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         return html;
+    }
+
+    function performClientSideIPDetection(contentDiv, submitBtn, spinner) {
+        // Use client-side IP detection service
+        contentDiv.innerHTML = '<div class="text-center"><i class="fas fa-spinner fa-spin"></i> Using client-side detection...</div>';
+        
+        // Try ipapi.co first (supports CORS)
+        fetch('https://ipapi.co/json/')
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    throw new Error(data.reason || 'IP detection failed');
+                }
+                
+                const result = {
+                    ip: data.ip,
+                    country: data.country_name,
+                    region: data.region,
+                    city: data.city,
+                    isp: data.org,
+                    org: data.org,
+                    timezone: data.timezone,
+                    postal: data.postal,
+                    loc: data.latitude && data.longitude ? `${data.latitude},${data.longitude}` : null
+                };
+                
+                displaySystemIPResults(result, contentDiv);
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-search"></i> Detect My System IP';
+                spinner.style.display = 'none';
+            })
+            .catch(error => {
+                // Fallback to ipinfo.io
+                fetch('https://ipinfo.io/json')
+                    .then(response => response.json())
+                    .then(data => {
+                        const result = {
+                            ip: data.ip,
+                            country: data.country,
+                            region: data.region,
+                            city: data.city,
+                            isp: data.org,
+                            org: data.org,
+                            timezone: data.timezone,
+                            postal: data.postal,
+                            loc: data.loc,
+                            hostname: data.hostname
+                        };
+                        
+                        displaySystemIPResults(result, contentDiv);
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = '<i class="fas fa-search"></i> Detect My System IP';
+                        spinner.style.display = 'none';
+                    })
+                    .catch(finalError => {
+                        contentDiv.innerHTML = `<div class="threat-malicious">Error: Unable to detect IP address. Both server-side and client-side detection failed.</div>`;
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = '<i class="fas fa-search"></i> Detect My System IP';
+                        spinner.style.display = 'none';
+                    });
+            });
+    }
+
+    function displaySystemIPResults(result, contentDiv) {
+        if (result.error) {
+            contentDiv.innerHTML = `<div class="threat-malicious">Error: ${result.error}</div>`;
+            return;
+        }
+
+        let html = '';
+        
+        // System IP Information
+        html += '<div class="result-item threat-safe">';
+        html += '<h6><i class="fas fa-network-wired"></i> Your System IP Information</h6>';
+        html += `<div class="row">
+            <div class="col-md-6">
+                <p><strong>Public IP Address:</strong> <span class="text-warning">${result.ip}</span></p>
+                <p><strong>Country:</strong> ${result.country || 'Unknown'}</p>
+                <p><strong>Region:</strong> ${result.region || 'Unknown'}</p>
+                <p><strong>City:</strong> ${result.city || 'Unknown'}</p>
+            </div>
+            <div class="col-md-6">
+                <p><strong>ISP:</strong> ${result.isp || 'Unknown'}</p>
+                <p><strong>Organization:</strong> ${result.org || 'Unknown'}</p>
+                <p><strong>Timezone:</strong> ${result.timezone || 'Unknown'}</p>
+                <p><strong>Postal Code:</strong> ${result.postal || 'Unknown'}</p>
+            </div>
+        </div>`;
+        
+        if (result.loc) {
+            html += `<p><strong>Coordinates:</strong> ${result.loc}</p>`;
+        }
+        
+        html += '</div>';
+        
+        // Additional network information
+        if (result.hostname) {
+            html += '<div class="result-item threat-safe">';
+            html += '<h6><i class="fas fa-server"></i> Network Information</h6>';
+            html += `<p><strong>Hostname:</strong> ${result.hostname}</p>`;
+            html += '</div>';
+        }
+        
+        contentDiv.innerHTML = html;
     }
 });
 </script>

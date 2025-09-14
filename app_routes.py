@@ -13,7 +13,7 @@ from utils.password_cracker import start_brute_force, check_job_status
 from utils.scanner_utils import scan_url, scan_file_for_malware, vulnerability_scan
 from utils.password_analyzer import analyze_password_strength, generate_password_suggestions
 from utils.network_utils import ping_host, dns_lookup, port_scan, traceroute, whois_lookup, network_info
-from utils.osint_utils import check_email_breaches, search_username, analyze_ip, analyze_domain
+from utils.osint_utils import check_email_breaches, search_username, analyze_ip, analyze_domain, get_user_public_ip, get_ip_geolocation
 from utils.steganography import encode_text_in_any_file, decode_text_from_any_file, get_file_capacity, validate_file_format, create_stego_filename
 
 app.register_blueprint(make_replit_blueprint(), url_prefix="/auth")
@@ -155,6 +155,32 @@ def osint_analyze():
             return jsonify({'error': 'Invalid OSINT type'}), 400
         
         return jsonify(result)
+        
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/osint/system-ip', methods=['POST'])
+@require_login
+def osint_system_ip():
+    """Get user's system IP information"""
+    try:
+        # Get the user's real public IP address from headers
+        public_ip = get_user_public_ip(request)
+        
+        if not public_ip:
+            # If we can't detect from headers, return a message for client-side detection
+            return jsonify({
+                'error': 'Server cannot detect your public IP from headers. Please use client-side detection.',
+                'use_client_detection': True
+            }), 200
+        
+        # Get geolocation information for the IP
+        ip_info = get_ip_geolocation(public_ip)
+        
+        # Log the activity
+        log_activity('osint_system_ip', f'System IP detected: {public_ip}')
+        
+        return jsonify(ip_info)
         
     except Exception as e:
         return jsonify({'error': str(e)}), 500
