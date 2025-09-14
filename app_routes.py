@@ -1,6 +1,6 @@
 import os
 import hashlib
-from datetime import datetime
+from datetime import datetime, timedelta
 from flask import session, render_template, request, redirect, url_for, flash, jsonify, send_from_directory
 from werkzeug.utils import secure_filename
 from app import app, db
@@ -406,7 +406,7 @@ def dashboard():
         ActivityLog.action.label('action'),
         db.func.count(ActivityLog.id).label('count')
     ).filter(
-        ActivityLog.created_at >= db.func.current_date() - db.text('INTERVAL \'6 days\'')
+        ActivityLog.created_at >= datetime.utcnow() - timedelta(days=6)
     ).group_by(
         db.func.date(ActivityLog.created_at),
         ActivityLog.action
@@ -451,7 +451,7 @@ def dashboard():
         ActivityLog.action,
         db.func.count(ActivityLog.id).label('total')
     ).filter(
-        ActivityLog.created_at >= db.func.current_date() - db.text('INTERVAL \'6 days\'')
+        ActivityLog.created_at >= datetime.utcnow() - timedelta(days=6)
     ).group_by(ActivityLog.action).order_by(db.text('total DESC')).limit(5).all()
     
     timeline_data = {
