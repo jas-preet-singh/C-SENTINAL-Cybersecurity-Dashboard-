@@ -383,7 +383,53 @@ def dashboard():
     # Sort services by usage count (descending)
     sorted_services = sorted(service_usage.items(), key=lambda x: x[1]['count'], reverse=True)
     
-    return render_template('dashboard.html', service_usage=sorted_services)
+    # Get real-time statistics 
+    total_scans_today = ScanResult.query.filter(
+        db.func.date(ScanResult.created_at) == db.func.current_date()
+    ).count()
+    
+    active_jobs_count = Job.query.filter_by(status='running').count()
+    
+    total_activities = ActivityLog.query.count()
+    successful_activities = ActivityLog.query.filter(
+        ~ActivityLog.details.ilike('%error%'),
+        ~ActivityLog.details.ilike('%fail%'),
+        ~ActivityLog.details.ilike('%unable%'),
+        ~ActivityLog.details.ilike('%denied%')
+    ).count()
+    
+    success_rate = round((successful_activities / max(total_activities, 1)) * 100, 1)
+    
+    # Get activity timeline data (last 7 days)
+    activity_timeline = db.session.query(
+        db.func.date(ActivityLog.created_at).label('date'),
+        db.func.count(ActivityLog.id).label('count')
+    ).filter(
+        ActivityLog.created_at >= db.func.current_date() - db.text('INTERVAL \'6 days\'')
+    ).group_by(
+        db.func.date(ActivityLog.created_at)
+    ).order_by('date').all()
+    
+    # Convert to list of dictionaries for easier JSON serialization
+    timeline_data = [{'date': str(day.date), 'count': day.count} for day in activity_timeline]
+    
+    # Get service usage data for charts
+    chart_data = []
+    chart_labels = []
+    for service_key, service_data in sorted_services[:10]:  # Top 10 services
+        if service_data['count'] > 0:
+            chart_data.append(service_data['count'])
+            chart_labels.append(service_data['name'])
+    
+    return render_template('dashboard.html', 
+                         service_usage=sorted_services,
+                         total_scans_today=total_scans_today,
+                         active_jobs_count=active_jobs_count,
+                         success_rate=success_rate,
+                         total_activities=total_activities,
+                         timeline_data=timeline_data,
+                         chart_data=chart_data,
+                         chart_labels=chart_labels)
 
 @app.route('/activity')
 @require_login

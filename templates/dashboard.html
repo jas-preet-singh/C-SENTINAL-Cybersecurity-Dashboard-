@@ -61,16 +61,21 @@
  </div>
  <div class="card-body">
  <div class="stat-item">
- <h3 class="stat-number" id="totalScans">142</h3>
+ <h3 class="stat-number text-primary" id="totalScans">{{ total_scans_today or 0 }}</h3>
  <small class="text-muted">Total Scans Today</small>
  </div>
  <div class="stat-item mt-3">
- <h3 class="stat-number text-warning" id="activeJobs">3</h3>
+ <h3 class="stat-number text-warning" id="activeJobs">{{ active_jobs_count or 0 }}</h3>
  <small class="text-muted">Active Jobs</small>
  </div>
  <div class="stat-item mt-3">
- <h3 class="stat-number text-success" id="successRate">94%</h3>
+ <h3 class="stat-number text-success" id="successRate">{{ success_rate or 0 }}%</h3>
  <small class="text-muted">Success Rate</small>
+ </div>
+ </div>
+ <div class="stat-item mt-3">
+ <h3 class="stat-number text-info" id="totalActivities">{{ total_activities or 0 }}</h3>
+ <small class="text-muted">Total Activities</small>
  </div>
  </div>
  </div>
@@ -1370,23 +1375,27 @@ function getNetworkInfo() {
 
 // Initialize Analytics Charts
 function initializeCharts() {
+ // Get dynamic data from template
+ const chartLabels = {{ chart_labels | tojson | safe }};
+ const chartData = {{ chart_data | tojson | safe }};
+ const timelineData = {{ timeline_data | tojson | safe }};
+ 
  // Service Usage Chart (Doughnut)
  const serviceUsageCtx = document.getElementById('serviceUsageChart').getContext('2d');
+ 
+ // Create dynamic color palette
+ const colors = [
+ '#00ff66', '#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', 
+ '#f0932b', '#eb4d4b', '#6c5ce7', '#fd79a8', '#fdcb6e'
+ ];
+ 
  new Chart(serviceUsageCtx, {
  type: 'doughnut',
  data: {
- labels: ['File Encryption', 'Hash Calculator', 'Vulnerability Scanner', 'Brute Force', 'URL Scanner', 'Password Analyzer', 'Hash Comparison'],
+ labels: chartLabels,
  datasets: [{
- data: [24, 18, 12, 8, 15, 10, 6],
- backgroundColor: [
- '#00ff66', // Green - File Encryption
- '#ff6b6b', // Red - Hash Calculator
- '#4ecdc4', // Teal - Vulnerability Scanner
- '#45b7d1', // Blue - Brute Force
- '#f9ca24', // Yellow - URL Scanner
- '#f0932b', // Orange - Password Analyzer
- '#eb4d4b' // Dark Red - Hash Comparison
- ],
+ data: chartData,
+ backgroundColor: colors.slice(0, chartData.length),
  borderColor: '#00ff66',
  borderWidth: 2
  }]
@@ -1399,7 +1408,17 @@ function initializeCharts() {
  position: 'bottom',
  labels: {
  color: '#ffffff',
- usePointStyle: true
+ usePointStyle: true,
+ padding: 15
+ }
+ },
+ tooltip: {
+ callbacks: {
+ label: function(context) {
+ const total = context.dataset.data.reduce((a, b) => a + b, 0);
+ const percentage = Math.round((context.parsed / total) * 100);
+ return context.label + ': ' + context.parsed + ' uses (' + percentage + '%)';
+ }
  }
  }
  }
@@ -1408,13 +1427,34 @@ function initializeCharts() {
 
  // Activity Timeline Chart (Line)
  const timelineCtx = document.getElementById('activityTimelineChart').getContext('2d');
+ 
+ // Process timeline data for last 7 days
+ const labels = [];
+ const data = [];
+ const today = new Date();
+ 
+ // Create labels and data for last 7 days
+ for (let i = 6; i >= 0; i--) {
+ const date = new Date(today);
+ date.setDate(date.getDate() - i);
+ const dateStr = date.toISOString().split('T')[0];
+ 
+ // Get day name
+ const dayName = date.toLocaleDateString('en-US', { weekday: 'short' });
+ labels.push(dayName);
+ 
+ // Find matching data point
+ const dataPoint = timelineData.find(d => d.date === dateStr);
+ data.push(dataPoint ? dataPoint.count : 0);
+ }
+ 
  new Chart(timelineCtx, {
  type: 'line',
  data: {
- labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+ labels: labels,
  datasets: [{
  label: 'Security Activities',
- data: [12, 19, 15, 25, 22, 18, 20],
+ data: data,
  borderColor: '#00ff66',
  backgroundColor: 'rgba(0, 255, 102, 0.1)',
  fill: true,
@@ -1433,36 +1473,35 @@ function initializeCharts() {
  grid: { color: 'rgba(255, 255, 255, 0.1)' }
  },
  y: {
- ticks: { color: '#ffffff' },
+ beginAtZero: true,
+ ticks: { 
+ color: '#ffffff',
+ stepSize: 1
+ },
  grid: { color: 'rgba(255, 255, 255, 0.1)' }
  }
  },
  plugins: {
  legend: {
  labels: { color: '#ffffff' }
+ },
+ tooltip: {
+ callbacks: {
+ label: function(context) {
+ return 'Activities: ' + context.parsed.y;
+ }
+ }
  }
  }
  }
  });
 
 
- // Update real-time stats with animation
- updateRealTimeStats();
+ // Charts initialized with real data
 }
 
-function updateRealTimeStats() {
- // Simulate real-time data updates
- const stats = {
- totalScans: Math.floor(Math.random() * 50) + 120,
- activeJobs: Math.floor(Math.random() * 5) + 1,
- successRate: (Math.random() * 10 + 90).toFixed(1)
- };
-
- // Animate counter updates
- animateCounter('totalScans', stats.totalScans);
- animateCounter('activeJobs', stats.activeJobs);
- document.getElementById('successRate').textContent = stats.successRate + '%';
-}
+// Real-time stats are now dynamic from server data
+// No mock updates needed - data comes from actual database values
 
 function animateCounter(elementId, targetValue) {
  const element = document.getElementById(elementId);
@@ -1483,11 +1522,18 @@ function animateCounter(elementId, targetValue) {
 
 // Initialize charts when page loads
 document.addEventListener('DOMContentLoaded', function() {
- console.log('Dashboard loaded successfully');
+ console.log('Dashboard loaded with dynamic analytics');
+ 
+ // Check if Chart.js is loaded
+ if (typeof Chart !== 'undefined') {
  initializeCharts();
-
- // Update real-time stats every 10 seconds
- setInterval(updateRealTimeStats, 10000);
+ } else {
+ console.error('Chart.js not loaded. Adding CDN...');
+ const script = document.createElement('script');
+ script.src = 'https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.min.js';
+ script.onload = () => initializeCharts();
+ document.head.appendChild(script);
+ }
 });
 
 function togglePasswordVisibility() {
