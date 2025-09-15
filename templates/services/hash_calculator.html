@@ -4,7 +4,14 @@
 
 {% block content %}
 <style>
-    
+/* Footer collision prevention - aggressive spacing */
+.main-content {
+    padding-bottom: 10rem !important;
+}
+.educational-section {
+    margin-bottom: 4rem !important;
+}
+
 /* Hash calculator-specific styling */
 .hash-calculator-tools .tab-content {
     min-height: auto !important;
@@ -153,7 +160,7 @@
                  </div>
 
             <!-- Educational Information Section -->
-            <div class="row mt-4 mb-5">
+            <div class="row mt-4 mb-5 educational-section">
                 <div class="col-12">
                     <div class="card module-card">
                         <div class="card-body">
@@ -192,6 +199,10 @@
         
     </div>
 </div>
+
+<!-- Footer Spacer -->
+<div style="height: 200px; background: transparent;"></div>
+
 {% endblock %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {

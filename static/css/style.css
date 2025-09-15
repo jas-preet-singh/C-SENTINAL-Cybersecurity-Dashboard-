@@ -110,7 +110,17 @@ body {
 .main-content {
     margin-top: 80px;
     flex: 1 0 auto;
-    padding-bottom: 5rem;
+    padding-bottom: 8rem;
+}
+
+/* Educational Section Spacing */
+.educational-section {
+    margin-bottom: 4rem !important;
+}
+
+/* Service Pages Extra Protection */
+.service-page .main-content {
+    padding-bottom: 10rem !important;
 }
 
 /* Cards */

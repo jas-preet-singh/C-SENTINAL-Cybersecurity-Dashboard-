@@ -4,6 +4,14 @@
 
 {% block content %}
 <style>
+/* Footer collision prevention - aggressive spacing */
+.main-content {
+    padding-bottom: 10rem !important;
+}
+.educational-section {
+    margin-bottom: 4rem !important;
+}
+
 /* File encryption-specific styling */
 .file-encryption-tools .tab-content {
     min-height: auto !important;
@@ -73,7 +81,7 @@
             <p class="text-muted mb-4">Advanced AES encryption with PBKDF2 key derivation for secure file protection</p>
 
             <!-- Educational Information Section -->
-            <div class="row mt-4 mb-5">
+            <div class="row mt-4 mb-5 educational-section">
                 <div class="col-md-4">
                     <div class="encryption-features">
                         <h6 class="text-warning">HOW IT WORKS</h6>
@@ -337,4 +345,8 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
+
+<!-- Footer Spacer -->
+<div style="height: 200px; background: transparent;"></div>
+
 {% endblock %}
