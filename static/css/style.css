@@ -1161,7 +1161,7 @@ small {
     border-top: 1px solid var(--accent-green);
     padding: 2rem 0 1.5rem;
     backdrop-filter: blur(10px);
-    margin-top: auto;
+    margin-top: 6rem;
 }
 
 /* About Page Professional Styling */
