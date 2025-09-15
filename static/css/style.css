@@ -109,8 +109,8 @@ body {
 /* Main Content */
 .main-content {
     margin-top: 80px;
-    flex: 1;
-    padding-bottom: 4rem;
+    flex: 1 0 auto;
+    padding-bottom: 3rem;
 }
 
 /* Cards */
@@ -1161,7 +1161,7 @@ small {
     border-top: 1px solid var(--accent-green);
     padding: 2rem 0 1.5rem;
     backdrop-filter: blur(10px);
-    margin-top: 6rem;
+    margin-top: auto;
 }
 
 /* About Page Professional Styling */
