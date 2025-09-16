@@ -20,6 +20,36 @@ WORDLIST_PASSWORDS = {
     'years': [str(year) for year in range(1900, 2030)]
 }
 
+def check_file_unlocked(file_path):
+    """Check if file is already unlocked/has no password"""
+    file_type = detect_file_type(file_path)
+    
+    if file_type == 'zip':
+        try:
+            with zipfile.ZipFile(file_path, 'r') as zip_file:
+                # Try to get file info without password
+                zip_file.infolist()
+                return True  # File is not password protected
+        except (RuntimeError, zipfile.BadZipFile):
+            return False  # File is encrypted or corrupted
+            
+    elif file_type == 'pdf':
+        try:
+            with open(file_path, 'rb') as file:
+                pdf_reader = PyPDF2.PdfReader(file)
+                return not pdf_reader.is_encrypted  # True if not encrypted
+        except:
+            return False
+            
+    elif file_type == 'office':
+        try:
+            doc = Document(file_path)
+            return True  # File opened successfully without password
+        except:
+            return False  # File is encrypted or corrupted
+    
+    return False
+
 def try_password_zip(file_path, password):
     """Try to extract a ZIP file with given password"""
     try:
@@ -36,15 +66,18 @@ def try_password_pdf(file_path, password):
             pdf_reader = PyPDF2.PdfReader(file)
             if pdf_reader.is_encrypted:
                 return pdf_reader.decrypt(password)
-        return True
+            else:
+                return False  # File is not encrypted, so password attempt is meaningless
     except:
         return False
 
 def try_password_docx(file_path, password):
     """Try to open a DOCX file with given password"""
     try:
+        # For DOCX, if it opens without error, it's not password protected
+        # We need to actually try with password for encrypted files
         doc = Document(file_path)
-        return True
+        return False  # File is not password protected, so password attempt is meaningless
     except:
         return False
 
@@ -81,6 +114,14 @@ def brute_force_worker(job_id, file_path, wordlist_type, custom_wordlist_path=No
             if not job:
                 return
             
+            # First check if file is already unlocked
+            if check_file_unlocked(file_path):
+                job.status = 'completed'
+                job.result = 'File is already unlocked - no password required'
+                job.progress = 100
+                db.session.commit()
+                return
+            
             file_type = detect_file_type(file_path)
             
             # Load passwords based on type
@@ -94,7 +135,7 @@ def brute_force_worker(job_id, file_path, wordlist_type, custom_wordlist_path=No
             for i, password in enumerate(passwords):
                 # Check if job was cancelled
                 job = Job.query.get(job_id)
-                if job.status == 'cancelled':
+                if not job or job.status == 'cancelled':
                     break
                 
                 # Update current password being tested
@@ -110,30 +151,35 @@ def brute_force_worker(job_id, file_path, wordlist_type, custom_wordlist_path=No
                     success = try_password_docx(file_path, password)
                 
                 if success:
-                    job.status = 'completed'
-                    job.result = f'Password found: {password}'
-                    job.progress = 100
-                    db.session.commit()
+                    if job:
+                        job.status = 'completed'
+                        job.result = f'Password found: {password}'
+                        job.progress = 100
+                        db.session.commit()
                     return
                 
                 # Update progress
-                progress = int((i + 1) / total_passwords * 100)
-                job.progress = progress
-                db.session.commit()
+                if job:
+                    progress = int((i + 1) / total_passwords * 100)
+                    job.progress = progress
+                    db.session.commit()
                 
                 time.sleep(0.1)  # Small delay for better UX
             
             # If we get here, no password was found
-            job.status = 'completed'
-            job.result = 'Password not found in wordlist'
-            job.progress = 100
-            db.session.commit()
+            job = Job.query.get(job_id)
+            if job:
+                job.status = 'completed'
+                job.result = 'Password not found in wordlist'
+                job.progress = 100
+                db.session.commit()
             
         except Exception as e:
             job = Job.query.get(job_id)
-            job.status = 'failed'
-            job.result = f'Error: {str(e)}'
-            db.session.commit()
+            if job:
+                job.status = 'failed'
+                job.result = f'Error: {str(e)}'
+                db.session.commit()
 
 def start_brute_force(job_id, file_path, wordlist_type, custom_wordlist_path=None):
     """Start brute force attack in background thread"""
