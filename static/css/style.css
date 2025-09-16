@@ -895,22 +895,22 @@ small {
 }
 
 .hero-features {
-    margin: 1.5rem 0;
+    margin: 1rem 0;
 }
 
 .feature-item {
     display: flex;
     align-items: center;
-    margin-bottom: 0.6rem;
+    margin-bottom: 0.3rem;
     color: var(--text-secondary);
-    font-size: 0.95rem;
+    font-size: 0.85rem;
 }
 
 .feature-item i {
     color: var(--accent-green);
-    margin-right: 12px;
-    width: 18px;
-    font-size: 0.9rem;
+    margin-right: 8px;
+    width: 14px;
+    font-size: 0.75rem;
 }
 
 .hero-cta {
