@@ -880,7 +880,7 @@ small {
 }
 
 .hero-title {
-    font-size: 3.5rem;
+    font-size: 2.8rem;
     font-weight: 700;
     color: var(--accent-green);
     text-shadow: 0 0 20px rgba(0, 255, 102, 0.5);
@@ -888,7 +888,7 @@ small {
 }
 
 .hero-subtitle {
-    font-size: 1.25rem;
+    font-size: 1.1rem;
     color: var(--text-secondary);
     margin-bottom: 2rem;
     line-height: 1.6;
@@ -901,16 +901,16 @@ small {
 .feature-item {
     display: flex;
     align-items: center;
-    margin-bottom: 0.3rem;
+    margin-bottom: 0.5rem;
     color: var(--text-secondary);
-    font-size: 0.85rem;
+    font-size: 1rem;
 }
 
 .feature-item i {
     color: var(--accent-green);
-    margin-right: 8px;
-    width: 14px;
-    font-size: 0.75rem;
+    margin-right: 12px;
+    width: 18px;
+    font-size: 0.9rem;
 }
 
 .hero-cta {
