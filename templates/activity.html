@@ -1,145 +1,113 @@
 {% extends "base.html" %}
 
-{% block title %}Activity History - CyberSec Dashboard{% endblock %}
+{% block title %}Activity - CyberSec Dashboard{% endblock %}
 
 {% block content %}
 <div class="container">
- <!-- Header Section -->
- <div class="row mt-4 mb-5">
- <div class="col-12">
- <div class="welcome-card">
- <h2>
- <i class="fas fa-history"></i>
- Activity History
- </h2>
- <p>Track your security operations and scan results.</p>
- </div>
- </div>
- </div>
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="welcome-card">
+                <h2>
+                    <i class="fas fa-chart-line"></i>
+                    Activity Dashboard
+                </h2>
+                <p>Monitor recent scans, system usage, and security activities.</p>
+            </div>
+        </div>
+    </div>
 
- <!-- Recent Activity -->
- <div class="row">
- <div class="col-lg-6 mb-4">
- <div class="card activity-card">
- <div class="card-header">
- <h6><i class="fas fa-clock"></i> Recent Activities</h6>
- </div>
- <div class="card-body">
- {% if recent_jobs %}
- <div class="activity-list">
- {% for task in recent_jobs %}
- <div class="activity-item">
- <div class="activity-icon">
- <i class="fas {{ task.icon }} text-{{ 'success' if task.status == 'completed' else 'warning' if task.status == 'running' else 'danger' }}"></i>
- </div>
- <div class="activity-details">
- <strong>{{ task.title }}</strong>
- <small class="d-block text-muted">{{ task.timestamp.strftime('%Y-%m-%d %H:%M') }}</small>
- <small class="d-block text-muted">{{ task.details }}</small>
- <span class="badge bg-{{ 'success' if task.status == 'completed' else 'warning' if task.status == 'running' else 'danger' }}">
- {{ task.status.title() }}
- </span>
- </div>
- </div>
- {% endfor %}
- </div>
- {% else %}
- <p class="text-muted text-center">No recent activities</p>
- {% endif %}
- </div>
- </div>
- </div>
+    <!-- Recent Scans -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card activity-card">
+                <div class="card-header">
+                    <h6><i class="fas fa-history"></i> Recent Scans</h6>
+                </div>
+                <div class="card-body">
+                    {% if recent_scans %}
+                        <div class="activity-list">
+                            {% for scan in recent_scans %}
+                                <div class="activity-item">
+                                    <div class="activity-icon">
+                                        <i class="fas fa-{{ 'shield-alt' if scan.risk_level == 'low' else 'exclamation-triangle' if scan.risk_level == 'medium' else 'skull-crossbones' }}"></i>
+                                    </div>
+                                    <div class="activity-details">
+                                        <strong>{{ scan.scan_type.title() }} Scan</strong>
+                                        <small class="d-block text-muted">{{ scan.target[:50] }}{% if scan.target|length > 50 %}...{% endif %}</small>
+                                        <span class="badge bg-{{ 'success' if scan.risk_level == 'low' else 'warning' if scan.risk_level == 'medium' else 'danger' }}">
+                                            {{ scan.risk_level.title() }} Risk
+                                        </span>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-muted text-center">No recent scans</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
 
- <div class="col-lg-6 mb-4">
- <div class="card activity-card">
- <div class="card-header">
- <h6><i class="fas fa-shield-alt"></i> Recent Scans</h6>
- </div>
- <div class="card-body">
- {% if recent_scans %}
- <div class="activity-list">
- {% for scan in recent_scans %}
- <div class="activity-item">
- <div class="activity-icon">
- <i class="fas fa-{{ 'shield-alt' if scan.risk_level == 'low' else 'exclamation-triangle' if scan.risk_level == 'medium' else 'skull-crossbones' }}"></i>
- </div>
- <div class="activity-details">
- <strong>{{ scan.scan_type.title() }} Scan</strong>
- <small class="d-block text-muted">{{ scan.target[:50] }}{% if scan.target|length > 50 %}...{% endif %}</small>
- <span class="badge bg-{{ 'success' if scan.risk_level == 'low' else 'warning' if scan.risk_level == 'medium' else 'danger' }}">
- {{ scan.risk_level.title() }} Risk
- </span>
- </div>
- </div>
- {% endfor %}
- </div>
- {% else %}
- <p class="text-muted text-center">No recent scans</p>
- {% endif %}
- </div>
- </div>
- </div>
- </div>
-
- <!-- Activity Statistics -->
- <div class="row mt-4">
- <div class="col-12">
- <div class="card analytics-card">
- <div class="card-header">
- <h6><i class="fas fa-chart-line"></i> Activity Summary</h6>
- </div>
- <div class="card-body">
- <div class="row">
- <!-- Left Column - First 3 Statistics -->
- <div class="col-lg-6 col-md-12">
- <div class="row text-center">
- <div class="col-lg-4 col-md-4 col-6 mb-3">
- <div class="stat-item">
- <h3 class="stat-number">{{ total_jobs or 0 }}</h3>
- <small class="text-muted">Background Jobs</small>
- </div>
- </div>
- <div class="col-lg-4 col-md-4 col-6 mb-3">
- <div class="stat-item">
- <h3 class="stat-number text-info">{{ total_activities or 0 }}</h3>
- <small class="text-muted">Total Activities</small>
- </div>
- </div>
- <div class="col-lg-4 col-md-4 col-6 mb-3">
- <div class="stat-item">
- <h3 class="stat-number text-success">{{ completed_jobs or 0 }}</h3>
- <small class="text-muted">Completed Jobs</small>
- </div>
- </div>
- </div>
- </div>
- <!-- Right Column - Last 3 Statistics -->
- <div class="col-lg-6 col-md-12">
- <div class="row text-center">
- <div class="col-lg-4 col-md-4 col-6 mb-3">
- <div class="stat-item">
- <h3 class="stat-number text-success">{{ successful_activities or 0 }}</h3>
- <small class="text-muted">Successful Activities</small>
- </div>
- </div>
- <div class="col-lg-4 col-md-4 col-6 mb-3">
- <div class="stat-item">
- <h3 class="stat-number">{{ total_scans or 0 }}</h3>
- <small class="text-muted">Total Scans</small>
- </div>
- </div>
- <div class="col-lg-4 col-md-4 col-6 mb-3">
- <div class="stat-item">
- <h3 class="stat-number text-warning">{{ running_jobs or 0 }}</h3>
- <small class="text-muted">Active Jobs</small>
- </div>
- </div>
- </div>
- </div>
- </div>
- </div>
- </div>
- </div>
- </div>
+    <!-- Activity Statistics -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card analytics-card">
+                <div class="card-header">
+                    <h6><i class="fas fa-chart-line"></i> Activity Summary</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <!-- Left Column - First 3 Statistics -->
+                        <div class="col-lg-6 col-md-12">
+                            <div class="row g-3">
+                                <div class="col-12 mb-3">
+                                    <div class="stat-item text-center">
+                                        <h3 class="stat-number">{{ total_jobs or 0 }}</h3>
+                                        <small class="text-muted">Background Jobs</small>
+                                    </div>
+                                </div>
+                                <div class="col-12 mb-3">
+                                    <div class="stat-item text-center">
+                                        <h3 class="stat-number text-info">{{ total_activities or 0 }}</h3>
+                                        <small class="text-muted">Total Activities</small>
+                                    </div>
+                                </div>
+                                <div class="col-12 mb-3">
+                                    <div class="stat-item text-center">
+                                        <h3 class="stat-number text-success">{{ completed_jobs or 0 }}</h3>
+                                        <small class="text-muted">Completed Jobs</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Right Column - Last 3 Statistics -->
+                        <div class="col-lg-6 col-md-12">
+                            <div class="row g-3">
+                                <div class="col-12 mb-3">
+                                    <div class="stat-item text-center">
+                                        <h3 class="stat-number text-success">{{ successful_activities or 0 }}</h3>
+                                        <small class="text-muted">Successful Activities</small>
+                                    </div>
+                                </div>
+                                <div class="col-12 mb-3">
+                                    <div class="stat-item text-center">
+                                        <h3 class="stat-number">{{ total_scans or 0 }}</h3>
+                                        <small class="text-muted">Total Scans</small>
+                                    </div>
+                                </div>
+                                <div class="col-12 mb-3">
+                                    <div class="stat-item text-center">
+                                        <h3 class="stat-number text-warning">{{ running_jobs or 0 }}</h3>
+                                        <small class="text-muted">Active Jobs</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}
