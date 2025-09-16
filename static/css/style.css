@@ -1013,12 +1013,24 @@ small {
 }
 
 .activity-details strong {
-    color: var(--text-primary);
+    color: #ffffff !important;
     display: block;
+    font-weight: 600;
 }
 
 .activity-details small {
-    color: var(--text-muted);
+    color: #e0e0e0 !important;
+}
+
+/* Additional contrast improvements for activity sections */
+.activity-item .activity-details .text-muted,
+.activity-item .text-muted {
+    color: #d0d0d0 !important;
+}
+
+.activity-item .badge {
+    font-weight: 600;
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 /* Statistics Cards */
