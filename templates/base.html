@@ -14,7 +14,7 @@
  <!-- Google Fonts - Audiowide -->
  <link href="https://fonts.googleapis.com/css2?family=Audiowide&display=swap" rel="stylesheet">
  <!-- Custom CSS -->
- <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+ <link href="{{ url_for('static', filename='css/style.css') }}?v={{ range(1000, 9999) | random }}" rel="stylesheet">
  
  <style>
   h1, h2, h3, h4, h5, h6 {
