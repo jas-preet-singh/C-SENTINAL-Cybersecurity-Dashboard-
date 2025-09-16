@@ -16,6 +16,40 @@
         </div>
     </div>
 
+    <!-- Recent Tasks -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card activity-card">
+                <div class="card-header">
+                    <h6><i class="fas fa-tasks"></i> Recent Tasks</h6>
+                </div>
+                <div class="card-body">
+                    {% if recent_jobs %}
+                        <div class="activity-list">
+                            {% for task in recent_jobs %}
+                                <div class="activity-item">
+                                    <div class="activity-icon">
+                                        <i class="fas {{ task.icon }}"></i>
+                                    </div>
+                                    <div class="activity-details">
+                                        <strong>{{ task.title }}</strong>
+                                        <small class="d-block text-muted">{{ task.details }}</small>
+                                        <span class="badge bg-{{ 'success' if task.status == 'completed' else 'warning' if task.status == 'running' else 'danger' if task.status == 'failed' else 'secondary' }}">
+                                            {{ task.status.title() }}
+                                        </span>
+                                        <small class="text-muted d-block">{{ task.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</small>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-muted text-center">No recent tasks</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Recent Scans -->
     <div class="row mt-4">
         <div class="col-12">
