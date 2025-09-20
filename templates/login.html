@@ -11,13 +11,60 @@
  <div class="login-icon">
  <i class="fas fa-shield-alt"></i>
  </div>
- <h3 class="card-title">Access Denied</h3>
+ <h3 class="card-title">{% if show_register %}Register{% else %}Login{% endif %}</h3>
  <p class="card-text">
- You need to be logged in to access the cybersecurity dashboard.
+ {% if show_register %}
+ Create an account to access the cybersecurity dashboard.
+ {% else %}
+ Access the cybersecurity dashboard.
+ {% endif %}
  </p>
- <a href="{{ url_for('replit_auth.login') }}" class="btn btn-primary btn-glow">
- <i class="fas fa-sign-in-alt"></i> Login to Continue
- </a>
+ 
+ {% with messages = get_flashed_messages(with_categories=true) %}
+ {% if messages %}
+ {% for category, message in messages %}
+ <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show" role="alert">
+ {{ message }}
+ <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+ </div>
+ {% endfor %}
+ {% endif %}
+ {% endwith %}
+ 
+ {% if show_register %}
+ <form method="POST" action="{{ url_for('register') }}">
+ <div class="mb-3">
+ <input type="email" class="form-control" name="email" placeholder="Email" required>
+ </div>
+ <div class="mb-3">
+ <input type="password" class="form-control" name="password" placeholder="Password" required>
+ </div>
+ <button type="submit" class="btn btn-primary btn-glow w-100">
+ <i class="fas fa-user-plus"></i> Register
+ </button>
+ </form>
+ <div class="mt-3">
+ <a href="{{ url_for('login') }}" class="text-decoration-none">Already have an account? Login</a>
+ </div>
+ {% else %}
+ <form method="POST" action="{{ url_for('login') }}">
+ <div class="mb-3">
+ <input type="email" class="form-control" name="email" placeholder="Email" required>
+ </div>
+ <div class="mb-3">
+ <input type="password" class="form-control" name="password" placeholder="Password" required>
+ </div>
+ <button type="submit" class="btn btn-primary btn-glow w-100">
+ <i class="fas fa-sign-in-alt"></i> Login
+ </button>
+ </form>
+ <div class="mt-3">
+ <a href="{{ url_for('register') }}" class="text-decoration-none">Don't have an account? Register</a>
+ </div>
+ <div class="mt-2">
+ <!-- <small class="text-muted">Default admin: admin@cybersentinel.local / admin123</small> -->
+ </div>
+ {% endif %}
  </div>
  </div>
  </div>

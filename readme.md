@@ -1,6 +1,6 @@
 # Overview
 
-CyberSec Dashboard is a comprehensive Flask-based cybersecurity web application designed for security professionals, researchers, and enthusiasts. The platform provides a suite of 9 security tools including hash calculation, file encryption/decryption, password cracking, vulnerability scanning, malware detection, password strength analysis, and comprehensive network diagnostic tools. The application features a dark Matrix-themed UI with neon green accents and animated background effects, creating an immersive cybersecurity environment.
+C-SENTINAL is a comprehensive Flask-based cybersecurity web application designed for security professionals, researchers, and enthusiasts. The platform provides a suite of 10 security tools including hash calculation, file encryption/decryption, password cracking, vulnerability scanning, malware detection, password strength analysis, comprehensive network diagnostic tools and stegnography tool. The application features a dark Matrix-themed UI with neon green accents and animated background effects, creating an immersive cybersecurity environment.
 
 # User Preferences
 

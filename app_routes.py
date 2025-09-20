@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 from flask import session, render_template, request, redirect, url_for, flash, jsonify, send_from_directory
 from werkzeug.utils import secure_filename
 from app import app, db
-from replit_auth import require_login, make_replit_blueprint
+from local_auth import require_login
 from flask_login import current_user
 from models import User, Upload, Job, ScanResult, ActivityLog
 from utils.hash_utils import calculate_hash, compare_hashes
@@ -16,7 +16,7 @@ from utils.network_utils import ping_host, dns_lookup, port_scan, traceroute, wh
 from utils.osint_utils import check_email_breaches, search_username, analyze_ip, analyze_domain, get_user_public_ip, get_ip_geolocation
 from utils.steganography import encode_text_in_any_file, decode_text_from_any_file, get_file_capacity, validate_file_format, create_stego_filename
 
-app.register_blueprint(make_replit_blueprint(), url_prefix="/auth")
+# Local authentication is handled in local_auth.py
 
 # Make session permanent
 @app.before_request

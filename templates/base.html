@@ -457,7 +457,7 @@
  <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
  <div class="container">
  <a class="navbar-brand" href="{{ url_for('index') }}">
- <i class="fas fa-shield-alt"></i> CyberSec Dashboard
+ <i class="fas fa-shield-alt"></i> C-SENTINEL
  </a>
 
  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -514,14 +514,14 @@
  {{ current_user.first_name or 'User' }}
  </a>
  <ul class="dropdown-menu dropdown-menu-end">
- <li><a class="dropdown-item" href="{{ url_for('replit_auth.logout') }}">
+ <li><a class="dropdown-item" href="{{ url_for('logout') }}">
  <i class="fas fa-sign-out-alt"></i> Logout
  </a></li>
  </ul>
  </li>
  {% else %}
  <li class="nav-item">
- <a class="nav-link btn-glow" href="{{ url_for('replit_auth.login') }}">
+ <a class="nav-link btn-glow" href="{{ url_for('login') }}">
  <i class="fas fa-sign-in-alt"></i> Login
  </a>
  </li>
@@ -568,14 +568,14 @@
    <div class="container">
    <div class="row">
    <div class="col-md-6">
-   <h5><i class="fas fa-shield-alt"></i> CyberSec Dashboard</h5>
+   <h5><i class="fas fa-shield-alt"></i> C-SENTINEL</h5>
    <p>Advanced cybersecurity tools for professionals and enthusiasts.</p>
    </div>
    <div class="col-md-6">
    <h6>Connect</h6>
    <div class="social-links">
    <a href="https://github.com/jas-preet-singh" class="social-link"><i class="fab fa-github"></i></a>
-   <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+   <a href="https://x.com/Jaspreet911520" class="social-link"><i class="fab fa-twitter"></i></a>
    <a href="https://www.instagram.com/preet_jas_01824?igsh=MWdpNWp5N3MyMWFj" class="social-link"><i class="fab fa-instagram"></i></a>
    <a href="https://www.linkedin.com/in/jaspreet-singh-906415297/" class="social-link"><i class="fab fa-linkedin"></i></a>
    </div>

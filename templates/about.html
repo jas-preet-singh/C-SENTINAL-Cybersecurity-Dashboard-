@@ -15,13 +15,13 @@
  <div class="row">
  <div class="col-md-3">
  <div class="stat-item">
- <h3 class="stat-number">10K+</h3>
+ <h3 class="stat-number">100+</h3>
  <p class="stat-label">Active Users</p>
  </div>
  </div>
  <div class="col-md-3">
  <div class="stat-item">
- <h3 class="stat-number">8</h3>
+ <h3 class="stat-number">10</h3>
  <p class="stat-label">Security Tools</p>
  </div>
  </div>
@@ -43,47 +43,6 @@
  </div>
  </div>
 
- <!-- Company Overview -->
- <div class="row mb-5">
- <div class="col-12">
- <div class="card company-overview-card">
- <div class="card-body">
- <div class="row align-items-center">
- <div class="col-lg-6">
- <h2 class="mb-4"><i class="fas fa-building"></i> Company Overview</h2>
- <p class="lead">CyberSec Dashboard is a premier cybersecurity platform established to bridge the gap between theoretical knowledge and practical application in the cybersecurity domain.</p>
- <p>Founded by industry veterans, our platform serves as a comprehensive solution for security professionals, educational institutions, and organizations seeking to enhance their cybersecurity capabilities through hands-on experience and advanced tooling.</p>
- </div>
- <div class="col-lg-6">
- <div class="company-highlights">
- <div class="highlight-item">
- <i class="fas fa-award"></i>
- <div>
- <h5>Industry Recognition</h5>
- <p>Trusted by leading cybersecurity firms and educational institutions</p>
- </div>
- </div>
- <div class="highlight-item">
- <i class="fas fa-globe"></i>
- <div>
- <h5>Global Reach</h5>
- <p>Supporting security professionals across 50+ countries</p>
- </div>
- </div>
- <div class="highlight-item">
- <i class="fas fa-certificate"></i>
- <div>
- <h5>Compliance Ready</h5>
- <p>Built to meet enterprise security and compliance standards</p>
- </div>
- </div>
- </div>
- </div>
- </div>
- </div>
- </div>
- </div>
- </div>
 
  <!-- Mission & Vision -->
  <div class="row mb-5">
@@ -272,72 +231,6 @@
  </div>
  </div>
 
- <!-- Our Clients -->
- <div class="row mb-5">
- <div class="col-12">
- <h2 class="text-center mb-5">
- <i class="fas fa-handshake"></i> Trusted by Industry Leaders
- </h2>
- <div class="row">
- <div class="col-lg-3 col-md-6 mb-4">
- <div class="card client-card h-100">
- <div class="card-body text-center">
- <div class="client-icon">
- <i class="fas fa-university"></i>
- </div>
- <h4 class="card-title">Educational Institutions</h4>
- <p>Leading universities and cybersecurity programs worldwide trust our platform for hands-on security education and research.</p>
- <div class="client-stats">
- <span class="badge bg-primary">500+ Universities</span>
- </div>
- </div>
- </div>
- </div>
- <div class="col-lg-3 col-md-6 mb-4">
- <div class="card client-card h-100">
- <div class="card-body text-center">
- <div class="client-icon">
- <i class="fas fa-building"></i>
- </div>
- <h4 class="card-title">Enterprise Organizations</h4>
- <p>Fortune 500 companies and government agencies rely on our tools for security training and vulnerability assessment.</p>
- <div class="client-stats">
- <span class="badge bg-success">200+ Enterprises</span>
- </div>
- </div>
- </div>
- </div>
- <div class="col-lg-3 col-md-6 mb-4">
- <div class="card client-card h-100">
- <div class="card-body text-center">
- <div class="client-icon">
- <i class="fas fa-microscope"></i>
- </div>
- <h4 class="card-title">Security Researchers</h4>
- <p>Independent researchers and security firms use our platform for threat analysis, malware research, and vulnerability discovery.</p>
- <div class="client-stats">
- <span class="badge bg-warning">1000+ Researchers</span>
- </div>
- </div>
- </div>
- </div>
- <div class="col-lg-3 col-md-6 mb-4">
- <div class="card client-card h-100">
- <div class="card-body text-center">
- <div class="client-icon">
- <i class="fas fa-shield-alt"></i>
- </div>
- <h4 class="card-title">Security Teams</h4>
- <p>SOC teams, penetration testers, and security consultants leverage our tools for comprehensive security assessments.</p>
- <div class="client-stats">
- <span class="badge bg-info">300+ Security Teams</span>
- </div>
- </div>
- </div>
- </div>
- </div>
- </div>
- </div>
 
  <!-- Partnership & Contact -->
  <div class="row mb-5">
@@ -405,7 +298,7 @@
  <i class="fas fa-tachometer-alt"></i> Access Dashboard
  </a>
  {% else %}
- <a href="{{ url_for('replit_auth.login') }}" class="btn btn-primary btn-glow btn-lg">
+ <a href="{{ url_for('login') }}" class="btn btn-primary btn-glow btn-lg">
  <i class="fas fa-sign-in-alt"></i> Start Free Trial
  </a>
  {% endif %}
